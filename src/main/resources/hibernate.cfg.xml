@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:mysql://localhost:3306/Chinook</property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">qwertyuiop1234567890</property>
+        <mapping class="chinookMgr.db.entities.AlbumEntity"/>
+        <mapping class="chinookMgr.db.entities.ArtistEntity"/>
+        <mapping class="chinookMgr.db.entities.CustomerEntity"/>
+        <mapping class="chinookMgr.db.entities.EmployeeEntity"/>
+        <mapping class="chinookMgr.db.entities.GenreEntity"/>
+        <mapping class="chinookMgr.db.entities.InvoiceEntity"/>
+        <mapping class="chinookMgr.db.entities.InvoiceLineEntity"/>
+        <mapping class="chinookMgr.db.entities.MediaTypeEntity"/>
+        <mapping class="chinookMgr.db.entities.PlaylistEntity"/>
+        <mapping class="chinookMgr.db.entities.PlaylistTrackEntity"/>
+
+    </session-factory>
+</hibernate-configuration>

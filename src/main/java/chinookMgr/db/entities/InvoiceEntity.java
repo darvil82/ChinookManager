@@ -1,0 +1,156 @@
+package chinookMgr.db.entities;
+
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+
+@Entity
+@jakarta.persistence.Table(name = "Invoice", schema = "Chinook", catalog = "")
+public class InvoiceEntity {
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@jakarta.persistence.Column(name = "InvoiceId", nullable = false)
+	private int invoiceId;
+
+	public int getInvoiceId() {
+		return invoiceId;
+	}
+
+	public void setInvoiceId(int invoiceId) {
+		this.invoiceId = invoiceId;
+	}
+
+	@Basic
+	@Column(name = "CustomerId", nullable = false)
+	private int customerId;
+
+	public int getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+
+	@Basic
+	@Column(name = "InvoiceDate", nullable = false)
+	private Timestamp invoiceDate;
+
+	public Timestamp getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(Timestamp invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
+
+	@Basic
+	@Column(name = "BillingAddress", nullable = true, length = 70)
+	private String billingAddress;
+
+	public String getBillingAddress() {
+		return billingAddress;
+	}
+
+	public void setBillingAddress(String billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+
+	@Basic
+	@Column(name = "BillingCity", nullable = true, length = 40)
+	private String billingCity;
+
+	public String getBillingCity() {
+		return billingCity;
+	}
+
+	public void setBillingCity(String billingCity) {
+		this.billingCity = billingCity;
+	}
+
+	@Basic
+	@Column(name = "BillingState", nullable = true, length = 40)
+	private String billingState;
+
+	public String getBillingState() {
+		return billingState;
+	}
+
+	public void setBillingState(String billingState) {
+		this.billingState = billingState;
+	}
+
+	@Basic
+	@Column(name = "BillingCountry", nullable = true, length = 40)
+	private String billingCountry;
+
+	public String getBillingCountry() {
+		return billingCountry;
+	}
+
+	public void setBillingCountry(String billingCountry) {
+		this.billingCountry = billingCountry;
+	}
+
+	@Basic
+	@Column(name = "BillingPostalCode", nullable = true, length = 10)
+	private String billingPostalCode;
+
+	public String getBillingPostalCode() {
+		return billingPostalCode;
+	}
+
+	public void setBillingPostalCode(String billingPostalCode) {
+		this.billingPostalCode = billingPostalCode;
+	}
+
+	@Basic
+	@Column(name = "Total", nullable = false, precision = 2)
+	private BigDecimal total;
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		InvoiceEntity that = (InvoiceEntity)o;
+
+		if (invoiceId != that.invoiceId) return false;
+		if (customerId != that.customerId) return false;
+		if (invoiceDate != null ? !invoiceDate.equals(that.invoiceDate) : that.invoiceDate != null) return false;
+		if (billingAddress != null ? !billingAddress.equals(that.billingAddress) : that.billingAddress != null)
+			return false;
+		if (billingCity != null ? !billingCity.equals(that.billingCity) : that.billingCity != null) return false;
+		if (billingState != null ? !billingState.equals(that.billingState) : that.billingState != null) return false;
+		if (billingCountry != null ? !billingCountry.equals(that.billingCountry) : that.billingCountry != null)
+			return false;
+		if (billingPostalCode != null ? !billingPostalCode.equals(that.billingPostalCode) : that.billingPostalCode != null)
+			return false;
+		if (total != null ? !total.equals(that.total) : that.total != null) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = invoiceId;
+		result = 31 * result + customerId;
+		result = 31 * result + (invoiceDate != null ? invoiceDate.hashCode() : 0);
+		result = 31 * result + (billingAddress != null ? billingAddress.hashCode() : 0);
+		result = 31 * result + (billingCity != null ? billingCity.hashCode() : 0);
+		result = 31 * result + (billingState != null ? billingState.hashCode() : 0);
+		result = 31 * result + (billingCountry != null ? billingCountry.hashCode() : 0);
+		result = 31 * result + (billingPostalCode != null ? billingPostalCode.hashCode() : 0);
+		result = 31 * result + (total != null ? total.hashCode() : 0);
+		return result;
+	}
+}
