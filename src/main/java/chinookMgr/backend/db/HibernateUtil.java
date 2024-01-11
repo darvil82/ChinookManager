@@ -1,4 +1,4 @@
-package chinookMgr.db;
+package chinookMgr.backend.db;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

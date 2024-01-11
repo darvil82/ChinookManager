@@ -1,21 +1,21 @@
-package chinookMgr.db.entities;
+package chinookMgr.backend.db.entities;
 
 import jakarta.persistence.*;
 
 @Entity
-@jakarta.persistence.Table(name = "Artist", schema = "Chinook", catalog = "")
-public class ArtistEntity {
+@jakarta.persistence.Table(name = "MediaType", schema = "Chinook", catalog = "")
+public class MediaTypeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
-	@jakarta.persistence.Column(name = "ArtistId", nullable = false)
-	private int artistId;
+	@jakarta.persistence.Column(name = "MediaTypeId", nullable = false)
+	private int mediaTypeId;
 
-	public int getArtistId() {
-		return artistId;
+	public int getMediaTypeId() {
+		return mediaTypeId;
 	}
 
-	public void setArtistId(int artistId) {
-		this.artistId = artistId;
+	public void setMediaTypeId(int mediaTypeId) {
+		this.mediaTypeId = mediaTypeId;
 	}
 
 	@Basic
@@ -35,9 +35,9 @@ public class ArtistEntity {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		ArtistEntity that = (ArtistEntity)o;
+		MediaTypeEntity that = (MediaTypeEntity)o;
 
-		if (artistId != that.artistId) return false;
+		if (mediaTypeId != that.mediaTypeId) return false;
 		if (name != null ? !name.equals(that.name) : that.name != null) return false;
 
 		return true;
@@ -45,7 +45,7 @@ public class ArtistEntity {
 
 	@Override
 	public int hashCode() {
-		int result = artistId;
+		int result = mediaTypeId;
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		return result;
 	}

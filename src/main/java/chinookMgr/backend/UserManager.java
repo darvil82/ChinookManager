@@ -1,14 +1,17 @@
 package chinookMgr.backend;
 
-import chinookMgr.db.HibernateUtil;
-import chinookMgr.db.entities.CustomerEntity;
-import chinookMgr.db.entities.EmployeeEntity;
+import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.backend.db.entities.CustomerEntity;
+import chinookMgr.backend.db.entities.EmployeeEntity;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 public class UserManager {
 	private static User currentUser;
+	public static Consumer<User<?>> onUserChange;
 
-	public static User getCurrentUser() {
+	public static User<?> getCurrentUser() {
 		return UserManager.currentUser;
 	}
 
@@ -16,7 +19,16 @@ public class UserManager {
 		return UserManager.currentUser != null;
 	}
 
+	private static void setCurrentUser(User<?> user) {
+		UserManager.currentUser = user;
+		if (UserManager.onUserChange != null) {
+			UserManager.onUserChange.accept(user);
+		}
+	}
+
 	public static boolean login(@NotNull String email, @NotNull String password) {
+
+
 		try (var session = HibernateUtil.getSession()) {
 			{
 				var query = session.createQuery(
@@ -29,7 +41,7 @@ public class UserManager {
 				// its an employee
 				var result = query.getResultList();
 				if (result.size() == 1) {
-					UserManager.currentUser = new Employee(result.get(0));
+					setCurrentUser(new Employee(result.get(0)));
 					return true;
 				}
 			}
@@ -45,12 +57,16 @@ public class UserManager {
 				// its a customer
 				var result = query.getResultList();
 				if (result.size() == 1) {
-					UserManager.currentUser = new Customer(result.get(0));
+					setCurrentUser(new Customer(result.get(0)));
 					return true;
 				}
 			}
 		}
 
 		return false;
+	}
+
+	public static void logout() {
+		setCurrentUser(null);
 	}
 }

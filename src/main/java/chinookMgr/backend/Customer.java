@@ -1,7 +1,7 @@
 package chinookMgr.backend;
 
-import chinookMgr.db.HibernateUtil;
-import chinookMgr.db.entities.CustomerEntity;
+import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.backend.db.entities.CustomerEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

@@ -1,33 +1,23 @@
-package chinookMgr.db.entities;
+package chinookMgr.backend.db.entities;
 
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
+
 @Entity
-@jakarta.persistence.Table(name = "Customer", schema = "Chinook", catalog = "")
-public class CustomerEntity {
+@jakarta.persistence.Table(name = "Employee", schema = "Chinook", catalog = "")
+public class EmployeeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
-	@jakarta.persistence.Column(name = "CustomerId", nullable = false)
-	private int customerId;
+	@jakarta.persistence.Column(name = "EmployeeId", nullable = false)
+	private int employeeId;
 
-	public int getCustomerId() {
-		return customerId;
+	public int getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
-	}
-
-	@Basic
-	@Column(name = "FirstName", nullable = false, length = 40)
-	private String firstName;
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	@Basic
@@ -43,15 +33,63 @@ public class CustomerEntity {
 	}
 
 	@Basic
-	@Column(name = "Company", nullable = true, length = 80)
-	private String company;
+	@Column(name = "FirstName", nullable = false, length = 20)
+	private String firstName;
 
-	public String getCompany() {
-		return company;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setCompany(String company) {
-		this.company = company;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	@Basic
+	@Column(name = "Title", nullable = false)
+	private int title;
+
+	public int getTitle() {
+		return title;
+	}
+
+	public void setTitle(int title) {
+		this.title = title;
+	}
+
+	@Basic
+	@Column(name = "ReportsTo", nullable = true)
+	private Integer reportsTo;
+
+	public Integer getReportsTo() {
+		return reportsTo;
+	}
+
+	public void setReportsTo(Integer reportsTo) {
+		this.reportsTo = reportsTo;
+	}
+
+	@Basic
+	@Column(name = "BirthDate", nullable = true)
+	private Timestamp birthDate;
+
+	public Timestamp getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(Timestamp birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	@Basic
+	@Column(name = "HireDate", nullable = true)
+	private Timestamp hireDate;
+
+	public Timestamp getHireDate() {
+		return hireDate;
+	}
+
+	public void setHireDate(Timestamp hireDate) {
+		this.hireDate = hireDate;
 	}
 
 	@Basic
@@ -139,7 +177,7 @@ public class CustomerEntity {
 	}
 
 	@Basic
-	@Column(name = "Email", nullable = false, length = 60)
+	@Column(name = "Email", nullable = true, length = 60)
 	private String email;
 
 	public String getEmail() {
@@ -148,18 +186,6 @@ public class CustomerEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	@Basic
-	@Column(name = "SupportRepId", nullable = true)
-	private Integer supportRepId;
-
-	public Integer getSupportRepId() {
-		return supportRepId;
-	}
-
-	public void setSupportRepId(Integer supportRepId) {
-		this.supportRepId = supportRepId;
 	}
 
 	@Basic
@@ -174,30 +200,20 @@ public class CustomerEntity {
 		this.password = password;
 	}
 
-	@Basic
-	@Column(name = "Roles", nullable = false)
-	private byte roles;
-
-	public byte getRoles() {
-		return roles;
-	}
-
-	public void setRoles(byte roles) {
-		this.roles = roles;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		CustomerEntity that = (CustomerEntity)o;
+		EmployeeEntity that = (EmployeeEntity)o;
 
-		if (customerId != that.customerId) return false;
-		if (roles != that.roles) return false;
-		if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
+		if (employeeId != that.employeeId) return false;
+		if (title != that.title) return false;
 		if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
-		if (company != null ? !company.equals(that.company) : that.company != null) return false;
+		if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
+		if (reportsTo != null ? !reportsTo.equals(that.reportsTo) : that.reportsTo != null) return false;
+		if (birthDate != null ? !birthDate.equals(that.birthDate) : that.birthDate != null) return false;
+		if (hireDate != null ? !hireDate.equals(that.hireDate) : that.hireDate != null) return false;
 		if (address != null ? !address.equals(that.address) : that.address != null) return false;
 		if (city != null ? !city.equals(that.city) : that.city != null) return false;
 		if (state != null ? !state.equals(that.state) : that.state != null) return false;
@@ -206,7 +222,6 @@ public class CustomerEntity {
 		if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
 		if (fax != null ? !fax.equals(that.fax) : that.fax != null) return false;
 		if (email != null ? !email.equals(that.email) : that.email != null) return false;
-		if (supportRepId != null ? !supportRepId.equals(that.supportRepId) : that.supportRepId != null) return false;
 		if (password != null ? !password.equals(that.password) : that.password != null) return false;
 
 		return true;
@@ -214,10 +229,13 @@ public class CustomerEntity {
 
 	@Override
 	public int hashCode() {
-		int result = customerId;
-		result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+		int result = employeeId;
 		result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-		result = 31 * result + (company != null ? company.hashCode() : 0);
+		result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+		result = 31 * result + title;
+		result = 31 * result + (reportsTo != null ? reportsTo.hashCode() : 0);
+		result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
+		result = 31 * result + (hireDate != null ? hireDate.hashCode() : 0);
 		result = 31 * result + (address != null ? address.hashCode() : 0);
 		result = 31 * result + (city != null ? city.hashCode() : 0);
 		result = 31 * result + (state != null ? state.hashCode() : 0);
@@ -226,9 +244,7 @@ public class CustomerEntity {
 		result = 31 * result + (phone != null ? phone.hashCode() : 0);
 		result = 31 * result + (fax != null ? fax.hashCode() : 0);
 		result = 31 * result + (email != null ? email.hashCode() : 0);
-		result = 31 * result + (supportRepId != null ? supportRepId.hashCode() : 0);
 		result = 31 * result + (password != null ? password.hashCode() : 0);
-		result = 31 * result + (int)roles;
 		return result;
 	}
 }

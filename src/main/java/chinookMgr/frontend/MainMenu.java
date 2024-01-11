@@ -1,6 +1,8 @@
 package chinookMgr.frontend;
 
 
+import chinookMgr.backend.User;
+import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.components.views.TestView;
 import chinookMgr.frontend.components.views.View;
 import chinookMgr.frontend.components.Toolbar;
@@ -20,6 +22,7 @@ public class MainMenu extends JFrame {
 	private JScrollPane pathScrollPane;
 	private JProgressBar progressBar;
 	private JLabel txtStatus;
+	private JButton btnAccount;
 	private Toolbar toolbar;
 
 	public MainMenu() {
@@ -69,6 +72,10 @@ public class MainMenu extends JFrame {
 		}
 	}
 
+	private void onUserChange(@Nullable User<?> newUser) {
+		this.btnAccount.setVisible(newUser != null);
+	}
+
 	public void build() {
 		this.toolbar = new Toolbar();
 		this.toolbarContainer.add(this.toolbar);
@@ -80,6 +87,7 @@ public class MainMenu extends JFrame {
 
 		ViewStack.onViewChange = this::onViewStackChange;
 		LoadingManager.onTaskChange = this::onLoadingTaskChange;
+		UserManager.onUserChange = this::onUserChange;
 		StatusManager.statusLabel = this.txtStatus;
 		this.onViewStackChange(null);
 	}

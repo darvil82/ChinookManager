@@ -1,4 +1,4 @@
-package chinookMgr.db.entities;
+package chinookMgr.backend.db.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 
 @Entity
 @jakarta.persistence.Table(name = "PlaylistTrack", schema = "Chinook", catalog = "")
-@jakarta.persistence.IdClass(chinookMgr.db.entities.PlaylistTrackEntityPK.class)
+@jakarta.persistence.IdClass(PlaylistTrackEntityPK.class)
 public class PlaylistTrackEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id

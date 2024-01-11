@@ -1,4 +1,4 @@
-package chinookMgr.db.entities;
+package chinookMgr.backend.db.entities;
 
 import java.io.Serializable;
 
