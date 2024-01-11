@@ -8,7 +8,9 @@ import java.awt.event.ActionListener;
 
 public class Toolbar extends JComponent {
 	public Toolbar() {
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		var layout = new GridLayout(0, 1);
+		this.setLayout(layout);
+		this.setMinimumSize(new Dimension(100, 0));
 	}
 
 	public void addOption(@NotNull String name, @NotNull ActionListener listener) {
@@ -52,13 +54,12 @@ public class Toolbar extends JComponent {
 
 		@Override
 		protected void paintComponent(Graphics g) {
-			g.setColor(Color.DARK_GRAY);
-			g.fillRect(0, this.getHeight() - 2, this.getWidth(), 2);
-
 			{
-				if (this.getModel().isPressed() || this.isActive())
+				if (this.getModel().isPressed())
 					g.setColor(new Color(255, 255, 255, 25));
-				else if (this.getModel().isRollover())
+				else if (this.isActive())
+					g.setColor(new Color(255, 255, 255, 50));
+				else if (this.getModel().isRollover() || this.isActive())
 					g.setColor(new Color(0, 0, 0, 50));
 				else
 					g.setColor(new Color(0, 0, 0, 0));

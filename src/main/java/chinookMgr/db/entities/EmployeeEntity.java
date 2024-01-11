@@ -188,6 +188,18 @@ public class EmployeeEntity {
 		this.email = email;
 	}
 
+	@Basic
+	@Column(name = "Password", nullable = true, length = 32)
+	private String password;
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -210,6 +222,7 @@ public class EmployeeEntity {
 		if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
 		if (fax != null ? !fax.equals(that.fax) : that.fax != null) return false;
 		if (email != null ? !email.equals(that.email) : that.email != null) return false;
+		if (password != null ? !password.equals(that.password) : that.password != null) return false;
 
 		return true;
 	}
@@ -231,6 +244,7 @@ public class EmployeeEntity {
 		result = 31 * result + (phone != null ? phone.hashCode() : 0);
 		result = 31 * result + (fax != null ? fax.hashCode() : 0);
 		result = 31 * result + (email != null ? email.hashCode() : 0);
+		result = 31 * result + (password != null ? password.hashCode() : 0);
 		return result;
 	}
 }

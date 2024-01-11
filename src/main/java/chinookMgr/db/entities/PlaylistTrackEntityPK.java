@@ -21,4 +21,18 @@ public class PlaylistTrackEntityPK implements Serializable {
 	public void setTrackId(int trackId) {
 		this.trackId = trackId;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof PlaylistTrackEntityPK)) return false;
+		PlaylistTrackEntityPK that = (PlaylistTrackEntityPK) o;
+		return getPlaylistId() == that.getPlaylistId() &&
+			getTrackId() == that.getTrackId();
+	}
+
+	@Override
+	public int hashCode() {
+		return 31;
+	}
 }

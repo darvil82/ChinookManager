@@ -1,8 +1,11 @@
 package chinookMgr.frontend;
 
 
-import chinookMgr.frontend.components.TestTool;
+import chinookMgr.frontend.components.views.TestView;
+import chinookMgr.frontend.components.views.View;
 import chinookMgr.frontend.components.Toolbar;
+import chinookMgr.frontend.components.views.WelcomeView;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,10 +13,13 @@ import java.awt.*;
 public class MainMenu extends JFrame {
 	private JPanel mainPanel;
 	private JPanel toolbarContainer;
-	private JPanel toolContent;
-	private JLabel txtCurrentToolName;
+	private JPanel viewContent;
+	private JLabel txtCurrentViewName;
 	private JButton btnPrev;
-	private JLabel txtAbsToolPath;
+	private JLabel txtAbsViewPath;
+	private JScrollPane pathScrollPane;
+	private JProgressBar progressBar;
+	private JLabel txtStatus;
 	private Toolbar toolbar;
 
 	public MainMenu() {
@@ -25,30 +31,56 @@ public class MainMenu extends JFrame {
 		this.build();
 	}
 
+	private void onViewStackChange(@Nullable View newView) {
+		this.viewContent.removeAll();
+
+		if (newView == null) {
+			this.txtAbsViewPath.setVisible(false);
+			this.btnPrev.setEnabled(false);
+			this.toolbar.deactivateAll();
+			ViewStack.replace(new WelcomeView());
+		} else {
+			this.txtCurrentViewName.setText(newView.getName());
+			this.viewContent.add(newView.getPanel());
+			this.txtAbsViewPath.setText(ViewStack.getAbsPath());
+			this.txtAbsViewPath.setVisible(true);
+			this.btnPrev.setEnabled(!newView.disableBackButton());
+		}
+
+		SwingUtilities.invokeLater(() -> {
+			this.pathScrollPane.getHorizontalScrollBar().setValue(this.pathScrollPane.getHorizontalScrollBar().getMaximum());
+		});
+		this.viewContent.revalidate();
+		this.viewContent.repaint();
+	}
+
+	private void onLoadingTaskChange(@Nullable LoadingManager.LoadingTask task) {
+		if (task == null) {
+			this.progressBar.setValue(0);
+			this.progressBar.setMaximum(0);
+			StatusManager.clear();
+			this.progressBar.setIndeterminate(false);
+		} else {
+			this.progressBar.setValue(task.getProgress());
+			this.progressBar.setMaximum(task.getMax());
+			this.txtStatus.setText(task.getStatus());
+			StatusManager.setStatus(task.getStatus());
+			this.progressBar.setIndeterminate(task.isIndeterminate());
+		}
+	}
+
 	public void build() {
 		this.toolbar = new Toolbar();
-		this.toolbarContainer.add(this.toolbar, BorderLayout.WEST);
+		this.toolbarContainer.add(this.toolbar);
+		this.btnPrev.addActionListener(e -> ViewStack.pop());
 
-		this.toolbar.addOption("test", e -> {
-			this.toolContent.removeAll();
-			this.toolContent.add(new TestTool().getPanel());
-			this.toolContent.revalidate();
-		});
-		this.toolbar.addOption("test", e -> {
-			this.toolContent.removeAll();
-			this.toolContent.add(new TestTool().getPanel());
-			this.toolContent.revalidate();
-		});
-		this.toolbar.addOption("test", e -> {
-			this.toolContent.removeAll();
-			this.toolContent.add(new TestTool().getPanel());
-			this.toolContent.revalidate();
-		});
-		this.toolbar.addOption("test", e -> {
-			this.toolContent.removeAll();
-			this.toolContent.add(new TestTool().getPanel());
-			this.toolContent.revalidate();
-		});
+		this.toolbar.addOption("Inicio", e -> ViewStack.replace(new WelcomeView()));
+		this.toolbar.addOption("test 1", e -> ViewStack.replace(new TestView()));
+		this.toolbar.addOption("test 2", e -> ViewStack.replace(new TestView()));
 
+		ViewStack.onViewChange = this::onViewStackChange;
+		LoadingManager.onTaskChange = this::onLoadingTaskChange;
+		StatusManager.statusLabel = this.txtStatus;
+		this.onViewStackChange(null);
 	}
 }

@@ -162,6 +162,30 @@ public class CustomerEntity {
 		this.supportRepId = supportRepId;
 	}
 
+	@Basic
+	@Column(name = "Password", nullable = true, length = 32)
+	private String password;
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Basic
+	@Column(name = "Roles", nullable = false)
+	private byte roles;
+
+	public byte getRoles() {
+		return roles;
+	}
+
+	public void setRoles(byte roles) {
+		this.roles = roles;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -170,6 +194,7 @@ public class CustomerEntity {
 		CustomerEntity that = (CustomerEntity)o;
 
 		if (customerId != that.customerId) return false;
+		if (roles != that.roles) return false;
 		if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
 		if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
 		if (company != null ? !company.equals(that.company) : that.company != null) return false;
@@ -182,6 +207,7 @@ public class CustomerEntity {
 		if (fax != null ? !fax.equals(that.fax) : that.fax != null) return false;
 		if (email != null ? !email.equals(that.email) : that.email != null) return false;
 		if (supportRepId != null ? !supportRepId.equals(that.supportRepId) : that.supportRepId != null) return false;
+		if (password != null ? !password.equals(that.password) : that.password != null) return false;
 
 		return true;
 	}
@@ -201,6 +227,8 @@ public class CustomerEntity {
 		result = 31 * result + (fax != null ? fax.hashCode() : 0);
 		result = 31 * result + (email != null ? email.hashCode() : 0);
 		result = 31 * result + (supportRepId != null ? supportRepId.hashCode() : 0);
+		result = 31 * result + (password != null ? password.hashCode() : 0);
+		result = 31 * result + (int)roles;
 		return result;
 	}
 }
