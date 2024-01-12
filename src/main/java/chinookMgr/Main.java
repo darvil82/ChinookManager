@@ -13,6 +13,9 @@ public class Main {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		new MainMenu().setVisible(true);
+
+		var app = new MainMenu();
+		app.setLocationRelativeTo(null);
+		app.setVisible(true);
 	}
 }

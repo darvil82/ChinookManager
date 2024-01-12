@@ -27,7 +27,7 @@ public class LoginView extends View {
 				StatusManager.showUpdate("Sesión iniciada.");
 			} else {
 				JOptionPane.showMessageDialog(
-					null,
+					this.mainPanel,
 					"El correo electrónico o la contraseña son incorrectos",
 					"Error",
 					JOptionPane.ERROR_MESSAGE

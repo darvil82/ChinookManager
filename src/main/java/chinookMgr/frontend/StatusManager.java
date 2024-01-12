@@ -20,33 +20,27 @@ public abstract class StatusManager {
 	}
 
 	public static void clear() {
-		if (hideThread == null || !hideThread.isActive())
+		if (hideThread == null)
 			statusLabel.setText("");
 	}
 
 
-}
-
-class HideThread extends Thread {
-	private boolean active = true;
-
-	public HideThread() {
-		this.start();
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	@Override
-	public void run() {
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			return;
+	static class HideThread extends Thread {
+		public HideThread() {
+			this.start();
 		}
 
-		StatusManager.statusLabel.setText("");
-		this.active = false;
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				StatusManager.hideThread = null;
+				return;
+			}
+
+			StatusManager.statusLabel.setText("");
+			StatusManager.hideThread = null;
+		}
 	}
 }

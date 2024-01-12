@@ -21,9 +21,8 @@ public class UserManager {
 
 	private static void setCurrentUser(User<?> user) {
 		UserManager.currentUser = user;
-		if (UserManager.onUserChange != null) {
+		if (UserManager.onUserChange != null)
 			UserManager.onUserChange.accept(user);
-		}
 	}
 
 	public static boolean login(@NotNull String email, @NotNull String password) {
