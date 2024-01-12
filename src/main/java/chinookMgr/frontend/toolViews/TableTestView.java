@@ -12,8 +12,7 @@ public class TableTestView implements ToolView {
 	private JPanel tableContainer;
 
 	public TableTestView() {
-		this.tableContainer.add(new TableInspector().getPanel());
-		this.tableContainer.revalidate();
+		View.insert(this.tableContainer, new TableInspector());
 	}
 
 	@Override

@@ -29,7 +29,8 @@ public class MainMenu extends JFrame {
 		super("Chinook Manager");
 		this.setContentPane(this.mainPanel);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setMinimumSize(new Dimension(800, 500));
+		this.setMinimumSize(new Dimension(500, 300));
+		this.setPreferredSize(new Dimension(800, 500));
 		this.pack();
 		this.build();
 	}
@@ -42,6 +43,7 @@ public class MainMenu extends JFrame {
 			this.btnPrev.setEnabled(false);
 			this.toolbar.deactivateAll();
 			ViewStack.replace(new WelcomeView());
+			this.toolbar.toggleOption("Inicio", true);
 		} else {
 			this.txtCurrentViewName.setText(newView.getName());
 			this.viewContent.add(newView.getPanel());

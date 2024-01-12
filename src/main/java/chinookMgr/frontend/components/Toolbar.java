@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.stream.Stream;
 
 public class Toolbar extends JComponent {
 	public Toolbar() {
@@ -19,10 +20,29 @@ public class Toolbar extends JComponent {
 		this.revalidate();
 	}
 
+	private Stream<ToolButton> getButtons() {
+		return Stream.of(this.getComponents())
+			.filter(c -> c instanceof ToolButton)
+			.map(c -> (ToolButton)c);
+	}
+
+	public void toggleOption(@NotNull String name, boolean active) {
+		this.getButtons()
+			.filter(b -> b.getText().equals(name))
+			.findFirst()
+			.ifPresent(b -> b.setActive(active));
+	}
+
+	public void toggleOption(@NotNull String name) {
+		this.getButtons()
+			.filter(b -> b.getText().equals(name))
+			.findFirst()
+			.ifPresent(b -> b.setActive(!b.isActive()));
+	}
+
 	public void deactivateAll() {
-		for (var button : this.getComponents())
-			if (button instanceof ToolButton btn)
-				btn.setActive(false);
+		this.getButtons()
+			.forEach(b -> b.setActive(false));
 	}
 
 	@Override

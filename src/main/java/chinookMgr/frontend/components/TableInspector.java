@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class TableInspector implements View {
+public class TableInspector<T> implements View {
 	private JTextField inputSearch;
 	private JButton btnNew;
 	private JTable resultTable;
@@ -16,10 +16,11 @@ public class TableInspector implements View {
 	private JPanel mainPanel;
 
 	public TableInspector() {
-
 	}
+
 
 	public @NotNull JPanel getPanel() {
 		return this.mainPanel;
 	}
+
 }
