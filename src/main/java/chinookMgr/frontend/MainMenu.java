@@ -3,11 +3,10 @@ package chinookMgr.frontend;
 
 import chinookMgr.backend.User;
 import chinookMgr.backend.UserManager;
-import chinookMgr.frontend.components.views.SongsView;
-import chinookMgr.frontend.components.views.TestView;
-import chinookMgr.frontend.components.views.View;
+import chinookMgr.frontend.toolViews.TableTestView;
+import chinookMgr.frontend.toolViews.TestView;
 import chinookMgr.frontend.components.Toolbar;
-import chinookMgr.frontend.components.views.WelcomeView;
+import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -35,7 +34,7 @@ public class MainMenu extends JFrame {
 		this.build();
 	}
 
-	private void onViewStackChange(@Nullable View newView) {
+	private void onViewStackChange(@Nullable ToolView newView) {
 		this.viewContent.removeAll();
 
 		if (newView == null) {
@@ -84,7 +83,7 @@ public class MainMenu extends JFrame {
 
 		this.toolbar.addOption("Inicio", e -> ViewStack.replace(new WelcomeView()));
 		this.toolbar.addOption("test 1", e -> ViewStack.replace(new TestView()));
-		this.toolbar.addOption("test 2", e -> ViewStack.replace(new SongsView()));
+		this.toolbar.addOption("test 2", e -> ViewStack.replace(new TableTestView()));
 
 		ViewStack.onViewChange = this::onViewStackChange;
 		LoadingManager.onTaskChange = this::onLoadingTaskChange;

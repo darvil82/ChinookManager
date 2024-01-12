@@ -1,14 +1,12 @@
-package chinookMgr.frontend.components.views;
+package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.UserManager;
-import chinookMgr.frontend.LoadingManager;
-import chinookMgr.frontend.StatusManager;
-import chinookMgr.frontend.ViewStack;
+import chinookMgr.frontend.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class LoginView extends View {
+public class LoginView implements ToolView {
 	private JTextField inputEmail;
 	private JPanel mainPanel;
 	private JPasswordField inputPassword;
@@ -26,7 +24,7 @@ public class LoginView extends View {
 		this.inputPassword.setEnabled(false);
 
 		LoadingManager.pushPop("Iniciando sesión...", () -> {
-			if (UserManager.login(this.inputEmail.getText(), new String(this.inputPassword.getPassword()))) {
+			if (UserManager.login(this.inputEmail.getText().trim(), new String(this.inputPassword.getPassword()))) {
 				ViewStack.pop();
 				StatusManager.showUpdate("Sesión iniciada.");
 			} else {

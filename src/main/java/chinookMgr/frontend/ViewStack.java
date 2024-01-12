@@ -1,28 +1,28 @@
 package chinookMgr.frontend;
 
-import chinookMgr.frontend.components.views.View;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.tools.Tool;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class ViewStack {
-	private static ArrayList<View> views = new ArrayList<>();
-	public static @Nullable Consumer<View> onViewChange;
+	private static ArrayList<ToolView> views = new ArrayList<>();
+	public static @Nullable Consumer<ToolView> onViewChange;
 
 	private static void notifyViewChange() {
 		if (onViewChange == null) return;
 		onViewChange.accept(views.size() == 0 ? null : getTop());
 	}
 
-	public static void push(@NotNull View view) {
+	public static void push(@NotNull ToolView view) {
 		views.add(view);
 		getTop().onReMount(null);
 		notifyViewChange();
 	}
 
-	public static void replace(@NotNull View view) {
+	public static void replace(@NotNull ToolView view) {
 		views.clear();
 		views.add(view);
 		getTop().onReMount(null);
@@ -36,7 +36,7 @@ public class ViewStack {
 		getTop().onReMount(prevTop);
 	}
 
-	public static @NotNull View getTop() {
+	public static @NotNull ToolView getTop() {
 		return views.get(views.size() - 1);
 	}
 

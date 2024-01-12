@@ -1,13 +1,14 @@
-package chinookMgr.frontend.components.views;
+package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.UserManager;
+import chinookMgr.frontend.ToolView;
+import chinookMgr.frontend.View;
 import chinookMgr.frontend.ViewStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class WelcomeView extends View {
+public class WelcomeView implements ToolView {
 	private JPanel mainPanel;
 	private JButton btnLogin;
 	private JLabel txtWelcome;
@@ -32,7 +33,7 @@ public class WelcomeView extends View {
 	}
 
 	@Override
-	public void onReMount(View prevView) {
+	public void onReMount(ToolView prevView) {
 		if (!UserManager.isLoggedIn()) return;
 
 		this.btnLogin.setVisible(false);

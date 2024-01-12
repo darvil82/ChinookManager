@@ -68,9 +68,9 @@ public class Toolbar extends JComponent {
 			}
 
 			g.setColor(Color.WHITE);
-			g.setFont(g.getFont().deriveFont(Font.BOLD, 13f));
+			g.setFont(g.getFont().deriveFont(Font.BOLD, 15f));
 
-			g.drawString(this.getText(), 5, this.getHeight() / 2 + g.getFontMetrics().getHeight() / 2 - 2);
+			g.drawString(this.getText(), 10, this.getHeight() / 2 + g.getFontMetrics().getHeight() / 2 - 2);
 		}
 	}
 }
