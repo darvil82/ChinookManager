@@ -19,5 +19,7 @@
         <mapping class="chinookMgr.backend.db.entities.PlaylistEntity"/>
         <mapping class="chinookMgr.backend.db.entities.PlaylistTrackEntity"/>
         <mapping class="chinookMgr.backend.db.entities.TitleEntity"/>
+        <mapping class="chinookMgr.backend.db.entities.TrackEntity"/>
+
     </session-factory>
 </hibernate-configuration>

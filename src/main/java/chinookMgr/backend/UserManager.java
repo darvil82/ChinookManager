@@ -3,6 +3,7 @@ package chinookMgr.backend;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.CustomerEntity;
 import chinookMgr.backend.db.entities.EmployeeEntity;
+import chinookMgr.shared.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -26,7 +27,7 @@ public class UserManager {
 	}
 
 	public static boolean login(@NotNull String email, @NotNull String password) {
-
+		byte[] passwordHash = Utils.toMD5(password);
 
 		try (var session = HibernateUtil.getSession()) {
 			{
@@ -35,7 +36,7 @@ public class UserManager {
 					EmployeeEntity.class
 				);
 				query.setParameter("email", email);
-				query.setParameter("password", password);
+				query.setParameter("password", passwordHash);
 
 				// its an employee
 				var result = query.getResultList();
@@ -51,7 +52,7 @@ public class UserManager {
 					CustomerEntity.class
 				);
 				query.setParameter("email", email);
-				query.setParameter("password", password);
+				query.setParameter("password", passwordHash);
 
 				// its a customer
 				var result = query.getResultList();

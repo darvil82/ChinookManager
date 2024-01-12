@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 
 @Entity
 @jakarta.persistence.Table(name = "PlaylistTrack", schema = "Chinook", catalog = "")
-@jakarta.persistence.IdClass(PlaylistTrackEntityPK.class)
+@jakarta.persistence.IdClass(chinookMgr.backend.db.entities.PlaylistTrackEntityPK.class)
 public class PlaylistTrackEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id

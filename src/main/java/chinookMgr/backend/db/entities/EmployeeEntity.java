@@ -3,6 +3,7 @@ package chinookMgr.backend.db.entities;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 @Entity
 @jakarta.persistence.Table(name = "Employee", schema = "Chinook", catalog = "")
@@ -189,14 +190,14 @@ public class EmployeeEntity {
 	}
 
 	@Basic
-	@Column(name = "Password", nullable = true, length = 32)
-	private String password;
+	@Column(name = "Password", nullable = true)
+	private byte[] password;
 
-	public String getPassword() {
+	public byte[] getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(byte[] password) {
 		this.password = password;
 	}
 
@@ -222,7 +223,7 @@ public class EmployeeEntity {
 		if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
 		if (fax != null ? !fax.equals(that.fax) : that.fax != null) return false;
 		if (email != null ? !email.equals(that.email) : that.email != null) return false;
-		if (password != null ? !password.equals(that.password) : that.password != null) return false;
+		if (!Arrays.equals(password, that.password)) return false;
 
 		return true;
 	}
@@ -244,7 +245,7 @@ public class EmployeeEntity {
 		result = 31 * result + (phone != null ? phone.hashCode() : 0);
 		result = 31 * result + (fax != null ? fax.hashCode() : 0);
 		result = 31 * result + (email != null ? email.hashCode() : 0);
-		result = 31 * result + (password != null ? password.hashCode() : 0);
+		result = 31 * result + Arrays.hashCode(password);
 		return result;
 	}
 }

@@ -14,14 +14,13 @@ public class LoadingManager {
 		notifyTaskChange();
 	}
 
-	public static void push(String status) {
+	public static void pushIntermediate(String status) {
 		tasks.add(new LoadingTask(status, 0, -1));
 		notifyTaskChange();
 	}
 
-	public static void push(String status, Runnable runnable) {
-		tasks.add(new LoadingTask(status, 0, -1));
-		notifyTaskChange();
+	public static void pushPop(String status, Runnable runnable) {
+		pushIntermediate(status);
 
 		new Thread(() -> {
 			runnable.run();

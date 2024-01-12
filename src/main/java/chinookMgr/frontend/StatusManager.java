@@ -7,6 +7,7 @@ import javax.swing.*;
 public abstract class StatusManager {
 	public static JLabel statusLabel;
 	private static HideThread hideThread;
+	public static int waitTime = 3000;
 
 	public static void showUpdate(@NotNull String status) {
 		statusLabel.setText(status);
@@ -33,7 +34,7 @@ public abstract class StatusManager {
 		@Override
 		public void run() {
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(waitTime);
 			} catch (InterruptedException e) {
 				StatusManager.hideThread = null;
 				return;

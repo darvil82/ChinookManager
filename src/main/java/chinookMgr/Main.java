@@ -1,6 +1,8 @@
 package chinookMgr;
 
+import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.MainMenu;
+import chinookMgr.shared.Utils;
 
 import javax.swing.*;
 

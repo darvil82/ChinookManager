@@ -2,6 +2,8 @@ package chinookMgr.backend.db.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Arrays;
+
 @Entity
 @jakarta.persistence.Table(name = "Customer", schema = "Chinook", catalog = "")
 public class CustomerEntity {
@@ -163,14 +165,14 @@ public class CustomerEntity {
 	}
 
 	@Basic
-	@Column(name = "Password", nullable = true, length = 32)
-	private String password;
+	@Column(name = "Password", nullable = true)
+	private byte[] password;
 
-	public String getPassword() {
+	public byte[] getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(byte[] password) {
 		this.password = password;
 	}
 
@@ -207,7 +209,7 @@ public class CustomerEntity {
 		if (fax != null ? !fax.equals(that.fax) : that.fax != null) return false;
 		if (email != null ? !email.equals(that.email) : that.email != null) return false;
 		if (supportRepId != null ? !supportRepId.equals(that.supportRepId) : that.supportRepId != null) return false;
-		if (password != null ? !password.equals(that.password) : that.password != null) return false;
+		if (!Arrays.equals(password, that.password)) return false;
 
 		return true;
 	}
@@ -227,7 +229,7 @@ public class CustomerEntity {
 		result = 31 * result + (fax != null ? fax.hashCode() : 0);
 		result = 31 * result + (email != null ? email.hashCode() : 0);
 		result = 31 * result + (supportRepId != null ? supportRepId.hashCode() : 0);
-		result = 31 * result + (password != null ? password.hashCode() : 0);
+		result = 31 * result + Arrays.hashCode(password);
 		result = 31 * result + (int)roles;
 		return result;
 	}
