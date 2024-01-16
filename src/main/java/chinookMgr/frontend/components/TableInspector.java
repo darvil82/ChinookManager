@@ -24,6 +24,7 @@ public class TableInspector<T> implements View {
 	private JLabel lblPagesTotal;
 	private JPanel mainPanel;
 	private JLabel txtResultCount;
+	private JScrollPane tableScrollPane;
 	public static final int PAGE_SIZE = 100;
 
 	private Querier query;
@@ -119,6 +120,7 @@ public class TableInspector<T> implements View {
 
 		this.numPage.setValue(page + 1);
 		this.currentPage = page;
+		this.tableScrollPane.getVerticalScrollBar().setValue(0);
 
 		this.btnBack.setEnabled(page > 0);
 		this.btnForward.setEnabled(page < this.pageCount - 1);
