@@ -3,9 +3,9 @@ package chinookMgr.frontend;
 
 import chinookMgr.backend.User;
 import chinookMgr.backend.UserManager;
+import chinookMgr.frontend.components.Toolbar;
 import chinookMgr.frontend.toolViews.TableTestView;
 import chinookMgr.frontend.toolViews.TestView;
-import chinookMgr.frontend.components.Toolbar;
 import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,8 +29,8 @@ public class MainMenu extends JFrame {
 		super("Chinook Manager");
 		this.setContentPane(this.mainPanel);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setMinimumSize(new Dimension(500, 300));
-		this.setPreferredSize(new Dimension(800, 500));
+		this.setMinimumSize(new Dimension(600, 400));
+		this.setPreferredSize(new Dimension(800, 525));
 		this.pack();
 		this.build();
 	}

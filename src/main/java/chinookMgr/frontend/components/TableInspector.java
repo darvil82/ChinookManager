@@ -12,7 +12,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.*;
+import java.util.function.Function;
 
 public class TableInspector<T> implements View {
 	private JTextField inputSearch;
@@ -95,15 +95,12 @@ public class TableInspector<T> implements View {
 			this.setPage(0);
 		}
 
-		this.resultTable.revalidate();
 		this.txtResultCount.setText(valueCount + " resultado/s");
 	}
 
 	private void clearData() {
 		this.getTableModel().clear();
 		this.txtResultCount.setText("0 resultados");
-		this.resultTable.revalidate();
-		this.resultTable.repaint();
 	}
 
 	private void setPage(int page) {
@@ -120,8 +117,6 @@ public class TableInspector<T> implements View {
 				.forEach(r -> this.getTableModel().addItem((T)r));
 		}
 
-		this.resultTable.revalidate();
-		this.resultTable.repaint();
 		this.numPage.setValue(page + 1);
 		this.currentPage = page;
 
