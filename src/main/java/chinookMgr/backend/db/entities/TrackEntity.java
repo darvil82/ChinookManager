@@ -141,4 +141,10 @@ public class TrackEntity {
 		result = 31 * result + (unitPrice != null ? unitPrice.hashCode() : 0);
 		return result;
 	}
+
+
+	@Override
+	public String toString() {
+		return this.name;
+	}
 }
