@@ -1,12 +1,15 @@
 package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.UserManager;
-import chinookMgr.frontend.*;
+import chinookMgr.frontend.LoadingManager;
+import chinookMgr.frontend.StatusManager;
+import chinookMgr.frontend.ToolView;
+import chinookMgr.frontend.ViewStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class LoginView implements ToolView {
+public class LoginView extends ToolView {
 	private JTextField inputEmail;
 	private JPanel mainPanel;
 	private JPasswordField inputPassword;

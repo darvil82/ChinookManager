@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class TrackView implements ToolView {
+public class TrackView extends ToolView {
 	private JTextField txtName;
 	private JTextField txtComposer;
 	private JPanel mainPanel;

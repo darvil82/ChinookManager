@@ -2,10 +2,14 @@ package chinookMgr.frontend;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface ToolView extends View {
+public abstract class ToolView extends View {
 	public abstract @NotNull String getName();
 
-	public default boolean disableBackButton() {
+	public boolean disableBackButton() {
 		return false;
+	}
+
+	public static abstract class Supplier<T> extends ToolView {
+		protected abstract T submit();
 	}
 }

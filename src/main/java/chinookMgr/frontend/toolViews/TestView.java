@@ -2,13 +2,12 @@ package chinookMgr.frontend.toolViews;
 
 import chinookMgr.frontend.StatusManager;
 import chinookMgr.frontend.ToolView;
-import chinookMgr.frontend.View;
 import chinookMgr.frontend.ViewStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class TestView implements ToolView {
+public class TestView extends ToolView {
 	private JPanel mainContainer;
 	private JButton openSubButton;
 	private JLabel txt;

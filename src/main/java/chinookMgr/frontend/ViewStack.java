@@ -3,13 +3,15 @@ package chinookMgr.frontend;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.tools.Tool;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class ViewStack {
 	private static ArrayList<ToolView> views = new ArrayList<>();
+	private static HashMap<ToolView.Supplier<?>, Consumer<?>> awaiters = new HashMap<>();
 	public static @Nullable Consumer<ToolView> onViewChange;
+
 
 	private static void notifyViewChange() {
 		if (onViewChange == null) return;
@@ -18,20 +20,35 @@ public class ViewStack {
 
 	public static void push(@NotNull ToolView view) {
 		views.add(view);
-		getTop().onReMount(null);
+		notifyViewChange();
+	}
+
+	public static <T> void pushAwait(@NotNull ToolView.Supplier<T> view, Consumer<T> onPop) {
+		views.add(view);
+		awaiters.put(view, onPop);
 		notifyViewChange();
 	}
 
 	public static void replace(@NotNull ToolView view) {
 		views.clear();
 		views.add(view);
-		getTop().onReMount(null);
+		awaiters.clear();
 		notifyViewChange();
 	}
 
 	public static void pop() {
 		var prevTop = getTop();
 		views.remove(views.size() - 1);
+		var newTop = getTop();
+
+		if (prevTop instanceof ToolView.Supplier supplier) {
+			var callback = (Consumer<Object>)awaiters.get(supplier);
+			if (callback != null) {
+				callback.accept(supplier.submit());
+				awaiters.remove(supplier);
+			}
+		}
+
 		notifyViewChange();
 		getTop().onReMount(prevTop);
 	}

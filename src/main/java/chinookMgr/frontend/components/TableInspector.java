@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class TableInspector<T> implements View {
+public class TableInspector<T> extends View {
 	private JTextField inputSearch;
 	private JButton btnNew;
 	private JTable resultTable;

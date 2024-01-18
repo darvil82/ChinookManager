@@ -2,13 +2,12 @@ package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.ToolView;
-import chinookMgr.frontend.View;
 import chinookMgr.frontend.ViewStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class WelcomeView implements ToolView {
+public class WelcomeView extends ToolView {
 	private JPanel mainPanel;
 	private JButton btnLogin;
 	private JLabel txtWelcome;
