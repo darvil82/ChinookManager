@@ -1,27 +1,26 @@
 package chinookMgr.frontend.toolViews;
 
-import chinookMgr.backend.db.HibernateUtil;
-import chinookMgr.backend.db.entities.ArtistEntity;
 import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.View;
+import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.jetbrains.annotations.NotNull;
 
-import javax.sound.midi.Track;
 import javax.swing.*;
-import java.util.function.Function;
 
 public class TableTestView implements ToolView {
 	private JPanel mainPanel;
 	private JPanel tableContainer;
 
 	public TableTestView() {
-		View.insert(this.tableContainer, new TableInspector<TrackEntity>(TrackEntity.class, (q, input) -> {
-			return q.apply("name like ?1").setParameter(1, "%" + input + "%");
-		}));
+		View.insert(
+			this.tableContainer,
+			TableInspector.create(TrackEntity.class)
+				.withQuerier("from TrackEntity where name like :search")
+				.withCounter("select count(*) from TrackEntity where name like :search")
+				.withRowClick(t -> ViewStack.push(new TrackView(t)))
+		);
 
 	}
 
