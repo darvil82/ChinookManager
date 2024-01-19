@@ -44,7 +44,8 @@ public class ViewStack {
 		if (prevTop instanceof ToolView.Supplier supplier) {
 			var callback = (Consumer<Object>)awaiters.get(supplier);
 			if (callback != null) {
-				callback.accept(supplier.submit());
+				var result = supplier.submit();
+				if (result != null) callback.accept(result);
 				awaiters.remove(supplier);
 			}
 		}
@@ -52,6 +53,8 @@ public class ViewStack {
 		notifyViewChange();
 		getTop().onReMount(prevTop);
 	}
+
+//	public static void popSubmit()
 
 	public static @NotNull ToolView getTop() {
 		return views.get(views.size() - 1);

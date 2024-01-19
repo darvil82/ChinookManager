@@ -16,7 +16,7 @@ public class Main {
 			"""
    				Ha ocurrido un error al establecer el tema. Se usará el tema por defecto de Java.
    				Tenga en cuenta que esto causará problemas visuales y no se recomienda usar la aplicación.
-   				
+
    				¿Continuar de todas formas?
 			""",
 				"Error",

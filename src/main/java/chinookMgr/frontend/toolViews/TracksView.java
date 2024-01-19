@@ -8,17 +8,28 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class TableTestView extends ToolView.Supplier<TrackEntity> {
+public class TracksView extends ToolView.Supplier<TrackEntity> {
 	private JPanel mainPanel;
 	private JPanel tableContainer;
+	private TrackEntity selectedTrack;
 
-	public TableTestView() {
+	public TracksView() {
+		this(false);
+	}
+
+	public TracksView(boolean selector) {
 		this.insertView(
 			this.tableContainer,
 			TableInspector.create(TrackEntity.class)
 				.withQuerier("from TrackEntity where name like :search")
 				.withCounter("select count(*) from TrackEntity where name like :search")
-				.withRowClick(t -> ViewStack.push(new TrackView(t)))
+				.withRowClick(t -> {
+					if (selector) {
+						ViewStack.pop();
+					} else {
+						ViewStack.push(new TrackView(t));
+					}
+				})
 		);
 	}
 
@@ -29,11 +40,11 @@ public class TableTestView extends ToolView.Supplier<TrackEntity> {
 
 	@Override
 	public @NotNull String getName() {
-		return "Table Test";
+		return "Canciones";
 	}
 
 	@Override
 	protected TrackEntity submit() {
-		return null;
+		return this.selectedTrack;
 	}
 }

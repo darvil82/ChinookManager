@@ -63,4 +63,9 @@ public class AlbumEntity {
 		result = 31 * result + artistId;
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return this.getTitle();
+	}
 }

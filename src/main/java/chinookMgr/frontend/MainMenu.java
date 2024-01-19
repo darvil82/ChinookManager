@@ -4,8 +4,8 @@ package chinookMgr.frontend;
 import chinookMgr.backend.User;
 import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.components.Toolbar;
-import chinookMgr.frontend.toolViews.TableTestView;
 import chinookMgr.frontend.toolViews.TestView;
+import chinookMgr.frontend.toolViews.TracksView;
 import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,7 +85,7 @@ public class MainMenu extends JFrame {
 
 		this.toolbar.addOption("Inicio", e -> ViewStack.replace(new WelcomeView()));
 		this.toolbar.addOption("test 1", e -> ViewStack.replace(new TestView()));
-		this.toolbar.addOption("test 2", e -> ViewStack.replace(new TableTestView()));
+		this.toolbar.addOption("test 2", e -> ViewStack.replace(new TracksView()));
 
 		ViewStack.onViewChange = this::onViewStackChange;
 		LoadingManager.onTaskChange = this::onLoadingTaskChange;
