@@ -8,10 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class AlbumsView extends ToolView.Supplier<AlbumEntity> {
+public class AlbumsView extends ToolView {
 	private JPanel mainPanel;
 	private JPanel tableContainer;
-	private AlbumEntity selectedAlbum;
 
 	public AlbumsView() {
 		this(false);
@@ -24,12 +23,8 @@ public class AlbumsView extends ToolView.Supplier<AlbumEntity> {
 				.withQuerier("from AlbumEntity where title like :search")
 				.withCounter("select count(*) from AlbumEntity where title like :search")
 				.withRowClick(t -> {
-					if (selector) {
-						this.selectedAlbum = t;
-						ViewStack.pop();
-					} else {
-//						ViewStack.push(new TrackView(t));
-					}
+					if (selector)
+						ViewStack.popSubmit(t);
 				})
 		);
 	}
@@ -42,10 +37,5 @@ public class AlbumsView extends ToolView.Supplier<AlbumEntity> {
 	@Override
 	public @NotNull String getName() {
 		return "Álbumes";
-	}
-
-	@Override
-	protected AlbumEntity submit() {
-		return this.selectedAlbum;
 	}
 }

@@ -2,12 +2,12 @@ package chinookMgr.frontend.components;
 
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.ListTableModel;
+import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.View;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -31,7 +31,7 @@ public class TableInspector<T> extends View {
 
 	private final String querier;
 	private final String counter;
-	private Class<T> entClass;
+	private final Class<T> entClass;
 	private Consumer<T> onRowClick;
 
 	private int pageCount = 0;
@@ -51,10 +51,11 @@ public class TableInspector<T> extends View {
 	}
 
 	public static <T> Builder<T> create(Class<T> clazz) {
-		return new Builder(clazz);
+		return new Builder<>(clazz);
 	}
 
 	private void build() {
+		SwingUtilities.invokeLater(() -> this.inputSearch.requestFocus());
 		this.resultTable.setModel(new ListTableModel<>(new ArrayList<>(), List.of("Item")));
 		this.resultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.resultTable.addMouseListener(new MouseAdapter() {
@@ -80,24 +81,14 @@ public class TableInspector<T> extends View {
 		// set bottom border
 		this.numPage.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(0, 0, 0, 0.4f)));
 
-		this.inputSearch.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				TableInspector.this.updateData();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				TableInspector.this.updateData();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
+		this.inputSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyReleased(java.awt.event.KeyEvent evt) {
 				TableInspector.this.updateData();
 			}
 		});
 	}
 
+	@SuppressWarnings("unchecked")
 	private ListTableModel<T> getTableModel() {
 		return (ListTableModel<T>)this.resultTable.getModel();
 	}
@@ -159,8 +150,13 @@ public class TableInspector<T> extends View {
 		return this.mainPanel;
 	}
 
+	@Override
+	protected void onReMount(@Nullable ToolView prevView) {
+		this.inputSearch.requestFocus();
+	}
+
 	public static class Builder<T> implements chinookMgr.shared.Builder<TableInspector<T>> {
-		private Class<T> entClass;
+		private final Class<T> entClass;
 		private String querier;
 		private String counter;
 		private Consumer<T> onRowClick;
@@ -186,6 +182,9 @@ public class TableInspector<T> extends View {
 
 		@Override
 		public TableInspector<T> build() {
+			if (this.querier == null || this.counter == null)
+				throw new IllegalStateException("Querier and counter must be set");
+
 			var ti = new TableInspector<>(this.entClass, this.querier, this.counter);
 			ti.onRowClick = this.onRowClick;
 			return ti;

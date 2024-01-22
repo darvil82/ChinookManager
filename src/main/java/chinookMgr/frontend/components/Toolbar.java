@@ -53,9 +53,12 @@ public class Toolbar extends JComponent {
 
 	public class ToolButton extends JButton {
 		private boolean isActive = false;
+		private final Color originalBackground = this.getBackground();
 
 		public ToolButton(String name, ActionListener listener) {
 			super(name);
+			this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			this.setFont(this.getFont().deriveFont(16f).deriveFont(Font.BOLD));
 			this.addActionListener(e -> {
 				Toolbar.this.deactivateAll();
 				this.setActive(true);
@@ -65,32 +68,12 @@ public class Toolbar extends JComponent {
 
 		public void setActive(boolean active) {
 			this.isActive = active;
+			this.setBackground(active ? new Color(0, 0, 0.05f, 0.4f) : this.originalBackground);
 			this.repaint();
 		}
 
 		public boolean isActive() {
 			return this.isActive;
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			{
-				if (this.getModel().isPressed())
-					g.setColor(new Color(255, 255, 255, 25));
-				else if (this.isActive())
-					g.setColor(new Color(255, 255, 255, 50));
-				else if (this.getModel().isRollover() || this.isActive())
-					g.setColor(new Color(0, 0, 0, 50));
-				else
-					g.setColor(new Color(0, 0, 0, 0));
-
-				g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			}
-
-			g.setColor(Color.WHITE);
-			g.setFont(g.getFont().deriveFont(Font.BOLD, 15f));
-
-			g.drawString(this.getText(), 10, this.getHeight() / 2 + g.getFontMetrics().getHeight() / 2 - 2);
 		}
 	}
 }

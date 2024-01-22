@@ -11,7 +11,7 @@ public class TestView extends ToolView {
 	private JPanel mainContainer;
 	private JButton openSubButton;
 	private JLabel txt;
-	private int current;
+	private final int current;
 
 	public TestView(int current) {
 		this.current = current;
@@ -27,7 +27,7 @@ public class TestView extends ToolView {
 	}
 
 	@Override
-	public JPanel getPanel() {
+	public @NotNull JPanel getPanel() {
 		return this.mainContainer;
 	}
 

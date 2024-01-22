@@ -11,7 +11,6 @@ import javax.swing.*;
 public class TracksView extends ToolView.Supplier<TrackEntity> {
 	private JPanel mainPanel;
 	private JPanel tableContainer;
-	private TrackEntity selectedTrack;
 
 	public TracksView() {
 		this(false);
@@ -24,11 +23,10 @@ public class TracksView extends ToolView.Supplier<TrackEntity> {
 				.withQuerier("from TrackEntity where name like :search")
 				.withCounter("select count(*) from TrackEntity where name like :search")
 				.withRowClick(t -> {
-					if (selector) {
-						ViewStack.pop();
-					} else {
+					if (selector)
+						ViewStack.popSubmit(t);
+					else
 						ViewStack.push(new TrackView(t));
-					}
 				})
 		);
 	}
@@ -41,10 +39,5 @@ public class TracksView extends ToolView.Supplier<TrackEntity> {
 	@Override
 	public @NotNull String getName() {
 		return "Canciones";
-	}
-
-	@Override
-	protected TrackEntity submit() {
-		return this.selectedTrack;
 	}
 }

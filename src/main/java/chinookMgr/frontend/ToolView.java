@@ -9,7 +9,5 @@ public abstract class ToolView extends View {
 		return false;
 	}
 
-	public static abstract class Supplier<T> extends ToolView {
-		protected abstract T submit();
-	}
+	public static abstract class Supplier<T> extends ToolView { }
 }

@@ -16,6 +16,7 @@ public class LoginView extends ToolView {
 	private JButton btnLogin;
 
 	public LoginView() {
+		SwingUtilities.invokeLater(() -> this.inputEmail.grabFocus());
 		this.inputEmail.addActionListener(e -> this.login());
 		this.inputPassword.addActionListener(e -> this.login());
 		this.btnLogin.addActionListener(e -> this.login());

@@ -8,14 +8,14 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class ViewStack {
-	private static ArrayList<ToolView> views = new ArrayList<>();
-	private static HashMap<ToolView.Supplier<?>, Consumer<?>> awaiters = new HashMap<>();
+	private static final ArrayList<ToolView> views = new ArrayList<>();
+	private static final HashMap<ToolView.Supplier<?>, Consumer<?>> awaiters = new HashMap<>();
 	public static @Nullable Consumer<ToolView> onViewChange;
 
 
 	private static void notifyViewChange() {
 		if (onViewChange == null) return;
-		onViewChange.accept(views.size() == 0 ? null : getTop());
+		onViewChange.accept(views.isEmpty() ? null : getTop());
 	}
 
 	public static void push(@NotNull ToolView view) {
@@ -38,14 +38,25 @@ public class ViewStack {
 
 	public static void pop() {
 		var prevTop = getTop();
-		views.remove(views.size() - 1);
-		var newTop = getTop();
+		views.removeLast();
 
-		if (prevTop instanceof ToolView.Supplier supplier) {
+		if (prevTop instanceof ToolView.Supplier<?> supplier) {
+			awaiters.remove(supplier);
+		}
+
+		notifyViewChange();
+		getTop().onReMount(prevTop);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void popSubmit(@NotNull Object obj) {
+		var prevTop = getTop();
+		views.removeLast();
+
+		if (prevTop instanceof ToolView.Supplier<?> supplier) {
 			var callback = (Consumer<Object>)awaiters.get(supplier);
 			if (callback != null) {
-				var result = supplier.submit();
-				if (result != null) callback.accept(result);
+				callback.accept(obj);
 				awaiters.remove(supplier);
 			}
 		}
@@ -54,10 +65,8 @@ public class ViewStack {
 		getTop().onReMount(prevTop);
 	}
 
-//	public static void popSubmit()
-
 	public static @NotNull ToolView getTop() {
-		return views.get(views.size() - 1);
+		return views.getLast();
 	}
 
 	public static @NotNull String getAbsPath() {
