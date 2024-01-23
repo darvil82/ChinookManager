@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class AlbumsView extends ToolView {
+public class AlbumsView extends ToolView.Supplier<AlbumEntity> {
 	private JPanel mainPanel;
 	private JPanel tableContainer;
 

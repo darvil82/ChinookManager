@@ -68,7 +68,7 @@ public class Toolbar extends JComponent {
 
 		public void setActive(boolean active) {
 			this.isActive = active;
-			this.setBackground(active ? new Color(0, 0, 0.05f, 0.4f) : this.originalBackground);
+			this.setBackground(active ? this.originalBackground : new Color(0, 0, 0.05f, 0.4f));
 			this.repaint();
 		}
 
