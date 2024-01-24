@@ -12,6 +12,7 @@ import chinookMgr.frontend.toolViews.test.AlbumsView;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.math.BigDecimal;
 
 public class TrackView extends ToolView implements Saveable {
 	private JTextField txtName;
@@ -19,25 +20,57 @@ public class TrackView extends ToolView implements Saveable {
 	private JPanel mainPanel;
 	private JButton btnAlbum;
 	private JPanel savePanel;
-	private JSpinner spinner1;
-	private JSpinner spinner2;
-	private JSpinner spinner3;
+	private JSpinner numMinutes;
+	private JSpinner numPrice;
+	private JSpinner numSeconds;
 
-	private final TrackEntity track;
+	private TrackEntity track;
 	private AlbumEntity selectedAlbum;
 
 
 	public TrackView(TrackEntity track) {
 		this.track = track;
+		this.buildForTrack();
+	}
 
-		this.txtName.setText(track.getName());
-		this.txtComposer.setText(track.getComposer());
+	public TrackView() {
+		this.track = null;
+		this.buildForNew();
+	}
 
-		this.selectedAlbum = Album.getById(track.getAlbumId());
+	private void buildForNew() {
+		this.build();
+	}
+
+	private void buildForTrack() {
+		this.build();
+
+		this.txtName.setText(this.track.getName());
+		this.txtComposer.setText(this.track.getComposer());
+		this.numPrice.setValue(this.track.getUnitPrice().doubleValue());
+		this.selectedAlbum = Album.getById(this.track.getAlbumId());
 		this.btnAlbum.setText(this.selectedAlbum.getTitle());
 
+		int millis = track.getMilliseconds();
+		int minutes = millis / 60000;
+		int seconds = (millis % 60000) / 1000;
+
+		this.numMinutes.setValue(minutes);
+		this.numSeconds.setValue(seconds);
+	}
+
+	private void build() {
 		this.btnAlbum.addActionListener(e -> ViewStack.pushAwait(new AlbumsView(true), this::selectAlbum));
+		SwingUtilities.invokeLater(() -> this.txtName.grabFocus());
 		this.insertView(this.savePanel, new SaveOption(this));
+
+		this.numPrice.setModel(new SpinnerNumberModel(0, 0., 1000., 0.01));
+		this.numPrice.setEditor(new JSpinner.NumberEditor(this.numPrice, "0.00 €"));
+
+		this.numMinutes.setModel(new SpinnerNumberModel(0, 0, 1000, 1));
+		this.numMinutes.setEditor(new JSpinner.NumberEditor(this.numMinutes, "0 min"));
+		this.numSeconds.setModel(new SpinnerNumberModel(0, 0, 59, 1));
+		this.numSeconds.setEditor(new JSpinner.NumberEditor(this.numSeconds, "0 s"));
 	}
 
 	private void selectAlbum(@NotNull AlbumEntity album) {
@@ -52,22 +85,37 @@ public class TrackView extends ToolView implements Saveable {
 
 	@Override
 	public @NotNull String getName() {
-		return "Canción (" + this.txtName.getText() + ")";
+		if (this.track == null)
+			return "Nueva canción";
+		else
+			return "Canción (" + this.txtName.getText() + ")";
 	}
 
 	@Override
 	public void save() {
+		boolean isNew = this.track == null;
+		if (isNew)
+			this.track = new TrackEntity();
+
 		try (var session = HibernateUtil.getSession()) {
 			session.beginTransaction();
 
 			this.track.setName(this.txtName.getText());
 			this.track.setComposer(this.txtComposer.getText());
 			this.track.setAlbumId(this.selectedAlbum.getAlbumId());
+			this.track.setMilliseconds(
+				((int)this.numMinutes.getValue() * 60000) + ((int)this.numSeconds.getValue() * 1000)
+			);
+			this.track.setUnitPrice(BigDecimal.valueOf((double)this.numPrice.getValue()));
 
-			session.merge(this.track);
+			if (isNew) {
+				session.persist(this.track);
+			} else
+				session.merge(this.track);
 			session.getTransaction().commit();
 		}
 
 		ViewStack.pop();
 	}
+
 }

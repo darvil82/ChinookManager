@@ -26,9 +26,13 @@ public class LoginView extends ToolView {
 		this.btnLogin.setEnabled(false);
 		this.inputEmail.setEnabled(false);
 		this.inputPassword.setEnabled(false);
+		StatusManager.disableBackButton();
 
 		LoadingManager.pushPop("Iniciando sesión...", () -> {
-			if (UserManager.login(this.inputEmail.getText().trim(), new String(this.inputPassword.getPassword()))) {
+			boolean loginResult = UserManager.login(this.inputEmail.getText().trim(), new String(this.inputPassword.getPassword()));
+			StatusManager.enableBackButton();
+
+			if (loginResult) {
 				ViewStack.pop();
 				StatusManager.showUpdate("Sesión iniciada.");
 			} else {

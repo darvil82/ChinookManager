@@ -23,7 +23,7 @@ public class ViewStack {
 		notifyViewChange();
 	}
 
-	public static <T> void pushAwait(@NotNull ToolView.Supplier<T> view, Consumer<T> onPop) {
+	public static <T> void pushAwait(@NotNull ToolView.Supplier<T> view, @NotNull Consumer<T> onPop) {
 		views.add(view);
 		awaiters.put(view, onPop);
 		notifyViewChange();
@@ -34,6 +34,7 @@ public class ViewStack {
 		views.add(view);
 		awaiters.clear();
 		notifyViewChange();
+		getTop().onMount(null);
 	}
 
 	public static void pop() {
@@ -45,7 +46,7 @@ public class ViewStack {
 		}
 
 		notifyViewChange();
-		getTop().onReMount(prevTop);
+		getTop().onMount(prevTop);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -62,7 +63,7 @@ public class ViewStack {
 		}
 
 		notifyViewChange();
-		getTop().onReMount(prevTop);
+		getTop().onMount(prevTop);
 	}
 
 	public static @NotNull ToolView getTop() {

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class MainMenu extends JFrame {
 	private JPanel mainPanel;
@@ -78,6 +79,10 @@ public class MainMenu extends JFrame {
 		this.btnAccount.setVisible(newUser != null);
 	}
 
+	private synchronized void onBackButtonChange(boolean enabled) {
+		this.btnPrev.setEnabled(enabled);
+	}
+
 	public void build() {
 		this.toolbar = new Toolbar();
 		this.toolbarContainer.add(this.toolbar);
@@ -87,10 +92,26 @@ public class MainMenu extends JFrame {
 		this.toolbar.addOption("test 1", e -> ViewStack.replace(new TestView()));
 		this.toolbar.addOption("test 2", e -> ViewStack.replace(new TracksView()));
 
+		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+			KeyStroke.getKeyStroke("ctrl BACK_SPACE"), "popViewStack"
+		);
+		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+			KeyStroke.getKeyStroke("alt LEFT"), "popViewStack"
+		);
+		this.getRootPane().getActionMap().put("popViewStack", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!btnPrev.isEnabled()) return;
+				ViewStack.pop();
+			}
+		});
+
+
 		ViewStack.onViewChange = this::onViewStackChange;
 		LoadingManager.onTaskChange = this::onLoadingTaskChange;
 		UserManager.onUserChange = this::onUserChange;
 		StatusManager.statusLabel = this.txtStatus;
+		StatusManager.onBackButtonChange = this::onBackButtonChange;
 		this.onViewStackChange(null);
 	}
 }

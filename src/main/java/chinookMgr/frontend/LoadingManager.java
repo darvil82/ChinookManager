@@ -29,7 +29,7 @@ public class LoadingManager {
 	}
 
 	public static void pop() {
-		tasks.remove(tasks.size() - 1);
+		tasks.removeLast();
 		notifyTaskChange();
 	}
 
@@ -45,13 +45,13 @@ public class LoadingManager {
 	}
 
 	private static @NotNull LoadingManager.LoadingTask getTop() {
-		return tasks.get(tasks.size() - 1);
+		return tasks.getLast();
 	}
 
 	private static void notifyTaskChange() {
 		if (onTaskChange == null) return;
 
-		onTaskChange.accept(tasks.size() == 0 ? null : getTop());
+		onTaskChange.accept(tasks.isEmpty() ? null : getTop());
 	}
 
 	public static class LoadingTask {

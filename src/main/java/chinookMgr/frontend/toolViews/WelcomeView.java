@@ -26,13 +26,12 @@ public class WelcomeView extends ToolView {
 		return "Inicio";
 	}
 
-	@Override
 	public boolean disableBackButton() {
 		return true;
 	}
 
 	@Override
-	public void onReMount(ToolView prevView) {
+	public void onMount(ToolView prevView) {
 		if (!UserManager.isLoggedIn()) return;
 
 		this.btnLogin.setVisible(false);

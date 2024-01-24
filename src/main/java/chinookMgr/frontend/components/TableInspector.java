@@ -33,6 +33,7 @@ public class TableInspector<T> extends View {
 	private final String counter;
 	private final Class<T> entClass;
 	private Consumer<T> onRowClick;
+	private Runnable onNew;
 
 	private int pageCount = 0;
 	private int currentPage = 0;
@@ -56,6 +57,10 @@ public class TableInspector<T> extends View {
 
 	private void build() {
 		SwingUtilities.invokeLater(() -> this.inputSearch.requestFocus());
+		this.btnNew.addActionListener(e -> {
+			if (this.onNew == null) return;
+			this.onNew.run();
+		});
 		this.resultTable.setModel(new ListTableModel<>(new ArrayList<>(), List.of("Item")));
 		this.resultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.resultTable.addMouseListener(new MouseAdapter() {
@@ -151,7 +156,7 @@ public class TableInspector<T> extends View {
 	}
 
 	@Override
-	protected void onReMount(@Nullable ToolView prevView) {
+	protected void onMount(@Nullable ToolView prevView) {
 		this.inputSearch.requestFocus();
 	}
 
@@ -160,6 +165,7 @@ public class TableInspector<T> extends View {
 		private String querier;
 		private String counter;
 		private Consumer<T> onRowClick;
+		private Runnable onNewClick;
 
 		private Builder(Class<T> clazz) {
 			this.entClass = clazz;
@@ -180,6 +186,11 @@ public class TableInspector<T> extends View {
 			return this;
 		}
 
+		public Builder<T> withNewClick(@NotNull Runnable onAddClick) {
+			this.onNewClick = onAddClick;
+			return this;
+		}
+
 		@Override
 		public TableInspector<T> build() {
 			if (this.querier == null || this.counter == null)
@@ -187,6 +198,8 @@ public class TableInspector<T> extends View {
 
 			var ti = new TableInspector<>(this.entClass, this.querier, this.counter);
 			ti.onRowClick = this.onRowClick;
+			ti.onNew = this.onNewClick;
+
 			return ti;
 		}
 	}

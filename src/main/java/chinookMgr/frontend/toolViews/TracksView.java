@@ -28,6 +28,7 @@ public class TracksView extends ToolView.Supplier<TrackEntity> {
 					else
 						ViewStack.push(new TrackView(t));
 				})
+				.withNewClick(() -> ViewStack.push(new TrackView()))
 		);
 	}
 
