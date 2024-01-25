@@ -37,6 +37,7 @@
         </constraints>
         <properties>
           <text value="+"/>
+          <visible value="false"/>
         </properties>
       </component>
       <grid id="102f4" layout-manager="GridLayoutManager" row-count="1" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="-1">

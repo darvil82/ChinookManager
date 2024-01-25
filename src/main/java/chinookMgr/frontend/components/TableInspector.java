@@ -4,6 +4,7 @@ import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.ListTableModel;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.View;
+import chinookMgr.shared.Builder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +34,6 @@ public class TableInspector<T> extends View {
 	private final String counter;
 	private final Class<T> entClass;
 	private Consumer<T> onRowClick;
-	private Runnable onNew;
 
 	private int pageCount = 0;
 	private int currentPage = 0;
@@ -57,10 +57,6 @@ public class TableInspector<T> extends View {
 
 	private void build() {
 		SwingUtilities.invokeLater(() -> this.inputSearch.requestFocus());
-		this.btnNew.addActionListener(e -> {
-			if (this.onNew == null) return;
-			this.onNew.run();
-		});
 		this.resultTable.setModel(new ListTableModel<>(new ArrayList<>(), List.of("Item")));
 		this.resultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.resultTable.addMouseListener(new MouseAdapter() {
@@ -91,6 +87,11 @@ public class TableInspector<T> extends View {
 				TableInspector.this.updateData();
 			}
 		});
+	}
+
+	public void addNewButton(@NotNull Runnable onClick) {
+		this.btnNew.setVisible(true);
+		this.btnNew.addActionListener(e -> onClick.run());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -198,7 +199,8 @@ public class TableInspector<T> extends View {
 
 			var ti = new TableInspector<>(this.entClass, this.querier, this.counter);
 			ti.onRowClick = this.onRowClick;
-			ti.onNew = this.onNewClick;
+			if (this.onNewClick != null)
+				ti.addNewButton(this.onNewClick);
 
 			return ti;
 		}
