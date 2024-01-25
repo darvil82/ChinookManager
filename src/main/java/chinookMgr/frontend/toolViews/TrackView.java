@@ -1,13 +1,16 @@
 package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.Album;
+import chinookMgr.backend.MediaType;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.AlbumEntity;
+import chinookMgr.backend.db.entities.MediaTypeEntity;
 import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.SaveOption;
+import chinookMgr.frontend.components.TableComboBox;
 import chinookMgr.frontend.toolViews.test.AlbumsView;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +26,9 @@ public class TrackView extends ToolView implements Saveable {
 	private JSpinner numMinutes;
 	private JSpinner numPrice;
 	private JSpinner numSeconds;
+	private JPanel playlistsPanel;
+	private JPanel mediaTypeContainer;
+	private TableComboBox<MediaTypeEntity> mediaTypeComboBox;
 
 	private TrackEntity track;
 	private AlbumEntity selectedAlbum;
@@ -50,6 +56,7 @@ public class TrackView extends ToolView implements Saveable {
 		this.numPrice.setValue(this.track.getUnitPrice().doubleValue());
 		this.selectedAlbum = Album.getById(this.track.getAlbumId());
 		this.btnAlbum.setText(this.selectedAlbum.getTitle());
+		this.mediaTypeComboBox.setSelectedItem(MediaType.getById(this.track.getMediaTypeId()));
 
 		int millis = track.getMilliseconds();
 		int minutes = millis / 60000;
@@ -60,8 +67,13 @@ public class TrackView extends ToolView implements Saveable {
 	}
 
 	private void build() {
-		this.btnAlbum.addActionListener(e -> ViewStack.pushAwait(new AlbumsView(true), this::selectAlbum));
 		SwingUtilities.invokeLater(() -> this.txtName.grabFocus());
+
+		this.btnAlbum.addActionListener(e -> ViewStack.pushAwait(new AlbumsView(true), this::selectAlbum));
+		this.mediaTypeContainer.add(
+			this.mediaTypeComboBox = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName)
+		);
+
 		this.insertView(this.savePanel, new SaveOption(this));
 
 		this.numPrice.setModel(new SpinnerNumberModel(0, 0., 1000., 0.01));
@@ -94,6 +106,7 @@ public class TrackView extends ToolView implements Saveable {
 	@Override
 	public void save() {
 		boolean isNew = this.track == null;
+
 		if (isNew)
 			this.track = new TrackEntity();
 
@@ -107,11 +120,13 @@ public class TrackView extends ToolView implements Saveable {
 				((int)this.numMinutes.getValue() * 60000) + ((int)this.numSeconds.getValue() * 1000)
 			);
 			this.track.setUnitPrice(BigDecimal.valueOf((double)this.numPrice.getValue()));
+			this.track.setMediaTypeId(this.mediaTypeComboBox.getSelectedEntity().getMediaTypeId());
 
-			if (isNew) {
+			if (isNew)
 				session.persist(this.track);
-			} else
+			else
 				session.merge(this.track);
+
 			session.getTransaction().commit();
 		}
 
