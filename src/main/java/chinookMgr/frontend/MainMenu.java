@@ -3,9 +3,11 @@ package chinookMgr.frontend;
 
 import chinookMgr.backend.User;
 import chinookMgr.backend.UserManager;
+import chinookMgr.backend.entityHelpers.Track;
 import chinookMgr.frontend.components.Toolbar;
+import chinookMgr.frontend.toolViews.GenericTableView;
 import chinookMgr.frontend.toolViews.TestView;
-import chinookMgr.frontend.toolViews.TracksView;
+import chinookMgr.frontend.toolViews.TrackView;
 import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,7 +92,10 @@ public class MainMenu extends JFrame {
 
 		this.toolbar.addOption("Inicio", e -> ViewStack.replace(new WelcomeView()));
 		this.toolbar.addOption("test 1", e -> ViewStack.replace(new TestView()));
-		this.toolbar.addOption("test 2", e -> ViewStack.replace(new TracksView()));
+		this.toolbar.addOption("test 2", e -> ViewStack.replace(
+			new GenericTableView<>("Canciones", Track.getTableInspectorBuilder())
+				.attachSelectionView(TrackView::new)
+		));
 
 		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 			KeyStroke.getKeyStroke("ctrl BACK_SPACE"), "popViewStack"
