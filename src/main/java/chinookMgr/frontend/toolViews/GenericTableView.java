@@ -1,15 +1,12 @@
 package chinookMgr.frontend.toolViews;
 
-import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.ToolView;
-import chinookMgr.frontend.View;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.tools.Tool;
 import java.util.function.Consumer;
 import java.util.function.Function;
 

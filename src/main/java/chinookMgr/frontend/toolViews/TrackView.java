@@ -1,18 +1,16 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.db.entities.*;
 import chinookMgr.backend.entityHelpers.Album;
 import chinookMgr.backend.entityHelpers.Genre;
 import chinookMgr.backend.entityHelpers.MediaType;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
-import chinookMgr.backend.db.entities.AlbumEntity;
-import chinookMgr.backend.db.entities.GenreEntity;
-import chinookMgr.backend.db.entities.MediaTypeEntity;
-import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.SaveOption;
 import chinookMgr.frontend.components.TableComboBox;
+import chinookMgr.frontend.components.TableInspector;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -62,6 +60,12 @@ public class TrackView extends ToolView implements Saveable {
 		this.selectedGenre = Genre.getById(this.track.getGenreId());
 		this.btnGenre.setText(this.selectedGenre.getName());
 		this.comboMediaType.setSelectedItem(MediaType.getById(this.track.getMediaTypeId()));
+		this.playlistsPanel.setVisible(true);
+//		this.insertView(this.playlistsPanel, new GenericTableView<>(
+//			"Playlists", TableInspector.create(PlaylistEntity.class)
+//				.withQuerier("from PlaylistEntity p join PlaylistTrackEntity pt on p.playlistId = pt.playlistId where p.name like :search")
+//				.withCounter("select count(*) from PlaylistEntity where 'Name' like :search")
+//		));
 
 		int millis = track.getMilliseconds();
 		int minutes = millis / 60000;
