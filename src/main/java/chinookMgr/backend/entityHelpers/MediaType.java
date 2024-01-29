@@ -14,7 +14,7 @@ public abstract class MediaType {
 		}
 	}
 
-	public static TableInspector.Builder<MediaType> getTableInspectorBuilder() {
+	public static TableInspector<MediaType> getTableInspectorBuilder() {
 		return EntityHelper.getTableInspectorBuilder(MediaType.class, "name");
 	}
 }

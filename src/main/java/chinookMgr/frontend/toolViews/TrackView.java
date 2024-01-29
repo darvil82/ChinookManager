@@ -61,11 +61,18 @@ public class TrackView extends ToolView implements Saveable {
 		this.btnGenre.setText(this.selectedGenre.getName());
 		this.comboMediaType.setSelectedItem(MediaType.getById(this.track.getMediaTypeId()));
 		this.playlistsPanel.setVisible(true);
-//		this.insertView(this.playlistsPanel, new GenericTableView<>(
-//			"Playlists", TableInspector.create(PlaylistEntity.class)
-//				.withQuerier("from PlaylistEntity p join PlaylistTrackEntity pt on p.playlistId = pt.playlistId where p.name like :search")
-//				.withCounter("select count(*) from PlaylistEntity where 'Name' like :search")
-//		));
+		this.insertView(this.playlistsPanel, new GenericTableView<>(
+			"Playlists", new TableInspector<>(
+				(session, input) -> session.createQuery(
+					"select p from PlaylistEntity p, PlaylistTrackEntity pt where trackId = :id and p.playlistId = pt.playlistId"
+					, PlaylistEntity.class
+				)
+					.setParameter("id", this.track.getTrackId()),
+
+				(session, input) -> session.createQuery("select count(*) from PlaylistTrackEntity where trackId = :id", Long.class)
+					.setParameter("id", this.track.getTrackId())
+			)
+		));
 
 		int millis = track.getMilliseconds();
 		int minutes = millis / 60000;

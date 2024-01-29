@@ -14,10 +14,16 @@ public abstract class EntityHelper {
 		}
 	}
 
-	public static <T> TableInspector.Builder<T>
+	public static <T> TableInspector<T>
 	getTableInspectorBuilder(@NotNull Class<T> entityClass, @NotNull String searchField) {
-		return TableInspector.create(entityClass)
-			.withQuerier("from %s where %s like :search".formatted(entityClass.getSimpleName(), searchField))
-			.withCounter("select count(*) from %s where %s like :search".formatted(entityClass.getSimpleName(), searchField));
+		return new TableInspector<>(
+			(session, input) -> session.createQuery("from " + entityClass.getSimpleName() + " where :field like :input", entityClass)
+				.setParameter("input", "%" + input + "%")
+				.setParameter("field", searchField),
+
+			(session, input) -> session.createQuery("select count(*) from " + entityClass.getSimpleName() + " where :field like :input", Long.class)
+				.setParameter("input", "%" + input + "%")
+				.setParameter("field", searchField)
+		);
 	}
 }

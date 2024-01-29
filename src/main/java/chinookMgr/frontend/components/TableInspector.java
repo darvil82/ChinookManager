@@ -4,7 +4,7 @@ import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.ListTableModel;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.View;
-import chinookMgr.shared.Builder;
+import chinookMgr.shared.Querier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class TableInspector<T> extends View {
@@ -30,34 +31,28 @@ public class TableInspector<T> extends View {
 	private JScrollPane tableScrollPane;
 	public static final int PAGE_SIZE = 100;
 
-	private final String querier;
-	private final String counter;
-	private final Class<T> entClass;
+	private final Querier<T> querier;
+	private final Querier<Long> counter;
 	private Consumer<T> onRowClick;
 
 	private int pageCount = 0;
 	private int currentPage = 0;
 
 
-	private TableInspector(
-		Class<T> clazz,
-		@NotNull String querier,
-		@NotNull String counter
+	public TableInspector(
+		@NotNull Querier<T> querier,
+		@NotNull Querier<Long> counter
 	) {
 		this.querier = querier;
 		this.counter = counter;
-		this.entClass = clazz;
 		this.build();
 		this.updateData();
 	}
 
-	public static <T> Builder<T> create(Class<T> clazz) {
-		return new Builder<>(clazz);
-	}
-
 	private void build() {
 		SwingUtilities.invokeLater(() -> this.inputSearch.requestFocus());
-		this.resultTable.setModel(new ListTableModel<>(new ArrayList<>(), List.of("Item")));
+		this.resultTable.setModel(new ListTableModel<T>(new ArrayList<>(), List.of("Item")));
+
 		this.resultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.resultTable.addMouseListener(new MouseAdapter() {
 			@Override
@@ -79,6 +74,7 @@ public class TableInspector<T> extends View {
 				return null;
 			}
 		});
+
 		// set bottom border
 		this.numPage.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(0, 0, 0, 0.4f)));
 
@@ -89,10 +85,6 @@ public class TableInspector<T> extends View {
 		});
 	}
 
-	public void addNewButton(@NotNull Runnable onClick) {
-		this.btnNew.setVisible(true);
-		this.btnNew.addActionListener(e -> onClick.run());
-	}
 
 	@SuppressWarnings("unchecked")
 	private ListTableModel<T> getTableModel() {
@@ -101,10 +93,10 @@ public class TableInspector<T> extends View {
 
 	private void updateData() {
 		this.getTableModel().clear();
+		var search = this.inputSearch.getText();
 
 		try (var session = HibernateUtil.getSession()) {
-			long valueCount = session.createQuery(this.counter, Long.class)
-				.setParameter("search", "%" + this.inputSearch.getText() + "%")
+			long valueCount = this.counter.apply(session, search)
 				.uniqueResult();
 
 			this.setMaxPage((int)Math.ceil((double)valueCount / PAGE_SIZE));
@@ -126,11 +118,12 @@ public class TableInspector<T> extends View {
 	}
 
 	private void setPage(int page) {
+		var search = this.inputSearch.getText();
+
 		try (var session = HibernateUtil.getSession()) {
 			this.getTableModel().clear();
 
-			session.createQuery(this.querier, this.entClass)
-				.setParameter("search", "%" + this.inputSearch.getText() + "%")
+			this.querier.apply(session, search)
 				.setMaxResults(PAGE_SIZE)
 				.setFirstResult(page * PAGE_SIZE)
 				.stream()
@@ -152,6 +145,17 @@ public class TableInspector<T> extends View {
 		this.pageCount = maxPage;
 	}
 
+	public TableInspector<T> onRowClick(@NotNull Consumer<T> onRowClick) {
+		this.onRowClick = onRowClick;
+		return this;
+	}
+
+	public TableInspector<T> onNewButtonClick(@NotNull Runnable onClick) {
+		this.btnNew.setVisible(true);
+		this.btnNew.addActionListener(e -> onClick.run());
+		return this;
+	}
+
 	public @NotNull JPanel getPanel() {
 		return this.mainPanel;
 	}
@@ -159,50 +163,5 @@ public class TableInspector<T> extends View {
 	@Override
 	protected void onMount(@Nullable ToolView prevView) {
 		this.inputSearch.requestFocus();
-	}
-
-	public static class Builder<T> implements chinookMgr.shared.Builder<TableInspector<T>> {
-		private final Class<T> entClass;
-		private String querier;
-		private String counter;
-		private Consumer<T> onRowClick;
-		private Runnable onNewClick;
-
-		private Builder(Class<T> clazz) {
-			this.entClass = clazz;
-		}
-
-		public Builder<T> withQuerier(@NotNull String querier) {
-			this.querier = querier;
-			return this;
-		}
-
-		public Builder<T> withCounter(@NotNull String counter) {
-			this.counter = counter;
-			return this;
-		}
-
-		public Builder<T> withRowClick(@NotNull Consumer<T> onRowClick) {
-			this.onRowClick = onRowClick;
-			return this;
-		}
-
-		public Builder<T> withNewClick(@NotNull Runnable onAddClick) {
-			this.onNewClick = onAddClick;
-			return this;
-		}
-
-		@Override
-		public TableInspector<T> build() {
-			if (this.querier == null || this.counter == null)
-				throw new IllegalStateException("Querier and counter must be set");
-
-			var ti = new TableInspector<>(this.entClass, this.querier, this.counter);
-			ti.onRowClick = this.onRowClick;
-			if (this.onNewClick != null)
-				ti.addNewButton(this.onNewClick);
-
-			return ti;
-		}
 	}
 }

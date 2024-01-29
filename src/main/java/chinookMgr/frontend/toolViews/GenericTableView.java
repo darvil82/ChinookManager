@@ -15,13 +15,13 @@ public class GenericTableView<T> extends ToolView.Supplier<T> {
 	private final @NotNull String name;
 	private @Nullable Consumer<T> selectorHandler;
 
-	public GenericTableView(@NotNull String name, @NotNull TableInspector.Builder<T> builder) {
+	public GenericTableView(@NotNull String name, @NotNull TableInspector<T> inspector) {
 		this.mainPanel = new JPanel();
 		this.name = name;
 
 		this.insertView(
 			this.mainPanel,
-			builder.withRowClick(this::onRowClick)
+			inspector.onRowClick(this::onRowClick)
 		);
 	}
 
@@ -36,11 +36,8 @@ public class GenericTableView<T> extends ToolView.Supplier<T> {
 	}
 
 	private void onRowClick(T el) {
-		if (this.selectorHandler != null) {
+		if (this.selectorHandler != null)
 			this.selectorHandler.accept(el);
-			return;
-		}
-		ViewStack.popSubmit(el);
 	}
 
 	@Override

@@ -11,7 +11,7 @@ public abstract class Album {
 		return EntityHelper.getById(AlbumEntity.class, id);
 	}
 
-	public static TableInspector.Builder<AlbumEntity> getTableInspectorBuilder() {
+	public static TableInspector<AlbumEntity> getTableInspectorBuilder() {
 		return EntityHelper.getTableInspectorBuilder(AlbumEntity.class, "title");
 	}
 }

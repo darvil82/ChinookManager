@@ -1,7 +1,5 @@
 package chinookMgr.backend.entityHelpers;
 
-import chinookMgr.backend.db.HibernateUtil;
-import chinookMgr.backend.db.entities.GenreEntity;
 import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
@@ -14,8 +12,8 @@ public abstract class Track {
 		return EntityHelper.getById(TrackEntity.class, id);
 	}
 
-	public static TableInspector.Builder<TrackEntity> getTableInspectorBuilder() {
+	public static TableInspector<TrackEntity> getTableInspectorBuilder() {
 		return EntityHelper.getTableInspectorBuilder(TrackEntity.class, "name")
-			.withNewClick(() -> ViewStack.push(new TrackView()));
+			.onNewButtonClick(() -> ViewStack.push(new TrackView()));
 	}
 }
