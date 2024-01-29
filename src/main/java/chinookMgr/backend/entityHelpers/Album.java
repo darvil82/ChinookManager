@@ -12,6 +12,6 @@ public abstract class Album {
 	}
 
 	public static TableInspector<AlbumEntity> getTableInspectorBuilder() {
-		return EntityHelper.getTableInspectorBuilder(AlbumEntity.class, "title");
+		return EntityHelper.getTableInspectorBuilder(AlbumEntity.class, "title").submitValueOnRowClick();
 	}
 }

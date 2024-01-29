@@ -86,16 +86,16 @@ public class TrackView extends ToolView implements Saveable {
 		SwingUtilities.invokeLater(() -> this.txtName.grabFocus());
 
 		this.btnAlbum.addActionListener(e -> ViewStack.pushAwait(
-			new GenericTableView<>("Selección de album", Album.getTableInspectorBuilder()), this::selectAlbum
+			new GenericTableView<>("Selección de album", Album.getTableInspectorBuilder().submitValueOnRowClick()), this::selectAlbum
 		));
 		this.mediaTypeContainer.add(
 			this.comboMediaType = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName)
 		);
 		this.btnGenre.addActionListener(e -> ViewStack.pushAwait(
-			new GenericTableView<>("Selección de género", Genre.getTableInspectorBuilder()), this::selectGenre
+			new GenericTableView<>("Selección de género", Genre.getTableInspectorBuilder().submitValueOnRowClick()), this::selectGenre
 		));
 
-		this.insertView(this.savePanel, new SaveOption(this));
+		this.insertView(this.savePanel, new SaveOption<>(this));
 
 		this.numPrice.setModel(new SpinnerNumberModel(0, 0., 1000., 0.01));
 		this.numPrice.setEditor(new JSpinner.NumberEditor(this.numPrice, "0.00 €"));
@@ -147,6 +147,7 @@ public class TrackView extends ToolView implements Saveable {
 			);
 			this.track.setUnitPrice(BigDecimal.valueOf((double)this.numPrice.getValue()));
 			this.track.setMediaTypeId(this.comboMediaType.getSelectedEntity().getMediaTypeId());
+			this.track.setGenreId(this.selectedGenre.getGenreId());
 
 			if (isNew)
 				session.persist(this.track);
@@ -159,4 +160,19 @@ public class TrackView extends ToolView implements Saveable {
 		ViewStack.pop();
 	}
 
+	@Override
+	public void delete() {
+		try (var session = HibernateUtil.getSession()) {
+			session.beginTransaction();
+			session.remove(this.track);
+			session.getTransaction().commit();
+		}
+
+		ViewStack.pop();
+	}
+
+	@Override
+	public boolean isDeletable() {
+		return this.track != null;
+	}
 }

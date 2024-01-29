@@ -4,6 +4,7 @@ import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.ListTableModel;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.View;
+import chinookMgr.frontend.ViewStack;
 import chinookMgr.shared.Querier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,8 +16,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class TableInspector<T> extends View {
 	private JTextField inputSearch;
@@ -34,6 +35,7 @@ public class TableInspector<T> extends View {
 	private final Querier<T> querier;
 	private final Querier<Long> counter;
 	private Consumer<T> onRowClick;
+	private final ListTableModel<T> tableModel;
 
 	private int pageCount = 0;
 	private int currentPage = 0;
@@ -41,17 +43,27 @@ public class TableInspector<T> extends View {
 
 	public TableInspector(
 		@NotNull Querier<T> querier,
-		@NotNull Querier<Long> counter
+		@NotNull Querier<Long> counter,
+		@NotNull ListTableModel<T> tableModel
 	) {
 		this.querier = querier;
 		this.counter = counter;
+		this.tableModel = tableModel;
 		this.build();
 		this.updateData();
 	}
 
+	public TableInspector(
+		@NotNull Querier<T> querier,
+		@NotNull Querier<Long> counter
+	) {
+		this(querier, counter, new ListTableModel<>());
+	}
+
+
 	private void build() {
 		SwingUtilities.invokeLater(() -> this.inputSearch.requestFocus());
-		this.resultTable.setModel(new ListTableModel<T>(new ArrayList<>(), List.of("Item")));
+		this.resultTable.setModel(this.tableModel);
 
 		this.resultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.resultTable.addMouseListener(new MouseAdapter() {
@@ -147,6 +159,16 @@ public class TableInspector<T> extends View {
 
 	public TableInspector<T> onRowClick(@NotNull Consumer<T> onRowClick) {
 		this.onRowClick = onRowClick;
+		return this;
+	}
+
+	public TableInspector<T> submitValueOnRowClick() {
+		this.onRowClick = ViewStack::popSubmit;
+		return this;
+	}
+
+	public TableInspector<T> openViewOnRowClick(@NotNull Function<T, ToolView> ctor) {
+		this.onRowClick = item -> ViewStack.push(ctor.apply(item));
 		return this;
 	}
 

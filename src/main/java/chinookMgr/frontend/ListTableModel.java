@@ -1,7 +1,10 @@
 package chinookMgr.frontend;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -9,16 +12,26 @@ import java.util.stream.Stream;
 public class ListTableModel<T> extends AbstractTableModel implements Iterable<T> {
 	protected List<T> items;
 	private final List<String> columnNames;
-	private final boolean allEditable;
+	private CellRenderer<T> renderer;
 
-	public ListTableModel(List<T> list, List<String> columnNames) {
-		this(list, columnNames, false);
+	@FunctionalInterface
+	public interface CellRenderer<T> {
+		@NotNull String render(@NotNull T item, int column);
 	}
 
-	public ListTableModel(List<T> list, List<String> columnNames, boolean editable) {
+
+	public ListTableModel() {
+		this(new ArrayList<>(), List.of("Item"), (item, column) -> item.toString());
+	}
+
+	public ListTableModel(List<T> list) {
+		this(list, List.of("Item"), (item, column) -> item.toString());
+	}
+
+	public ListTableModel(List<T> list, List<String> columnNames, CellRenderer<T> renderer) {
 		this.items = list;
 		this.columnNames = columnNames;
-		this.allEditable = editable;
+		this.renderer = renderer;
 	}
 
 	@Override
@@ -61,11 +74,6 @@ public class ListTableModel<T> extends AbstractTableModel implements Iterable<T>
 	}
 
 	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return this.allEditable;
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		this.setItemAt(rowIndex, (T)aValue);
@@ -78,7 +86,7 @@ public class ListTableModel<T> extends AbstractTableModel implements Iterable<T>
 	}
 
 	@Override
-	public Iterator<T> iterator() {
+	public @NotNull Iterator<T> iterator() {
 		return this.items.iterator();
 	}
 

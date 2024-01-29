@@ -8,4 +8,10 @@ public interface Saveable {
 	default void cancel() {
 		ViewStack.pop();
 	}
+
+	default boolean isDeletable() {
+		return false;
+	}
+
+	default void delete() {}
 }

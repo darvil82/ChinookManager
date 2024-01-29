@@ -13,7 +13,6 @@ import java.util.function.Function;
 public class GenericTableView<T> extends ToolView.Supplier<T> {
 	private final @NotNull JPanel mainPanel;
 	private final @NotNull String name;
-	private @Nullable Consumer<T> selectorHandler;
 
 	public GenericTableView(@NotNull String name, @NotNull TableInspector<T> inspector) {
 		this.mainPanel = new JPanel();
@@ -21,23 +20,8 @@ public class GenericTableView<T> extends ToolView.Supplier<T> {
 
 		this.insertView(
 			this.mainPanel,
-			inspector.onRowClick(this::onRowClick)
+			inspector
 		);
-	}
-
-	public GenericTableView<T> attachSelectionHandler(@NotNull Consumer<T> handler) {
-		this.selectorHandler = handler;
-		return this;
-	}
-
-	public GenericTableView<T> attachSelectionView(@NotNull Function<T, ToolView> viewCtor) {
-		this.selectorHandler = e -> ViewStack.push(viewCtor.apply(e));
-		return this;
-	}
-
-	private void onRowClick(T el) {
-		if (this.selectorHandler != null)
-			this.selectorHandler.accept(el);
 	}
 
 	@Override

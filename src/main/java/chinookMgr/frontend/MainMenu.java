@@ -93,8 +93,7 @@ public class MainMenu extends JFrame {
 		this.toolbar.addOption("Inicio", e -> ViewStack.replace(new WelcomeView()));
 		this.toolbar.addOption("test 1", e -> ViewStack.replace(new TestView()));
 		this.toolbar.addOption("test 2", e -> ViewStack.replace(
-			new GenericTableView<>("Canciones", Track.getTableInspectorBuilder())
-				.attachSelectionView(TrackView::new)
+			new GenericTableView<>("Canciones", Track.getTableInspectorBuilder().openViewOnRowClick(TrackView::new))
 		));
 
 		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(

@@ -14,6 +14,6 @@ public abstract class Genre {
 	}
 
 	public static TableInspector<GenreEntity> getTableInspectorBuilder() {
-		return EntityHelper.getTableInspectorBuilder(GenreEntity.class, "name");
+		return EntityHelper.getTableInspectorBuilder(GenreEntity.class, "name").submitValueOnRowClick();
 	}
 }
