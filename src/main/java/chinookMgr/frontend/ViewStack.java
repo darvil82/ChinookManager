@@ -3,7 +3,6 @@ package chinookMgr.frontend;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -35,7 +34,6 @@ public class ViewStack {
 		views.add(view);
 		awaiters.clear();
 		notifyViewChange();
-		getTop().onMount(null);
 	}
 
 	public static void pop() {
@@ -47,7 +45,7 @@ public class ViewStack {
 		}
 
 		notifyViewChange();
-		getTop().onMount(prevTop);
+		getTop().onReMount(prevTop);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -64,7 +62,7 @@ public class ViewStack {
 		}
 
 		notifyViewChange();
-		getTop().onMount(prevTop);
+		getTop().onReMount(prevTop);
 	}
 
 	public static @NotNull ToolView getTop() {

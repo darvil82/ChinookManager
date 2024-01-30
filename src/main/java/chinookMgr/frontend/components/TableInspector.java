@@ -183,7 +183,18 @@ public class TableInspector<T> extends View {
 	}
 
 	@Override
-	protected void onMount(@Nullable ToolView prevView) {
+	protected void onReMount(@Nullable ToolView prevView) {
 		this.inputSearch.requestFocus();
+		int prevScroll = this.tableScrollPane.getVerticalScrollBar().getValue();
+		int tableSelection = this.resultTable.getSelectedRow();
+
+		this.setPage(this.currentPage); // refetch data in case it changed
+		this.tableScrollPane.getVerticalScrollBar().setValue(prevScroll); // restore scroll
+
+		if (tableSelection == -1) return;
+
+		// restore selection
+		tableSelection = Math.min(tableSelection, this.resultTable.getRowCount() - 1);
+		this.resultTable.setRowSelectionInterval(tableSelection, tableSelection);
 	}
 }

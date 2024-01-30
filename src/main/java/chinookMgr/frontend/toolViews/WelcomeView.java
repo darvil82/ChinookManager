@@ -14,6 +14,7 @@ public class WelcomeView extends ToolView {
 
 	public WelcomeView() {
 		this.btnLogin.addActionListener(e -> ViewStack.push(new LoginView()));
+		this.onReMount(null);
 	}
 
 	@Override
@@ -31,7 +32,7 @@ public class WelcomeView extends ToolView {
 	}
 
 	@Override
-	public void onMount(ToolView prevView) {
+	public void onReMount(ToolView prevView) {
 		if (!UserManager.isLoggedIn()) return;
 
 		this.btnLogin.setVisible(false);
