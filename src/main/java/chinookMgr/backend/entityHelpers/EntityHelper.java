@@ -17,7 +17,7 @@ public abstract class EntityHelper {
 	}
 
 	public static <T> TableInspector<T>
-	getTableInspectorBuilder(@NotNull Class<T> entityClass, @NotNull String searchField) {
+	getTableInspector(@NotNull Class<T> entityClass, @NotNull String searchField) {
 		assert searchField.chars().allMatch(Character::isAlphabetic);
 
 		return new TableInspector<>(

@@ -86,13 +86,13 @@ public class TrackView extends ToolView implements Saveable {
 		SwingUtilities.invokeLater(() -> this.txtName.grabFocus());
 
 		this.btnAlbum.addActionListener(e -> ViewStack.pushAwait(
-			new GenericTableView<>("Selección de album", Album.getTableInspectorBuilder().submitValueOnRowClick()), this::selectAlbum
+			new GenericTableView<>("Selección de album", Album.getTableInspector().submitValueOnRowClick()), this::selectAlbum
 		));
 		this.mediaTypeContainer.add(
 			this.comboMediaType = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName)
 		);
 		this.btnGenre.addActionListener(e -> ViewStack.pushAwait(
-			new GenericTableView<>("Selección de género", Genre.getTableInspectorBuilder().submitValueOnRowClick()), this::selectGenre
+			new GenericTableView<>("Selección de género", Genre.getTableInspector().submitValueOnRowClick()), this::selectGenre
 		));
 
 		this.insertView(this.savePanel, new SaveOption<>(this));

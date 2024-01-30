@@ -67,10 +67,10 @@ public class Customer extends User<CustomerEntity> {
 	public List<Role> getRoles() {
 		try (var session = HibernateUtil.getSession()) {
 			byte flags = session.createQuery(
-				"select roles from CustomerEntity where customerId = ?",
+				"select roles from CustomerEntity where customerId = :id",
 				Byte.class
 			)
-				.setParameter(0, this.entity.getCustomerId())
+				.setParameter("id", this.entity.getCustomerId())
 				.getSingleResult();
 
 			return Role.getRolesFromFlags(flags);

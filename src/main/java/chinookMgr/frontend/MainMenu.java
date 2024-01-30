@@ -79,6 +79,11 @@ public class MainMenu extends JFrame {
 
 	private void onUserChange(@Nullable User<?> newUser) {
 		this.btnAccount.setVisible(newUser != null);
+
+		if (newUser == null) return;
+
+		UserToolbars.initializeToolbarForUser(newUser, this.toolbar);
+		this.toolbar.setVisible(true);
 	}
 
 	private synchronized void onBackButtonChange(boolean enabled) {
@@ -88,13 +93,8 @@ public class MainMenu extends JFrame {
 	public void build() {
 		this.toolbar = new Toolbar();
 		this.toolbarContainer.add(this.toolbar);
+		this.toolbar.setVisible(false);
 		this.btnPrev.addActionListener(e -> ViewStack.pop());
-
-		this.toolbar.addOption("Inicio", e -> ViewStack.replace(new WelcomeView()));
-		this.toolbar.addOption("test 1", e -> ViewStack.replace(new TestView()));
-		this.toolbar.addOption("test 2", e -> ViewStack.replace(
-			new GenericTableView<>("Canciones", Track.getTableInspectorBuilder().openViewOnRowClick(TrackView::new))
-		));
 
 		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 			KeyStroke.getKeyStroke("ctrl BACK_SPACE"), "popViewStack"

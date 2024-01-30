@@ -12,8 +12,8 @@ public abstract class Track {
 		return EntityHelper.getById(TrackEntity.class, id);
 	}
 
-	public static TableInspector<TrackEntity> getTableInspectorBuilder() {
-		return EntityHelper.getTableInspectorBuilder(TrackEntity.class, "name")
+	public static TableInspector<TrackEntity> getTableInspector() {
+		return EntityHelper.getTableInspector(TrackEntity.class, "name")
 			.onNewButtonClick(() -> ViewStack.push(new TrackView()));
 	}
 }

@@ -13,7 +13,7 @@ public abstract class Genre {
 		}
 	}
 
-	public static TableInspector<GenreEntity> getTableInspectorBuilder() {
-		return EntityHelper.getTableInspectorBuilder(GenreEntity.class, "name").submitValueOnRowClick();
+	public static TableInspector<GenreEntity> getTableInspector() {
+		return EntityHelper.getTableInspector(GenreEntity.class, "name").submitValueOnRowClick();
 	}
 }
