@@ -5,38 +5,57 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ViewStack {
-	private static final ArrayList<ToolView> views = new ArrayList<>();
-	private static final HashMap<ToolView.Supplier<?>, Consumer<?>> awaiters = new HashMap<>();
-	public static @Nullable Consumer<ToolView> onViewChange;
+	private final ArrayList<ToolView> views = new ArrayList<>();
+	private final HashMap<ToolView.Supplier<?>, Consumer<?>> awaiters = new HashMap<>();
+	public @Nullable Consumer<ToolView> onViewChange;
+
+	private static List<ViewStack> stacks = new ArrayList<>();
+
+	public static ViewStack current() {
+		return stacks.getLast();
+	}
+
+	public static void pushViewStack(ViewStack stack) {
+		stacks.add(stack);
+	}
+
+	public static void pushViewStack() {
+		stacks.add(new ViewStack());
+	}
+
+	public static void popViewStack() {
+		stacks.removeLast();
+	}
 
 
-	private static void notifyViewChange() {
+	private void notifyViewChange() {
 		if (onViewChange == null) return;
 		onViewChange.accept(views.isEmpty() ? null : getTop());
 	}
 
-	public static void push(@NotNull ToolView view) {
+	public void push(@NotNull ToolView view) {
 		views.add(view);
 		notifyViewChange();
 	}
 
-	public static <T> void pushAwait(@NotNull ToolView.Supplier<T> view, @NotNull Consumer<T> onPop) {
+	public <T> void pushAwait(@NotNull ToolView.Supplier<T> view, @NotNull Consumer<T> onPop) {
 		views.add(view);
 		awaiters.put(view, onPop);
 		notifyViewChange();
 	}
 
-	public static void replace(@NotNull ToolView view) {
+	public void replace(@NotNull ToolView view) {
 		views.clear();
 		views.add(view);
 		awaiters.clear();
 		notifyViewChange();
 	}
 
-	public static void pop() {
+	public void pop() {
 		var prevTop = getTop();
 		views.removeLast();
 
@@ -45,11 +64,12 @@ public class ViewStack {
 		}
 
 		notifyViewChange();
+		if (views.isEmpty()) return;
 		getTop().onReMount(prevTop);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void popSubmit(@NotNull Object obj) {
+	public void popSubmit(@NotNull Object obj) {
 		var prevTop = getTop();
 		views.removeLast();
 
@@ -62,14 +82,15 @@ public class ViewStack {
 		}
 
 		notifyViewChange();
+		if (views.isEmpty()) return;
 		getTop().onReMount(prevTop);
 	}
 
-	public static @NotNull ToolView getTop() {
+	public @NotNull ToolView getTop() {
 		return views.getLast();
 	}
 
-	public static @NotNull String getAbsPath() {
+	public @NotNull String getAbsPath() {
 		var path = new StringBuilder();
 		for (int i = 0; i < views.size() - 1; i++)
 			path.append(views.get(i).getName())
@@ -77,7 +98,7 @@ public class ViewStack {
 		return path.toString();
 	}
 
-	public static void clear() {
+	public void clear() {
 		views.clear();
 		notifyViewChange();
 	}

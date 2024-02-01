@@ -16,7 +16,7 @@ public class TestView extends ToolView {
 	public TestView(int current) {
 		this.current = current;
 		this.openSubButton.addActionListener(e -> {
-			ViewStack.push(new TestView(current + 1));
+			ViewStack.current().push(new TestView(current + 1));
 			StatusManager.showUpdate("Opened subview " + (current + 1) + "!");
 		});
 		this.txt.setText("Current: " + current);

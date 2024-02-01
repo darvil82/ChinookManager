@@ -8,27 +8,25 @@ import chinookMgr.frontend.toolViews.GenericTableView;
 import chinookMgr.frontend.toolViews.TrackView;
 import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.event.ActionListener;
 import java.util.function.Consumer;
-import java.util.function.Function;
+
 
 public abstract class UserToolbars {
+	private UserToolbars() {}
+
 	public static final Consumer<Toolbar> TRACKS = t -> t.addOption(
 		"Canciones",
-		e -> ViewStack.replace(new GenericTableView<>("Canciones", Track.getTableInspector().openViewOnRowClick(TrackView::new)))
+		e -> ViewStack.current().replace(new GenericTableView<>("Canciones", Track.getTableInspector().openViewOnRowClick(TrackView::new)))
 	);
 
-	public static final Consumer<Toolbar> CUSTOMERS = t -> t.addOption("Clientes", e -> ViewStack.replace(new TrackView()));
-
-	public static final Consumer<Toolbar> EMPLOYEES = t -> t.addOption("Empleados", e -> ViewStack.replace(new TrackView()));
-
-	public static final Consumer<Toolbar> INVOICES = t -> t.addOption("Facturas", e -> ViewStack.replace(new TrackView()));
+	public static final Consumer<Toolbar> CUSTOMERS = t -> t.addOption("Clientes", e -> ViewStack.current().replace(new TrackView()));
+	public static final Consumer<Toolbar> EMPLOYEES = t -> t.addOption("Empleados", e -> ViewStack.current().replace(new TrackView()));
+	public static final Consumer<Toolbar> INVOICES = t -> t.addOption("Facturas", e -> ViewStack.current().replace(new TrackView()));
 
 
 	public static void initializeToolbarForUser(@NotNull User<?> user, @NotNull Toolbar toolbar) {
 		toolbar.removeAll();
-		toolbar.addOption("Inicio", e -> ViewStack.replace(new WelcomeView()));
+		toolbar.addOption("Inicio", e -> ViewStack.current().replace(new WelcomeView()));
 
 		if (user.hasPermission(Role.MANAGE_CUSTOMERS))
 			setTools(toolbar, CUSTOMERS);

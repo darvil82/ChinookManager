@@ -33,7 +33,7 @@ public class LoginView extends ToolView {
 			StatusManager.enableBackButton();
 
 			if (loginResult) {
-				ViewStack.pop();
+				ViewStack.current().pop();
 				StatusManager.showUpdate("Sesión iniciada.");
 			} else {
 				JOptionPane.showMessageDialog(

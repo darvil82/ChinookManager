@@ -163,12 +163,12 @@ public class TableInspector<T> extends View {
 	}
 
 	public TableInspector<T> submitValueOnRowClick() {
-		this.onRowClick = ViewStack::popSubmit;
+		this.onRowClick = ViewStack.current()::popSubmit;
 		return this;
 	}
 
 	public TableInspector<T> openViewOnRowClick(@NotNull Function<T, ToolView> ctor) {
-		this.onRowClick = item -> ViewStack.push(ctor.apply(item));
+		this.onRowClick = item -> ViewStack.current().push(ctor.apply(item));
 		return this;
 	}
 

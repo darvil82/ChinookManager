@@ -85,13 +85,13 @@ public class TrackView extends ToolView implements Saveable {
 	private void build() {
 		SwingUtilities.invokeLater(() -> this.txtName.grabFocus());
 
-		this.btnAlbum.addActionListener(e -> ViewStack.pushAwait(
+		this.btnAlbum.addActionListener(e -> ViewStack.current().pushAwait(
 			new GenericTableView<>("Selección de album", Album.getTableInspector().submitValueOnRowClick()), this::selectAlbum
 		));
 		this.mediaTypeContainer.add(
 			this.comboMediaType = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName)
 		);
-		this.btnGenre.addActionListener(e -> ViewStack.pushAwait(
+		this.btnGenre.addActionListener(e -> ViewStack.current().pushAwait(
 			new GenericTableView<>("Selección de género", Genre.getTableInspector().submitValueOnRowClick()), this::selectGenre
 		));
 
@@ -157,7 +157,7 @@ public class TrackView extends ToolView implements Saveable {
 			session.getTransaction().commit();
 		}
 
-		ViewStack.pop();
+		ViewStack.current().pop();
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class TrackView extends ToolView implements Saveable {
 			session.getTransaction().commit();
 		}
 
-		ViewStack.pop();
+		ViewStack.current().pop();
 	}
 
 	@Override

@@ -6,7 +6,7 @@ public interface Saveable {
 	void save();
 
 	default void cancel() {
-		ViewStack.pop();
+		ViewStack.current().pop();
 	}
 
 	default boolean isDeletable() {

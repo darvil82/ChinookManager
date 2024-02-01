@@ -5,8 +5,6 @@ import chinookMgr.backend.User;
 import chinookMgr.backend.UserManager;
 import chinookMgr.backend.entityHelpers.Track;
 import chinookMgr.frontend.components.Toolbar;
-import chinookMgr.frontend.toolViews.GenericTableView;
-import chinookMgr.frontend.toolViews.TestView;
 import chinookMgr.frontend.toolViews.TrackView;
 import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.Nullable;
@@ -28,8 +26,12 @@ public class MainMenu extends JFrame {
 	private JButton btnAccount;
 	private Toolbar toolbar;
 
+	private final ViewStack menuViewStack = new ViewStack();
+
+
 	public MainMenu() {
 		super("Chinook Manager");
+		ViewStack.pushViewStack(this.menuViewStack);
 		this.setContentPane(this.mainPanel);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setMinimumSize(new Dimension(600, 400));
@@ -45,12 +47,14 @@ public class MainMenu extends JFrame {
 			this.txtAbsViewPath.setVisible(false);
 			this.btnPrev.setEnabled(false);
 			this.toolbar.deactivateAll();
-			ViewStack.replace(new WelcomeView());
-			this.toolbar.toggleOption("Inicio", true);
+			this.menuViewStack.replace(new WelcomeView());
 		} else {
+			if (newView instanceof WelcomeView)
+				this.toolbar.toggleOption("Inicio", true);
+
 			this.txtCurrentViewName.setText(newView.getName());
 			this.viewContent.add(newView.getPanel());
-			this.txtAbsViewPath.setText(ViewStack.getAbsPath());
+			this.txtAbsViewPath.setText(this.menuViewStack.getAbsPath());
 			this.txtAbsViewPath.setVisible(true);
 			this.btnPrev.setEnabled(!newView.disableBackButton());
 		}
@@ -92,9 +96,13 @@ public class MainMenu extends JFrame {
 
 	public void build() {
 		this.toolbar = new Toolbar();
+		this.toolbar.addOption("DEBUG1", e -> {
+			WindowedToolView.display(this, new TrackView(Track.getById(1)));
+		});
+
+//		this.toolbar.setVisible(false);
 		this.toolbarContainer.add(this.toolbar);
-		this.toolbar.setVisible(false);
-		this.btnPrev.addActionListener(e -> ViewStack.pop());
+		this.btnPrev.addActionListener(e -> ViewStack.current().pop());
 
 		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 			KeyStroke.getKeyStroke("ctrl BACK_SPACE"), "popViewStack"
@@ -106,12 +114,12 @@ public class MainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!btnPrev.isEnabled()) return;
-				ViewStack.pop();
+				ViewStack.current().pop();
 			}
 		});
 
 
-		ViewStack.onViewChange = this::onViewStackChange;
+		this.menuViewStack.onViewChange = this::onViewStackChange;
 		LoadingManager.onTaskChange = this::onLoadingTaskChange;
 		UserManager.onUserChange = this::onUserChange;
 		StatusManager.statusLabel = this.txtStatus;
