@@ -23,8 +23,10 @@ public class ViewStack {
 		stacks.add(stack);
 	}
 
-	public static void pushViewStack() {
-		stacks.add(new ViewStack());
+	public static ViewStack pushViewStack() {
+		var stack = new ViewStack();
+		pushViewStack(stack);
+		return stack;
 	}
 
 	public static void popViewStack() {

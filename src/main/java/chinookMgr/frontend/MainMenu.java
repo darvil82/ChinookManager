@@ -26,12 +26,14 @@ public class MainMenu extends JFrame {
 	private JButton btnAccount;
 	private Toolbar toolbar;
 
-	private final ViewStack menuViewStack = new ViewStack();
+	private final ViewStack menuViewStack;
+
+	public static final MainMenu INSTANCE = new MainMenu();
 
 
-	public MainMenu() {
+	private MainMenu() {
 		super("Chinook Manager");
-		ViewStack.pushViewStack(this.menuViewStack);
+		this.menuViewStack = ViewStack.pushViewStack();
 		this.setContentPane(this.mainPanel);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setMinimumSize(new Dimension(600, 400));
@@ -56,7 +58,7 @@ public class MainMenu extends JFrame {
 			this.viewContent.add(newView.getPanel());
 			this.txtAbsViewPath.setText(this.menuViewStack.getAbsPath());
 			this.txtAbsViewPath.setVisible(true);
-			this.btnPrev.setEnabled(!newView.disableBackButton());
+			this.btnPrev.setEnabled(newView.enableBackButton());
 		}
 
 		SwingUtilities.invokeLater(() -> {
@@ -99,6 +101,7 @@ public class MainMenu extends JFrame {
 		this.toolbar.addOption("DEBUG1", e -> {
 			WindowedToolView.display(this, new TrackView(Track.getById(1)));
 		});
+		UserToolbars.TRACKS.accept(this.toolbar);
 
 //		this.toolbar.setVisible(false);
 		this.toolbarContainer.add(this.toolbar);

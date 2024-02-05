@@ -27,8 +27,8 @@ public class WelcomeView extends ToolView {
 		return "Inicio";
 	}
 
-	public boolean disableBackButton() {
-		return true;
+	public boolean enableBackButton() {
+		return false;
 	}
 
 	@Override

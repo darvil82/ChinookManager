@@ -7,6 +7,7 @@ import chinookMgr.backend.entityHelpers.MediaType;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.ToolView;
+import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.SaveOption;
 import chinookMgr.frontend.components.TableComboBox;
@@ -85,15 +86,11 @@ public class TrackView extends ToolView implements Saveable {
 	private void build() {
 		SwingUtilities.invokeLater(() -> this.txtName.grabFocus());
 
-		this.btnAlbum.addActionListener(e -> ViewStack.current().pushAwait(
-			new GenericTableView<>("Selección de album", Album.getTableInspector().submitValueOnRowClick()), this::selectAlbum
-		));
 		this.mediaTypeContainer.add(
 			this.comboMediaType = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName)
 		);
-		this.btnGenre.addActionListener(e -> ViewStack.current().pushAwait(
-			new GenericTableView<>("Selección de género", Genre.getTableInspector().submitValueOnRowClick()), this::selectGenre
-		));
+		Utils.attachViewSelectorToButton(this.btnAlbum, "album", Album.getTableInspector(), this::selectAlbum, () -> new AlbumView(this.selectedAlbum));
+		Utils.attachViewSelectorToButton(this.btnGenre, "género", Genre.getTableInspector(), this::selectGenre, () -> new GenreView(this.selectedGenre));
 
 		this.insertView(this.savePanel, new SaveOption<>(this));
 
@@ -149,10 +146,7 @@ public class TrackView extends ToolView implements Saveable {
 			this.track.setMediaTypeId(this.comboMediaType.getSelectedEntity().getMediaTypeId());
 			this.track.setGenreId(this.selectedGenre.getGenreId());
 
-			if (isNew)
-				session.persist(this.track);
-			else
-				session.merge(this.track);
+			session.merge(this.track);
 
 			session.getTransaction().commit();
 		}

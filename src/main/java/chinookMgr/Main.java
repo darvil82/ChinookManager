@@ -8,7 +8,7 @@ public class Main {
 	public static void main(String[] args) {
 		FlatOneDarkIJTheme.setup();
 
-		var app = new MainMenu();
+		var app = MainMenu.INSTANCE;
 		app.setLocationRelativeTo(null);
 		app.setVisible(true);
 	}

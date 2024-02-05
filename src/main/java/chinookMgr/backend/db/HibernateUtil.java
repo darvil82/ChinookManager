@@ -20,6 +20,7 @@ public class HibernateUtil {
 	}
 
 	public static Session getSession() {
+		System.out.println("Getting session");
 		return sessionFactory.openSession();
 	}
 }
