@@ -33,6 +33,12 @@ public class ViewStack {
 		stacks.removeLast();
 	}
 
+	public static void popAllButLast() {
+		while (stacks.size() > 1) {
+			stacks.removeLast();
+		}
+	}
+
 
 	private void notifyViewChange() {
 		if (onViewChange == null) return;

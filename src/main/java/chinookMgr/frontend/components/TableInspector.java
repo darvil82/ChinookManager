@@ -107,7 +107,7 @@ public class TableInspector<T> extends View {
 		this.getTableModel().clear();
 		var search = this.inputSearch.getText();
 
-		try (var session = HibernateUtil.getSession()) {
+		HibernateUtil.withSession(session -> {
 			long valueCount = this.counter.apply(session, search)
 				.uniqueResult();
 
@@ -120,7 +120,7 @@ public class TableInspector<T> extends View {
 
 			this.setPage(0);
 			this.txtResultCount.setText(valueCount + " resultado/s");
-		}
+		});
 	}
 
 	private void clearData() {
@@ -132,7 +132,7 @@ public class TableInspector<T> extends View {
 	private void setPage(int page) {
 		var search = this.inputSearch.getText();
 
-		try (var session = HibernateUtil.getSession()) {
+		HibernateUtil.withSession(session -> {
 			this.getTableModel().clear();
 
 			this.querier.apply(session, search)
@@ -140,7 +140,7 @@ public class TableInspector<T> extends View {
 				.setFirstResult(page * PAGE_SIZE)
 				.stream()
 				.forEach(r -> this.getTableModel().addItem(r));
-		}
+		});
 
 		this.numPage.setValue(page + 1);
 		this.currentPage = page;
