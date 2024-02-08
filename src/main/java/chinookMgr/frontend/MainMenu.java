@@ -49,7 +49,7 @@ public class MainMenu extends JFrame {
 			this.txtAbsViewPath.setVisible(false);
 			this.btnPrev.setEnabled(false);
 			this.toolbar.deactivateAll();
-			this.menuViewStack.replace(new WelcomeView());
+			this.menuViewStack.replaceWithWelcome();
 		} else {
 			if (newView instanceof WelcomeView)
 				this.toolbar.toggleOption("Inicio", true);

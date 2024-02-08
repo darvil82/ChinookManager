@@ -1,5 +1,6 @@
 package chinookMgr.frontend;
 
+import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,6 +62,10 @@ public class ViewStack {
 		views.add(view);
 		awaiters.clear();
 		notifyViewChange();
+	}
+
+	public void replaceWithWelcome() {
+		this.replace(new WelcomeView());
 	}
 
 	public void pop() {

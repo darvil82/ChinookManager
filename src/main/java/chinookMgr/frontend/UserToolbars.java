@@ -26,7 +26,7 @@ public abstract class UserToolbars {
 
 	public static void initializeToolbarForUser(@NotNull User<?> user, @NotNull Toolbar toolbar) {
 		toolbar.removeAll();
-		toolbar.addOption("Inicio", e -> ViewStack.current().replace(new WelcomeView()));
+		toolbar.addOption("Inicio", e -> ViewStack.current().replaceWithWelcome());
 
 		if (user.hasPermission(Role.MANAGE_CUSTOMERS))
 			setTools(toolbar, CUSTOMERS);
