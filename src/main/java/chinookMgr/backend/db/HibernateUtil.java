@@ -74,21 +74,26 @@ public class HibernateUtil {
 		try (var session = getSession()) {
 			return consumer.apply(session);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(
-				null,
-				"Ha ocurrido un error al realizar la operación. Abortando.",
-				"Error",
-				JOptionPane.ERROR_MESSAGE
-			);
-			SwingUtilities.invokeLater(ViewStack.current()::replaceWithWelcome);
+			operationError();
 		}
 		return null;
 	}
 
 	public static void withSession(@NotNull Consumer<Session> consumer) {
-		withSession(session -> {
+		try (var session = getSession()) {
 			consumer.accept(session);
-			return null;
-		});
+		} catch (Exception e) {
+			operationError();
+		}
+	}
+
+	private static void operationError() {
+		JOptionPane.showMessageDialog(
+			null,
+			"Ha ocurrido un error al realizar la operación. Abortando.",
+			"Error",
+			JOptionPane.ERROR_MESSAGE
+		);
+		SwingUtilities.invokeLater(ViewStack.current()::replaceWithWelcome);
 	}
 }
