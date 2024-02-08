@@ -65,7 +65,7 @@ public class Customer extends User<CustomerEntity> {
 
 	@Override
 	public List<Role> getRoles() {
-		try (var session = HibernateUtil.getSession()) {
+		return HibernateUtil.withSession(session -> {
 			byte flags = session.createQuery(
 				"select roles from CustomerEntity where customerId = :id",
 				Byte.class
@@ -74,6 +74,6 @@ public class Customer extends User<CustomerEntity> {
 				.getSingleResult();
 
 			return Role.getRolesFromFlags(flags);
-		}
+		});
 	}
 }

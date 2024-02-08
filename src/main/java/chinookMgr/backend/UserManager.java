@@ -26,10 +26,10 @@ public class UserManager {
 			UserManager.onUserChange.accept(user);
 	}
 
-	public static boolean login(@NotNull String email, @NotNull String password) {
+	public static Boolean login(@NotNull String email, @NotNull String password) {
 		byte[] passwordHash = Utils.toMD5(password);
 
-		try (var session = HibernateUtil.getSession()) {
+		return HibernateUtil.withSession(session -> {
 			{
 				var query = session.createQuery(
 					"from EmployeeEntity where email = :email and password = :password",
@@ -41,7 +41,7 @@ public class UserManager {
 				// its an employee
 				var result = query.getResultList();
 				if (result.size() == 1) {
-					setCurrentUser(new Employee(result.get(0)));
+					setCurrentUser(new Employee(result.getFirst()));
 					return true;
 				}
 			}
@@ -57,13 +57,13 @@ public class UserManager {
 				// its a customer
 				var result = query.getResultList();
 				if (result.size() == 1) {
-					setCurrentUser(new Customer(result.get(0)));
+					setCurrentUser(new Customer(result.getFirst()));
 					return true;
 				}
 			}
-		}
 
-		return false;
+			return false;
+		});
 	}
 
 	public static void logout() {

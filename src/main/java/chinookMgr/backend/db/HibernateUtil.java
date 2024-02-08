@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class HibernateUtil {
 	private static SessionFactory sessionFactory;
@@ -69,9 +70,9 @@ public class HibernateUtil {
 	}
 
 
-	public static void withSession(@NotNull Consumer<Session> consumer) {
+	public static <T> T withSession(@NotNull Function<Session, @NotNull T> consumer) {
 		try (var session = getSession()) {
-			consumer.accept(session);
+			return consumer.apply(session);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(
 				null,
@@ -81,5 +82,13 @@ public class HibernateUtil {
 			);
 			SwingUtilities.invokeLater(ViewStack.current()::replaceWithWelcome);
 		}
+		return null;
+	}
+
+	public static void withSession(@NotNull Consumer<Session> consumer) {
+		withSession(session -> {
+			consumer.accept(session);
+			return null;
+		});
 	}
 }

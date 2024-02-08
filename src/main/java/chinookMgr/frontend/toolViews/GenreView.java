@@ -63,10 +63,10 @@ public class GenreView extends ToolView implements Saveable {
 
 		this.genre.setName(this.txtName.getText());
 
-		try (var session = HibernateUtil.getSession()) {
+		HibernateUtil.withSession(session -> {
 			session.beginTransaction();
 			session.persist(this.genre);
 			session.getTransaction().commit();
-		}
+		});
 	}
 }

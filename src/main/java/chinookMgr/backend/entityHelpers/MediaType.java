@@ -9,9 +9,9 @@ public abstract class MediaType {
 	private MediaType() {}
 
 	public static MediaTypeEntity getById(int id) {
-		try (var session = HibernateUtil.getSession()) {
+		return HibernateUtil.withSession(session -> {
 			return session.get(MediaTypeEntity.class, id);
-		}
+		});
 	}
 
 	public static TableInspector<MediaType> getTableInspector() {

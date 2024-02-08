@@ -65,15 +65,15 @@ public class Employee extends User<EmployeeEntity> {
 
 	@Override
 	public List<Role> getRoles() {
-		try (var session = HibernateUtil.getSession()) {
+		return HibernateUtil.withSession(session -> {
 			byte flags = session.createQuery(
-				"select t.roles from EmployeeEntity e join e.title t where e.employeeId = ?",
-				Byte.class
-			)
+					"select t.roles from EmployeeEntity e join e.title t where e.employeeId = ?",
+					Byte.class
+				)
 				.setParameter(0, this.entity.getEmployeeId())
 				.getSingleResult();
 
 			return Role.getRolesFromFlags(flags);
-		}
+		});
 	}
 }

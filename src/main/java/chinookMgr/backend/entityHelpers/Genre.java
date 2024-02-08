@@ -9,9 +9,9 @@ public abstract class Genre {
 	private Genre() {}
 
 	public static GenreEntity getById(int id) {
-		try (var session = HibernateUtil.getSession()) {
+		return HibernateUtil.withSession(session -> {
 			return session.get(GenreEntity.class, id);
-		}
+		});
 	}
 
 	public static TableInspector<GenreEntity> getTableInspector() {

@@ -133,7 +133,7 @@ public class TrackView extends ToolView implements Saveable {
 		if (isNew)
 			this.track = new TrackEntity();
 
-		try (var session = HibernateUtil.getSession()) {
+		HibernateUtil.withSession(session -> {
 			session.beginTransaction();
 
 			this.track.setName(this.txtName.getText());
@@ -149,18 +149,18 @@ public class TrackView extends ToolView implements Saveable {
 			session.merge(this.track);
 
 			session.getTransaction().commit();
-		}
+		});
 
 		ViewStack.current().pop();
 	}
 
 	@Override
 	public void delete() {
-		try (var session = HibernateUtil.getSession()) {
+		HibernateUtil.withSession(session -> {
 			session.beginTransaction();
 			session.remove(this.track);
 			session.getTransaction().commit();
-		}
+		});
 
 		ViewStack.current().pop();
 	}

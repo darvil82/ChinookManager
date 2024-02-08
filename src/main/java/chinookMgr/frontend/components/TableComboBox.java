@@ -62,11 +62,11 @@ public class TableComboBox<T> extends JComboBox<T> {
 	private void setData() {
 		this.removeAllItems();
 
-		try (var session = HibernateUtil.getSession()) {
+		HibernateUtil.withSession(session -> {
 			session.createQuery("from " + this.entityClass.getSimpleName(), this.entityClass)
 				.getResultList()
 				.forEach(this::addItem);
-		}
+		});
 	}
 
 	public void refresh() {

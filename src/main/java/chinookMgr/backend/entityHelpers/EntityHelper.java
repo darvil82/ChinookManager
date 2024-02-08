@@ -11,9 +11,9 @@ public abstract class EntityHelper {
 	private EntityHelper() {}
 
 	public static <T> T getById(Class<T> entityClass, int id) {
-		try (var session = HibernateUtil.getSession()) {
+		return HibernateUtil.withSession(session -> {
 			return session.get(entityClass, id);
-		}
+		});
 	}
 
 	public static <T> TableInspector<T>
