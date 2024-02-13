@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
     implementation("org.hibernate.orm:hibernate-core:6.4.1.Final")
-    implementation("mysql:mysql-connector-java:8.0.28")
+    implementation("mysql:mysql-connector-java:+")
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("com.formdev:flatlaf:+")
     implementation("com.formdev:flatlaf-intellij-themes:+")

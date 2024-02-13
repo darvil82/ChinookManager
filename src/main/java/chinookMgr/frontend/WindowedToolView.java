@@ -19,6 +19,7 @@ public class WindowedToolView extends JDialog {
 		super(parent, true);
 		this.viewStack = ViewStack.pushViewStack();
 		this.viewStack.onViewChange = this::onViewStackChange;
+		this.viewStack.onStackPop = super::dispose;
 		this.viewStack.push(view);
 		this.btnPrev.addActionListener(e -> this.viewStack.pop());
 		this.setContentPane(this.mainPanel);

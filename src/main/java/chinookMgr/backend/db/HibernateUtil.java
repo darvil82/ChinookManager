@@ -1,5 +1,7 @@
 package chinookMgr.backend.db;
 
+import chinookMgr.frontend.ErrorDialog;
+import chinookMgr.frontend.MainMenu;
 import chinookMgr.frontend.ViewStack;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -74,7 +76,7 @@ public class HibernateUtil {
 		try (var session = getSession()) {
 			return consumer.apply(session);
 		} catch (Exception e) {
-			operationError();
+			operationError(e);
 		}
 		return null;
 	}
@@ -83,17 +85,13 @@ public class HibernateUtil {
 		try (var session = getSession()) {
 			consumer.accept(session);
 		} catch (Exception e) {
-			operationError();
+			operationError(e);
 		}
 	}
 
-	private static void operationError() {
-		JOptionPane.showMessageDialog(
-			null,
-			"Ha ocurrido un error al realizar la operación. Abortando.",
-			"Error",
-			JOptionPane.ERROR_MESSAGE
-		);
+	private static void operationError(Throwable e) {
+		ErrorDialog.display(MainMenu.INSTANCE, "Ha ocurrido un error al realizar la operación. Abortando.", e);
+		ViewStack.popAllButLast();
 		SwingUtilities.invokeLater(ViewStack.current()::replaceWithWelcome);
 	}
 }

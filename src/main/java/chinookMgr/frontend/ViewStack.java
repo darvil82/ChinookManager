@@ -13,6 +13,7 @@ public class ViewStack {
 	private final ArrayList<ToolView> views = new ArrayList<>();
 	private final HashMap<ToolView.Supplier<?>, Consumer<?>> awaiters = new HashMap<>();
 	public @Nullable Consumer<ToolView> onViewChange;
+	public @Nullable Runnable onStackPop;
 
 	private static List<ViewStack> stacks = new ArrayList<>();
 
@@ -31,12 +32,15 @@ public class ViewStack {
 	}
 
 	public static void popViewStack() {
-		stacks.removeLast();
+		var cb = stacks.removeLast().onStackPop;
+
+		if (cb != null)
+			cb.run();
 	}
 
 	public static void popAllButLast() {
 		while (stacks.size() > 1) {
-			stacks.removeLast();
+			popViewStack();
 		}
 	}
 
