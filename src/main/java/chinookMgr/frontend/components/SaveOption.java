@@ -1,6 +1,7 @@
 package chinookMgr.frontend.components;
 
 import chinookMgr.backend.Saveable;
+import chinookMgr.frontend.StatusManager;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.View;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,7 @@ public class SaveOption<T extends ToolView & Saveable> extends View {
 	private void onSave() {
 		if (!this.parent.getValidator().validate()) return;
 		this.parent.save();
+		StatusManager.showUpdate("Elemento guardado");
 	}
 
 	private void onDelete() {
@@ -39,6 +41,7 @@ public class SaveOption<T extends ToolView & Saveable> extends View {
 			JOptionPane.WARNING_MESSAGE
 		) == JOptionPane.YES_OPTION) {
 			this.parent.delete();
+			StatusManager.showUpdate("Elemento eliminado");
 		}
 	}
 

@@ -195,6 +195,7 @@ public class TableInspector<T> extends View {
 
 		// restore selection
 		tableSelection = Math.min(tableSelection, this.resultTable.getRowCount() - 1);
+		if (tableSelection < 0) return;
 		this.resultTable.setRowSelectionInterval(tableSelection, tableSelection);
 	}
 }
