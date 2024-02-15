@@ -21,8 +21,13 @@ public class SaveOption<T extends ToolView & Saveable> extends View {
 			this.btnDelete.setVisible(true);
 			this.btnDelete.addActionListener(e -> this.onDelete());
 		}
-		this.btnSave.addActionListener(e -> parent.save());
+		this.btnSave.addActionListener(e -> this.onSave());
 		this.btnCancel.addActionListener(e -> parent.cancel());
+	}
+
+	private void onSave() {
+		if (!this.parent.getValidator().validate()) return;
+		this.parent.save();
 	}
 
 	private void onDelete() {

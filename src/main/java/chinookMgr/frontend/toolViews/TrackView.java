@@ -6,6 +6,7 @@ import chinookMgr.backend.entityHelpers.Genre;
 import chinookMgr.backend.entityHelpers.MediaType;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.frontend.InputValidator;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.ViewStack;
@@ -57,6 +58,7 @@ public class TrackView extends ToolView implements Saveable {
 		this.txtComposer.setText(this.track.getComposer());
 		this.numPrice.setValue(this.track.getUnitPrice().doubleValue());
 		this.selectedAlbum = Album.getById(this.track.getAlbumId());
+
 		this.btnAlbum.setText(this.selectedAlbum.getTitle());
 		this.selectedGenre = Genre.getById(this.track.getGenreId());
 		this.btnGenre.setText(this.selectedGenre.getName());
@@ -85,6 +87,10 @@ public class TrackView extends ToolView implements Saveable {
 
 	private void build() {
 		SwingUtilities.invokeLater(() -> this.txtName.grabFocus());
+
+		this.getValidator().register(this.txtName, c -> !c.getText().isBlank(), "No se ha especificado un nombre");
+		this.getValidator().register(this.btnAlbum, c -> this.selectedAlbum != null, "No se ha seleccionado un album");
+		this.getValidator().register(this.btnGenre, c -> this.selectedGenre != null, "No se ha seleccionado un género");
 
 		this.mediaTypeContainer.add(
 			this.comboMediaType = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName)
