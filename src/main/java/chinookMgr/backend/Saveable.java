@@ -5,9 +5,7 @@ import chinookMgr.frontend.ViewStack;
 public interface Saveable {
 	void save();
 
-	default void cancel() {
-		ViewStack.current().pop();
-	}
+	default void cancel() {}
 
 	default boolean isDeletable() {
 		return false;

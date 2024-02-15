@@ -15,6 +15,15 @@ public class TestView extends ToolView {
 
 	public TestView(int current) {
 		this.current = current;
+		this.build();
+	}
+
+	public TestView() {
+		this(0);
+	}
+
+	@Override
+	protected void build() {
 		this.openSubButton.addActionListener(e -> {
 			ViewStack.current().push(new TestView(current + 1));
 			StatusManager.showUpdate("Opened subview " + (current + 1) + "!");
@@ -22,9 +31,6 @@ public class TestView extends ToolView {
 		this.txt.setText("Current: " + current);
 	}
 
-	public TestView() {
-		this(0);
-	}
 
 	@Override
 	public @NotNull JPanel getPanel() {

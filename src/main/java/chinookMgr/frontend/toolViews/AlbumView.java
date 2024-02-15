@@ -23,11 +23,11 @@ public class AlbumView extends ToolView {
 
 	public AlbumView(AlbumEntity album) {
 		this.album = album;
-		this.buildForAlbum();
+		this.buildForEntity();
 	}
 
-	private void buildForAlbum() {
-		this.build();
+	@Override
+	protected void build() {
 		this.txtTitle.setText(this.album.getTitle());
 		this.btnArtist.setText(Artist.getById(this.album.getArtistId()).getName());
 		this.insertView(
@@ -35,9 +35,6 @@ public class AlbumView extends ToolView {
 			new GenericTableView<>("Canciones", Album.getTracksTableInspector(this.album)
 				.openViewOnRowClick(TrackView::new))
 		);
-	}
-
-	private void build() {
 	}
 
 	@Override

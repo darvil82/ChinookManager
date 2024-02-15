@@ -19,16 +19,18 @@ public class GenreView extends ToolView implements Saveable {
 	private GenreEntity genre;
 
 	public GenreView() {
-		this.build();
+		this.buildForNew();
 	}
 
 	public GenreView(GenreEntity genre) {
 		this.genre = genre;
-		this.buildForGenre();
+		this.buildForEntity();
 	}
 
-	private void buildForGenre() {
-		this.build();
+
+	@Override
+	protected void build() {
+		this.insertView(this.savePanel, new SaveOption<>(this));
 		this.txtName.setText(this.genre.getName());
 		this.tracksPanel.setVisible(true);
 		this.insertView(
@@ -36,10 +38,6 @@ public class GenreView extends ToolView implements Saveable {
 			new GenericTableView<>("Canciones", Genre.getTracksTableInspector(this.genre)
 				.openViewOnRowClick(TrackView::new))
 		);
-	}
-
-	private void build() {
-		this.insertView(this.savePanel, new SaveOption<>(this));
 	}
 
 	@Override

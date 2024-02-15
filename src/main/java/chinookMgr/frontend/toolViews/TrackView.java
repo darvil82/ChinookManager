@@ -39,7 +39,7 @@ public class TrackView extends ToolView implements Saveable {
 
 	public TrackView(TrackEntity track) {
 		this.track = track;
-		this.buildForTrack();
+		this.buildForEntity();
 	}
 
 	public TrackView() {
@@ -47,12 +47,9 @@ public class TrackView extends ToolView implements Saveable {
 		this.buildForNew();
 	}
 
-	private void buildForNew() {
-		this.build();
-	}
-
-	private void buildForTrack() {
-		this.build();
+	@Override
+	protected void buildForEntity() {
+		super.buildForEntity();
 
 		this.txtName.setText(this.track.getName());
 		this.txtComposer.setText(this.track.getComposer());
@@ -85,7 +82,8 @@ public class TrackView extends ToolView implements Saveable {
 		this.numSeconds.setValue(seconds);
 	}
 
-	private void build() {
+	@Override
+	protected void build() {
 		SwingUtilities.invokeLater(() -> this.txtName.grabFocus());
 
 		this.getValidator().register(this.txtName, c -> !c.getText().isBlank(), "No se ha especificado un nombre");
@@ -156,8 +154,6 @@ public class TrackView extends ToolView implements Saveable {
 
 			session.getTransaction().commit();
 		});
-
-		ViewStack.current().pop();
 	}
 
 	@Override
@@ -167,8 +163,6 @@ public class TrackView extends ToolView implements Saveable {
 			session.remove(this.track);
 			session.getTransaction().commit();
 		});
-
-		ViewStack.current().pop();
 	}
 
 	@Override

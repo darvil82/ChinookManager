@@ -60,8 +60,8 @@ public class TableInspector<T> extends View {
 		this(querier, counter, new ListTableModel<>());
 	}
 
-
-	private void build() {
+	@Override
+	protected void build() {
 		SwingUtilities.invokeLater(() -> this.inputSearch.requestFocus());
 		this.resultTable.setModel(this.tableModel);
 
@@ -190,8 +190,6 @@ public class TableInspector<T> extends View {
 
 		this.setPage(this.currentPage); // refetch data in case it changed
 		this.tableScrollPane.getVerticalScrollBar().setValue(prevScroll); // restore scroll
-
-		if (tableSelection == -1) return;
 
 		// restore selection
 		tableSelection = Math.min(tableSelection, this.resultTable.getRowCount() - 1);

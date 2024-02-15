@@ -22,6 +22,13 @@ public class GenericTableView<T> extends ToolView.Supplier<T> {
 			this.mainPanel,
 			inspector
 		);
+
+		this.build();
+	}
+
+	@Override
+	protected void build() {
+
 	}
 
 	@Override

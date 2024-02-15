@@ -13,8 +13,13 @@ public class WelcomeView extends ToolView {
 	private JLabel txtWelcome;
 
 	public WelcomeView() {
-		this.btnLogin.addActionListener(e -> ViewStack.current().push(new LoginView()));
+		this.build();
 		this.onReMount(null);
+	}
+
+	@Override
+	protected void build() {
+		this.btnLogin.addActionListener(e -> ViewStack.current().push(new LoginView()));
 	}
 
 	@Override

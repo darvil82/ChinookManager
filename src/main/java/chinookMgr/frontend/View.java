@@ -13,6 +13,8 @@ public abstract class View {
 
 	public abstract @NotNull JPanel getPanel();
 
+	protected abstract void build();
+
 	protected void onReMount(@Nullable ToolView prevView) {
 		this.children.forEach(c -> c.onReMount(prevView));
 	}

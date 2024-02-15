@@ -16,6 +16,12 @@ public class LoginView extends ToolView {
 	private JButton btnLogin;
 
 	public LoginView() {
+		this.build();
+	}
+
+
+	@Override
+	protected void build() {
 		SwingUtilities.invokeLater(() -> this.inputEmail.grabFocus());
 		this.inputEmail.addActionListener(e -> this.login());
 		this.inputPassword.addActionListener(e -> this.login());
@@ -55,6 +61,7 @@ public class LoginView extends ToolView {
 	public @NotNull JPanel getPanel() {
 		return this.mainPanel;
 	}
+
 
 	@Override
 	public @NotNull String getName() {
