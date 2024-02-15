@@ -1,10 +1,10 @@
 package chinookMgr.backend.entityHelpers;
 
+import chinookMgr.backend.db.entities.AlbumEntity;
 import chinookMgr.backend.db.entities.ArtistEntity;
-import chinookMgr.backend.db.entities.TrackEntity;
-import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
-import chinookMgr.frontend.toolViews.TrackView;
+
+import static chinookMgr.backend.entityHelpers.EntityHelper.defaultSearch;
 
 public class Artist {
 	public static ArtistEntity getById(int id) {
@@ -13,6 +13,19 @@ public class Artist {
 
 	public static TableInspector<ArtistEntity> getTableInspector() {
 		return EntityHelper.getTableInspector(ArtistEntity.class, "name");
-//			.onNewButtonClick(() -> ViewStack.current().push(new TrackView()));
+	}
+
+	public static TableInspector<AlbumEntity> getAlbumsTableInspector(ArtistEntity artist) {
+		return new TableInspector<>(
+			(session, s) ->
+				session.createQuery("from AlbumEntity where artistId = :id and title like :input", AlbumEntity.class)
+					.setParameter("id", artist.getArtistId())
+					.setParameter("input", defaultSearch(s))
+			,
+			(session, s) ->
+				session.createQuery("select count(*) from AlbumEntity where artistId = :id and title like :input", Long.class)
+					.setParameter("id", artist.getArtistId())
+					.setParameter("input", defaultSearch(s))
+		);
 	}
 }

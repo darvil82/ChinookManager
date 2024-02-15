@@ -1,10 +1,11 @@
 package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.db.entities.AlbumEntity;
+import chinookMgr.backend.db.entities.ArtistEntity;
 import chinookMgr.backend.entityHelpers.Album;
 import chinookMgr.backend.entityHelpers.Artist;
 import chinookMgr.frontend.ToolView;
-import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -16,20 +17,34 @@ public class AlbumView extends ToolView {
 	private JPanel mainPanel;
 
 	private AlbumEntity album;
+	private ArtistEntity artist;
 
 	public AlbumView() {
-		this.build();
+		this.buildForNew();
 	}
 
 	public AlbumView(AlbumEntity album) {
 		this.album = album;
+		this.artist = Artist.getById(this.album.getArtistId());
 		this.buildForEntity();
 	}
 
 	@Override
-	protected void build() {
+	protected void buildForEntity() {
+		super.buildForEntity();
 		this.txtTitle.setText(this.album.getTitle());
-		this.btnArtist.setText(Artist.getById(this.album.getArtistId()).getName());
+	}
+
+	@Override
+	protected void build() {
+		Utils.attachViewSelectorToButton(
+			this.btnArtist,
+			() -> this.artist, "Artista",
+			Artist.getTableInspector(),
+			e -> this.artist = e,
+			ArtistView::new
+		);
+
 		this.insertView(
 			this.tracksPanel,
 			new GenericTableView<>("Canciones", Album.getTracksTableInspector(this.album)

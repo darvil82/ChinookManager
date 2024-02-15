@@ -1,18 +1,20 @@
 package chinookMgr.backend;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class User<T> {
 	public abstract @NotNull String getFirstName();
 	public abstract @NotNull String getLastName();
-	public abstract @NotNull String getAddress();
-	public abstract @NotNull String getCity();
-	public abstract @NotNull String getState();
-	public abstract @NotNull String getCountry();
-	public abstract @NotNull String getPostalCode();
-	public abstract @NotNull String getPhone();
+	public abstract @Nullable String getAddress();
+	public abstract @Nullable String getCity();
+	public abstract @Nullable String getState();
+	public abstract @Nullable String getCountry();
+	public abstract @Nullable String getPostalCode();
+	public abstract @Nullable String getPhone();
+	public abstract @Nullable String getFax();
 	public abstract @NotNull String getEmail();
 
 	public abstract @NotNull T getEntity();

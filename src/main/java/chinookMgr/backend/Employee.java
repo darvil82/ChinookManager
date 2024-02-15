@@ -3,6 +3,7 @@ package chinookMgr.backend;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.EmployeeEntity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -24,33 +25,38 @@ public class Employee extends User<EmployeeEntity> {
 	}
 
 	@Override
-	public @NotNull String getAddress() {
+	public @Nullable String getAddress() {
 		return this.entity.getAddress();
 	}
 
 	@Override
-	public @NotNull String getCity() {
+	public @Nullable String getCity() {
 		return this.entity.getCity();
 	}
 
 	@Override
-	public @NotNull String getState() {
+	public @Nullable String getState() {
 		return this.entity.getAddress();
 	}
 
 	@Override
-	public @NotNull String getCountry() {
+	public @Nullable String getCountry() {
 		return this.entity.getCountry();
 	}
 
 	@Override
-	public @NotNull String getPostalCode() {
+	public @Nullable String getPostalCode() {
 		return this.entity.getPostalCode();
 	}
 
 	@Override
-	public @NotNull String getPhone() {
+	public @Nullable String getPhone() {
 		return this.entity.getPhone();
+	}
+
+	@Override
+	public @Nullable String getFax() {
+		return this.entity.getFax();
 	}
 
 	@Override

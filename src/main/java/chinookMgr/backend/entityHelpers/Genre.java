@@ -5,6 +5,8 @@ import chinookMgr.backend.db.entities.GenreEntity;
 import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.components.TableInspector;
 
+import static chinookMgr.backend.entityHelpers.EntityHelper.defaultSearch;
+
 public abstract class Genre {
 	private Genre() {}
 
@@ -21,14 +23,14 @@ public abstract class Genre {
 	public static TableInspector<TrackEntity> getTracksTableInspector(GenreEntity genre) {
 		var genreId = genre.getGenreId();
 
-		return new TableInspector<>((session, search) ->
-			session.createQuery("from TrackEntity where genreId = :genreId and name like :search", TrackEntity.class)
-				.setParameter("genreId", genreId)
-				.setParameter("search", "%" + search + "%"),
+		return new TableInspector<>(
+			(session, search) -> session.createQuery("from TrackEntity where genreId = :genreId and name like :search", TrackEntity.class)
+					.setParameter("genreId", genreId)
+					.setParameter("search", defaultSearch(search)),
 
-			(session, s) -> session.createQuery("select count(*) from TrackEntity where genreId = :genreId and name like :search", Long.class)
+			(session, search) -> session.createQuery("select count(*) from TrackEntity where genreId = :genreId and name like :search", Long.class)
 				.setParameter("genreId", genreId)
-				.setParameter("search", "%" + s + "%")
+				.setParameter("search", defaultSearch(search))
 		);
 	}
 }

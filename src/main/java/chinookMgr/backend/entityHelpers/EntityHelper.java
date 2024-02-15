@@ -1,11 +1,8 @@
 package chinookMgr.backend.entityHelpers;
 
 import chinookMgr.backend.db.HibernateUtil;
-import chinookMgr.backend.db.entities.GenreEntity;
 import chinookMgr.frontend.components.TableInspector;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.stream.Stream;
 
 public abstract class EntityHelper {
 	private EntityHelper() {}
@@ -25,13 +22,17 @@ public abstract class EntityHelper {
 					"from " + entityClass.getSimpleName() + " where " + searchField + " like :input",
 					entityClass
 				)
-				.setParameter("input", "%" + input + "%"),
+				.setParameter("input", defaultSearch(input)),
 
 			(session, input) -> session.createQuery(
 					"select count(*) from " + entityClass.getSimpleName() + " where " + searchField + " like :input",
 					Long.class
 				)
-				.setParameter("input", "%" + input + "%")
+				.setParameter("input", defaultSearch(input))
 		);
+	}
+
+	public static @NotNull String defaultSearch(@NotNull String input) {
+		return "%" + input + "%";
 	}
 }

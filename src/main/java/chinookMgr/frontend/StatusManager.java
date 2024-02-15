@@ -22,7 +22,7 @@ public abstract class StatusManager {
 		statusLabel.setText(status);
 	}
 
-	public static void clear() {
+	public static void clearStatus() {
 		if (hideThread == null)
 			statusLabel.setText("");
 	}
@@ -36,7 +36,7 @@ public abstract class StatusManager {
 	}
 
 
-	static class HideThread extends Thread {
+	private static class HideThread extends Thread {
 		public HideThread() {
 			this.start();
 		}
