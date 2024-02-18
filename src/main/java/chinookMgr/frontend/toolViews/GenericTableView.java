@@ -27,11 +27,6 @@ public class GenericTableView<T> extends ToolView.Supplier<T> {
 	}
 
 	@Override
-	protected void build() {
-
-	}
-
-	@Override
 	public @NotNull JPanel getPanel() {
 		return this.mainPanel;
 	}

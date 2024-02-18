@@ -43,9 +43,6 @@ public class UserAccountView extends ToolView {
 		this.txtFax.setText(this.currentUser.getFax());
 	}
 
-	@Override
-	protected void build() {
-	}
 
 	@Override
 	public @NotNull String getName() {

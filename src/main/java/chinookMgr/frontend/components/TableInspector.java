@@ -124,8 +124,8 @@ public class TableInspector<T> extends View {
 	}
 
 	private void clearData() {
-		this.getTableModel().clear();
 		this.btnForward.setEnabled(false);
+		this.btnBack.setEnabled(false);
 		this.txtResultCount.setText("0 resultados");
 	}
 

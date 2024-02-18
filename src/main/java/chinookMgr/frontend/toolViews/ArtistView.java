@@ -31,11 +31,6 @@ public class ArtistView extends ToolView {
 	}
 
 	@Override
-	protected void build() {
-
-	}
-
-	@Override
 	public @NotNull String getName() {
 		return "Artista (" + this.txtName.getText() + ")";
 	}

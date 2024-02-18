@@ -99,10 +99,7 @@ public class MainMenu extends JFrame {
 
 	public void build() {
 		this.toolbar = new Toolbar();
-		this.toolbar.addOption("DEBUG1", e -> {
-			WindowedToolView.display(this, new TrackView(Track.getById(1)));
-		});
-		UserToolbars.TRACKS.accept(this.toolbar);
+		UserToolbars.DEBUG.accept(this.toolbar);
 
 //		this.toolbar.setVisible(false);
 		this.toolbarContainer.add(this.toolbar);

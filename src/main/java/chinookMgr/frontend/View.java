@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public abstract class View {
 	private final @NotNull ArrayList<View> children = new ArrayList<>(0);
 
+	protected void build() {}
 	public abstract @NotNull JPanel getPanel();
 
-	protected abstract void build();
 
 	protected void onReMount(@Nullable ToolView prevView) {
 		this.children.forEach(c -> c.onReMount(prevView));
