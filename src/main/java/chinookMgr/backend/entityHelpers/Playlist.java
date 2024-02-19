@@ -4,13 +4,17 @@ import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.PlaylistEntity;
 import chinookMgr.backend.db.entities.PlaylistTrackEntity;
 import chinookMgr.backend.db.entities.TrackEntity;
+import chinookMgr.frontend.ListTableModel;
 import chinookMgr.frontend.StatusManager;
+import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
 import chinookMgr.frontend.toolViews.PlaylistView;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+
+import java.util.List;
 
 import static chinookMgr.backend.entityHelpers.EntityHelper.defaultSearch;
 
@@ -36,7 +40,9 @@ public abstract class Playlist {
 
 			(session, search) -> session.createQuery("select count(*) from PlaylistTrackEntity pt join TrackEntity t on pt.trackId = t.trackId where pt.playlistId = :listId and t.name like :search", Long.class)
 				.setParameter("listId", playlistId)
-				.setParameter("search", defaultSearch(search))
+				.setParameter("search", defaultSearch(search)),
+
+			new ListTableModel<>(List.of("Nombre", "Duración"), (item, column) -> column == 1 ? Utils.formatMillis(item.getMilliseconds()) : item.toString())
 		);
 	}
 

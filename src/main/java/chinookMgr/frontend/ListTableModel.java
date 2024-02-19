@@ -7,12 +7,13 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 public class ListTableModel<T> extends AbstractTableModel implements Iterable<T> {
-	protected List<T> items;
+	protected final List<T> items = new ArrayList<>();
 	private final List<String> columnNames;
-	private CellRenderer<T> renderer;
+	private final BiFunction<T, Integer, String> cellRenderer;
 
 	@FunctionalInterface
 	public interface CellRenderer<T> {
@@ -21,17 +22,13 @@ public class ListTableModel<T> extends AbstractTableModel implements Iterable<T>
 
 
 	public ListTableModel() {
-		this(new ArrayList<>(), List.of("Item"), (item, column) -> item.toString());
+		this.columnNames = List.of("Elemento");
+		this.cellRenderer = (item, column) -> item.toString();
 	}
 
-	public ListTableModel(List<T> list) {
-		this(list, List.of("Item"), (item, column) -> item.toString());
-	}
-
-	public ListTableModel(List<T> list, List<String> columnNames, CellRenderer<T> renderer) {
-		this.items = list;
+	public ListTableModel(List<String> columnNames, BiFunction<T, Integer, String> cellRenderer) {
 		this.columnNames = columnNames;
-		this.renderer = renderer;
+		this.cellRenderer = cellRenderer;
 	}
 
 	@Override
@@ -70,7 +67,7 @@ public class ListTableModel<T> extends AbstractTableModel implements Iterable<T>
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return this.getItemAt(rowIndex);
+		return this.cellRenderer.apply(this.getItemAt(rowIndex), columnIndex);
 	}
 
 	@Override

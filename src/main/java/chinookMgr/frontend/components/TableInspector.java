@@ -68,6 +68,7 @@ public class TableInspector<T> extends View {
 	protected void build() {
 		SwingUtilities.invokeLater(() -> this.inputSearch.requestFocus());
 		this.resultTable.setModel(this.tableModel);
+		this.resultTable.getTableHeader().setReorderingAllowed(false);
 
 		this.resultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.resultTable.addMouseListener(new MouseAdapter() {

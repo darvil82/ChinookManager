@@ -40,4 +40,11 @@ public final class Utils {
 			);
 		});
 	}
+
+
+	public static @NotNull String formatMillis(long millis) {
+		int minutes = (int) (millis / (1000 * 60)) % 60;
+		int seconds = (int) (millis / 1000) % 60;
+		return String.format("%02d:%02d", minutes, seconds);
+	}
 }
