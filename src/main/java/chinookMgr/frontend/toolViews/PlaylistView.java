@@ -3,7 +3,9 @@ package chinookMgr.frontend.toolViews;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.PlaylistEntity;
 import chinookMgr.backend.entityHelpers.Playlist;
+import chinookMgr.backend.entityHelpers.Track;
 import chinookMgr.frontend.ToolView;
+import chinookMgr.frontend.ViewStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +33,7 @@ public class PlaylistView extends ToolView {
 	@Override
 	protected void build() {
 		super.build();
+		this.btnAddSong.addActionListener(e -> this.addSong());
 	}
 
 	@Override
@@ -42,7 +45,17 @@ public class PlaylistView extends ToolView {
 			"Canciones", Playlist.getTracksTableInspector(this.currentPlaylist)
 		));
 
-		this.onReMount(null);
+		this.recalculateDuration();
+	}
+
+	private void addSong() {
+		ViewStack.current().pushAwait(
+			new GenericTableView<>("Seleccionar Canción", Track.getTableInspector().submitValueOnRowClick()),
+			track -> {
+				Playlist.addTrack(this.currentPlaylist, track);
+				this.recalculateDuration();
+			}
+		);
 	}
 
 	@Override
@@ -57,12 +70,17 @@ public class PlaylistView extends ToolView {
 
 	@Override
 	protected void onReMount(@Nullable ToolView prevView) {
+		super.onReMount(prevView);
+		this.recalculateDuration();
+	}
+
+	private void recalculateDuration() {
 		// recalculating the total duration
 		HibernateUtil.withSession(s -> {
 			s.createQuery(
-				"select sum(t.milliseconds) from PlaylistTrackEntity pt join TrackEntity t on pt.trackId = t.trackId where pt.playlistId = :playlistId",
-				Long.class
-			)
+					"select sum(t.milliseconds) from PlaylistTrackEntity pt join TrackEntity t on pt.trackId = t.trackId where pt.playlistId = :playlistId",
+					Long.class
+				)
 				.setParameter("playlistId", this.currentPlaylist.getPlaylistId())
 				.uniqueResultOptional()
 				.ifPresentOrElse(

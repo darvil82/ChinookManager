@@ -14,7 +14,7 @@ public class WelcomeView extends ToolView {
 
 	public WelcomeView() {
 		this.build();
-		this.onReMount(null);
+		this.onReMount();
 	}
 
 	@Override

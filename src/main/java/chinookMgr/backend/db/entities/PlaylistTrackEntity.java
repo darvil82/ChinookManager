@@ -1,15 +1,11 @@
 package chinookMgr.backend.db.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 @jakarta.persistence.Table(name = "PlaylistTrack", schema = "Chinook", catalog = "")
 @jakarta.persistence.IdClass(chinookMgr.backend.db.entities.PlaylistTrackEntityPK.class)
 public class PlaylistTrackEntity {
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@jakarta.persistence.Column(name = "PlaylistId", nullable = false)
 	private int playlistId;
@@ -22,7 +18,6 @@ public class PlaylistTrackEntity {
 		this.playlistId = playlistId;
 	}
 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@jakarta.persistence.Column(name = "TrackId", nullable = false)
 	private int trackId;

@@ -20,19 +20,14 @@ public class HibernateUtil {
 	public static Consumer<Boolean> onConnectionChange;
 	private static boolean isConnected = false;
 
-	public static boolean init(@NotNull Consumer<Boolean> onConnectionChange) {
-		try {
-			try (var x = new StandardServiceRegistryBuilder().configure().build()) {
-				sessionFactory = new Configuration().configure().buildSessionFactory(x);
-			}
-		} catch (Exception ex) {
-			return false;
+	public static void init(@NotNull Consumer<Boolean> onConnectionChange) throws Exception {
+		try (var x = new StandardServiceRegistryBuilder().configure().build()) {
+			sessionFactory = new Configuration().configure().buildSessionFactory(x);
 		}
 
 		HibernateUtil.onConnectionChange = onConnectionChange;
 		isConnected = true;
 		new CheckingThread();
-		return true;
 	}
 
 	private static void invokeOnConnectionChange(boolean isConnected) {
@@ -74,7 +69,10 @@ public class HibernateUtil {
 
 	public static <T> T withSession(@NotNull Function<Session, @NotNull T> consumer) {
 		try (var session = getSession()) {
-			return consumer.apply(session);
+			session.beginTransaction();
+			var result = consumer.apply(session);
+			session.getTransaction().commit();
+			return result;
 		} catch (Exception e) {
 			operationError(e);
 		}
@@ -83,7 +81,9 @@ public class HibernateUtil {
 
 	public static void withSession(@NotNull Consumer<Session> consumer) {
 		try (var session = getSession()) {
+			session.beginTransaction();
 			consumer.accept(session);
+			session.getTransaction().commit();
 		} catch (Exception e) {
 			operationError(e);
 		}

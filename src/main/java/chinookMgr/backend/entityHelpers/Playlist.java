@@ -1,7 +1,9 @@
 package chinookMgr.backend.entityHelpers;
 
+import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.AlbumEntity;
 import chinookMgr.backend.db.entities.PlaylistEntity;
+import chinookMgr.backend.db.entities.PlaylistTrackEntity;
 import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
@@ -35,5 +37,15 @@ public abstract class Playlist {
 				.setParameter("listId", playlistId)
 				.setParameter("search", defaultSearch(search))
 		);
+	}
+
+	public static void addTrack(@NotNull PlaylistEntity playlist, @NotNull TrackEntity track) {
+		HibernateUtil.withSession(s -> {
+			var playlistTrack = new PlaylistTrackEntity();
+			playlistTrack.setPlaylistId(playlist.getPlaylistId());
+			playlistTrack.setTrackId(track.getTrackId());
+
+			s.persist(playlistTrack);
+		});
 	}
 }

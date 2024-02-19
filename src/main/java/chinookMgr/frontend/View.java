@@ -19,6 +19,10 @@ public abstract class View {
 		this.children.forEach(c -> c.onReMount(prevView));
 	}
 
+	public final void onReMount() {
+		this.onReMount(null);
+	}
+
 	protected void insertView(@NotNull JPanel container, @NotNull Builder<? extends View> view) {
 		this.insertView(container, view.build());
 	}
