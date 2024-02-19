@@ -6,6 +6,7 @@ import chinookMgr.backend.entityHelpers.Genre;
 import chinookMgr.backend.entityHelpers.MediaType;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.backend.entityHelpers.Track;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.components.SaveOption;
@@ -149,9 +150,7 @@ public class TrackView extends ToolView implements Saveable {
 
 	@Override
 	public void delete() {
-		HibernateUtil.withSession(session -> {
-			session.remove(this.track);
-		});
+		Track.disable(this.track);
 	}
 
 	@Override

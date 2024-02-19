@@ -22,11 +22,11 @@ public abstract class Album {
 		var albumId = album.getAlbumId();
 
 		return new TableInspector<>(
-			(session, search) -> session.createQuery("from TrackEntity where albumId = :albumId and name like :search", TrackEntity.class)
+			(session, search) -> session.createQuery("from TrackEntity where albumId = :albumId and name like :search and enabled = true", TrackEntity.class)
 				.setParameter("albumId", albumId)
 				.setParameter("search", defaultSearch(search)),
 
-			(session, search) -> session.createQuery("select count(*) from TrackEntity where albumId = :albumId and name like :search", Long.class)
+			(session, search) -> session.createQuery("select count(*) from TrackEntity where albumId = :albumId and name like :search and enabled = true", Long.class)
 				.setParameter("albumId", albumId)
 				.setParameter("search", defaultSearch(search))
 		);

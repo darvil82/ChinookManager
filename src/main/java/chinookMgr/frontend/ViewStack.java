@@ -4,6 +4,7 @@ import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,10 @@ public class ViewStack {
 
 	public static ViewStack current() {
 		return stacks.getLast();
+	}
+
+	public static JPanel currentPanel() {
+		return current().getTop().getPanel();
 	}
 
 	public static void pushViewStack(ViewStack stack) {

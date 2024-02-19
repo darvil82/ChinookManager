@@ -24,11 +24,11 @@ public abstract class Genre {
 		var genreId = genre.getGenreId();
 
 		return new TableInspector<>(
-			(session, search) -> session.createQuery("from TrackEntity where genreId = :genreId and name like :search", TrackEntity.class)
+			(session, search) -> session.createQuery("from TrackEntity where genreId = :genreId and name like :search and enabled = true", TrackEntity.class)
 					.setParameter("genreId", genreId)
 					.setParameter("search", defaultSearch(search)),
 
-			(session, search) -> session.createQuery("select count(*) from TrackEntity where genreId = :genreId and name like :search", Long.class)
+			(session, search) -> session.createQuery("select count(*) from TrackEntity where genreId = :genreId and name like :search and enabled = true", Long.class)
 				.setParameter("genreId", genreId)
 				.setParameter("search", defaultSearch(search))
 		);

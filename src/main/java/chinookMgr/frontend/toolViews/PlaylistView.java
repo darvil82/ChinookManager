@@ -2,6 +2,7 @@ package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.PlaylistEntity;
+import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.backend.entityHelpers.Playlist;
 import chinookMgr.backend.entityHelpers.Track;
 import chinookMgr.frontend.ToolView;
@@ -10,12 +11,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.event.MouseEvent;
 
 public class PlaylistView extends ToolView {
 	private JTextField txtName;
 	private JTextField txtTotalDuration;
 	private JPanel tracksPanel;
-	private JButton btnAddSong;
 	private JPanel mainPanel;
 
 	private final PlaylistEntity currentPlaylist;
@@ -31,26 +32,34 @@ public class PlaylistView extends ToolView {
 	}
 
 	@Override
-	protected void build() {
-		super.build();
-		this.btnAddSong.addActionListener(e -> this.addSong());
-	}
-
-	@Override
 	protected void buildForEntity() {
 		super.buildForEntity();
 
 		this.txtName.setText(this.currentPlaylist.getName());
 		this.insertView(this.tracksPanel, new GenericTableView<>(
 			"Canciones", Playlist.getTracksTableInspector(this.currentPlaylist)
-		));
+				.onRowClick(this::onTrackClick)
+				.onNewButtonClick(this::addSong))
+		);
 
 		this.recalculateDuration();
 	}
 
+	private void onTrackClick(MouseEvent e, TrackEntity track) {
+		// is the user holding the DELETE key?
+		if (e.isControlDown()) {
+			Playlist.removeTrack(this.currentPlaylist, track);
+			this.onReMount();
+			return;
+		}
+
+		// if not, then we just show the track details
+		ViewStack.current().push(new TrackView(track));
+	}
+
 	private void addSong() {
 		ViewStack.current().pushAwait(
-			new GenericTableView<>("Seleccionar Canción", Track.getTableInspector().submitValueOnRowClick()),
+			new GenericTableView<>("Añadir Canción", Track.getTableInspector().submitValueOnRowClick()),
 			track -> {
 				Playlist.addTrack(this.currentPlaylist, track);
 				this.recalculateDuration();

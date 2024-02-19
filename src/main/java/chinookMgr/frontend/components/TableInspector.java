@@ -19,6 +19,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -37,7 +38,7 @@ public class TableInspector<T> extends View {
 
 	private final Querier<T> querier;
 	private final Querier<Long> counter;
-	private Consumer<T> onRowClick;
+	private BiConsumer<MouseEvent, T> onRowClick;
 	private final ListTableModel<T> tableModel;
 
 	private int pageCount = 0;
@@ -74,7 +75,7 @@ public class TableInspector<T> extends View {
 			public void mouseClicked(MouseEvent e) {
 				if (TableInspector.this.onRowClick == null) return;
 				var pos = TableInspector.this.resultTable.rowAtPoint(e.getPoint());
-				TableInspector.this.onRowClick.accept(TableInspector.this.getTableModel().getItemAt(pos));
+				TableInspector.this.onRowClick.accept(e, TableInspector.this.getTableModel().getItemAt(pos));
 			}
 		});
 		this.btnForward.addActionListener(e -> this.setPage(this.currentPage + 1));
@@ -121,7 +122,7 @@ public class TableInspector<T> extends View {
 				return;
 			}
 
-			this.setPage(0);
+			this.setPage(this.currentPage);
 			this.txtResultCount.setText(valueCount + " resultado/s");
 		});
 	}
@@ -160,18 +161,18 @@ public class TableInspector<T> extends View {
 		this.pageCount = maxPage;
 	}
 
-	public TableInspector<T> onRowClick(@NotNull Consumer<T> onRowClick) {
+	public TableInspector<T> onRowClick(@NotNull BiConsumer<MouseEvent, T> onRowClick) {
 		this.onRowClick = onRowClick;
 		return this;
 	}
 
 	public TableInspector<T> submitValueOnRowClick() {
-		this.onRowClick = ViewStack.current()::popSubmit;
+		this.onRowClick = (e, item) -> ViewStack.current().popSubmit(item);
 		return this;
 	}
 
 	public TableInspector<T> openViewOnRowClick(@NotNull Function<T, ToolView> ctor) {
-		this.onRowClick = item -> ViewStack.current().push(ctor.apply(item));
+		this.onRowClick = (e, item) -> ViewStack.current().push(ctor.apply(item));
 		return this;
 	}
 
@@ -191,7 +192,7 @@ public class TableInspector<T> extends View {
 		int prevScroll = this.tableScrollPane.getVerticalScrollBar().getValue();
 		int tableSelection = this.resultTable.getSelectedRow();
 
-		this.setPage(this.currentPage); // refetch data in case it changed
+		this.updateData(); // refetch data in case it changed
 		this.tableScrollPane.getVerticalScrollBar().setValue(prevScroll); // restore scroll
 
 		// restore selection

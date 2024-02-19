@@ -50,7 +50,9 @@ public class ErrorDialog extends JDialog {
 		this.tracePanel.setVisible(true);
 		this.lblShowTrace.setVisible(false);
 		this.setMinimumSize(new Dimension(500, 450));
+		this.setPreferredSize(new Dimension(800, 600));
 		this.tracePanel.getVerticalScrollBar().setValue(0);
+		this.setLocationRelativeTo(null);
 		this.pack();
 	}
 

@@ -36,6 +36,10 @@ public class TrackEntity {
 	@Column(name = "UnitPrice", nullable = false, precision = 2)
 	private BigDecimal unitPrice;
 
+	@Basic
+	@Column(name = "Enabled", nullable = false)
+	private boolean enabled = true;
+
 	public int getTrackId() {
 		return trackId;
 	}
@@ -106,6 +110,14 @@ public class TrackEntity {
 
 	public void setUnitPrice(BigDecimal unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	@Override

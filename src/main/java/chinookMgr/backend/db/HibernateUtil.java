@@ -90,7 +90,7 @@ public class HibernateUtil {
 	}
 
 	private static void operationError(Throwable e) {
-		ErrorDialog.display(MainMenu.INSTANCE, "Ha ocurrido un error al realizar la operación. Abortando.", e);
+		ErrorDialog.display(ViewStack.currentPanel(), "Ha ocurrido un error al realizar la operación. Abortando.", e);
 		ViewStack.popAllButLast();
 		SwingUtilities.invokeLater(ViewStack.current()::replaceWithWelcome);
 	}
