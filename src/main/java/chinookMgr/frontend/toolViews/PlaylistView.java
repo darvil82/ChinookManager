@@ -88,7 +88,9 @@ public class PlaylistView extends ToolView implements Saveable {
 
 	@Override
 	public @NotNull String getName() {
-		return "Lista de reproducción (" + this.txtName.getText() + ")";
+		return this.currentPlaylist == null
+			? "Nueva lista de reproducción"
+			: "Lista de reproducción (" + this.currentPlaylist.getName() + ")";
 	}
 
 	@Override
@@ -106,9 +108,9 @@ public class PlaylistView extends ToolView implements Saveable {
 		// recalculating the total duration
 		HibernateUtil.withSession(s -> {
 			s.createQuery(
-					"select sum(t.milliseconds) from PlaylistTrackEntity pt join TrackEntity t on pt.trackId = t.trackId where pt.playlistId = :playlistId",
-					Long.class
-				)
+				"select sum(t.milliseconds) from PlaylistTrackEntity pt join TrackEntity t on pt.trackId = t.trackId where pt.playlistId = :playlistId",
+				Long.class
+			)
 				.setParameter("playlistId", this.currentPlaylist.getPlaylistId())
 				.uniqueResultOptional()
 				.ifPresentOrElse(

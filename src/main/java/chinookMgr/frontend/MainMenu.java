@@ -109,9 +109,6 @@ public class MainMenu extends JFrame {
 		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 			KeyStroke.getKeyStroke("ctrl W"), "popViewStack"
 		);
-		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-			KeyStroke.getKeyStroke("alt LEFT"), "popViewStack"
-		);
 		this.getRootPane().getActionMap().put("popViewStack", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
