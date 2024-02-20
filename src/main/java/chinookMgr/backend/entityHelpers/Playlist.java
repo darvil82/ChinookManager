@@ -78,4 +78,14 @@ public abstract class Playlist {
 			StatusManager.showUpdate("Canción eliminada de la lista");
 		});
 	}
+
+	public static void remove(@NotNull PlaylistEntity playlist) {
+		HibernateUtil.withSession(s -> {
+			s.createMutationQuery("delete from PlaylistTrackEntity where playlistId = :playlistId")
+				.setParameter("playlistId", playlist.getPlaylistId())
+				.executeUpdate();
+
+			s.remove(playlist);
+		});
+	}
 }

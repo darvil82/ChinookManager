@@ -13,12 +13,22 @@ public class SaveOption<T extends ToolView & Saveable> extends View {
 	private JButton btnDelete;
 
 	private final @NotNull T parent;
+	private final boolean autoPop;
 
-	public SaveOption(@NotNull T parent) {
+	public SaveOption(@NotNull T parent, boolean autoPop) {
+		parent.addOnReMountListener(this::whenRemounted);
 		this.parent = parent;
+		this.autoPop = autoPop;
 		this.build();
 	}
 
+	public SaveOption(@NotNull T parent) {
+		this(parent, true);
+	}
+
+	private void whenRemounted(View view) {
+
+	}
 
 	@Override
 	protected void build() {
@@ -31,7 +41,8 @@ public class SaveOption<T extends ToolView & Saveable> extends View {
 	}
 
 	private void whenDone() {
-		ViewStack.current().pop();
+		if (this.autoPop)
+			ViewStack.current().pop();
 	}
 
 	private void onSave() {

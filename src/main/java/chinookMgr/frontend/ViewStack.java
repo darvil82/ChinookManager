@@ -50,7 +50,7 @@ public class ViewStack {
 	}
 
 
-	private void notifyViewChange() {
+	public void notifyViewChange() {
 		if (onViewChange == null) return;
 		onViewChange.accept(views.isEmpty() ? null : getTop());
 	}
@@ -67,6 +67,7 @@ public class ViewStack {
 	}
 
 	public void replace(@NotNull ToolView view) {
+		views.forEach(ToolView::dispose);
 		views.clear();
 		views.add(view);
 		awaiters.clear();
@@ -78,8 +79,8 @@ public class ViewStack {
 	}
 
 	public void pop() {
-		var prevTop = getTop();
-		views.removeLast();
+		var prevTop = views.removeLast();
+		prevTop.dispose();
 
 		if (prevTop instanceof ToolView.Supplier<?> supplier) {
 			awaiters.remove(supplier);
@@ -92,8 +93,8 @@ public class ViewStack {
 
 	@SuppressWarnings("unchecked")
 	public void popSubmit(@NotNull Object obj) {
-		var prevTop = getTop();
-		views.removeLast();
+		var prevTop = views.removeLast();
+		prevTop.dispose();
 
 		if (prevTop instanceof ToolView.Supplier<?> supplier) {
 			var callback = (Consumer<Object>)awaiters.get(supplier);
@@ -121,6 +122,7 @@ public class ViewStack {
 	}
 
 	public void clear() {
+		views.forEach(ToolView::dispose);
 		views.clear();
 		notifyViewChange();
 	}

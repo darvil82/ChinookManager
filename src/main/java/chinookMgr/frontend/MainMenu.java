@@ -38,7 +38,7 @@ public class MainMenu extends JFrame {
 		this.setContentPane(this.mainPanel);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setMinimumSize(new Dimension(600, 400));
-		this.setPreferredSize(new Dimension(800, 525));
+		this.setPreferredSize(new Dimension(1000, 700));
 		this.pack();
 		this.build();
 	}
@@ -107,7 +107,7 @@ public class MainMenu extends JFrame {
 		this.btnAccount.addActionListener(e -> ViewStack.current().replace(new UserAccountView(UserManager.getCurrentUser())));
 
 		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-			KeyStroke.getKeyStroke("ctrl BACK_SPACE"), "popViewStack"
+			KeyStroke.getKeyStroke("ctrl W"), "popViewStack"
 		);
 		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 			KeyStroke.getKeyStroke("alt LEFT"), "popViewStack"

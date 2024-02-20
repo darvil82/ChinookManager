@@ -14,13 +14,16 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class HibernateUtil {
 	private static SessionFactory sessionFactory;
 	public static Consumer<Boolean> onConnectionChange;
 	private static boolean isConnected = false;
 
-	public static void init(@NotNull Consumer<Boolean> onConnectionChange) throws Exception {
+	public static void init(@NotNull Consumer<Boolean> onConnectionChange) {
+		Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
 		try (var x = new StandardServiceRegistryBuilder().configure().build()) {
 			sessionFactory = new Configuration().configure().buildSessionFactory(x);
 		}

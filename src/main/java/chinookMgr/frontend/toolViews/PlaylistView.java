@@ -21,6 +21,8 @@ public class PlaylistView extends ToolView implements Saveable {
 	private JPanel tracksPanel;
 	private JPanel mainPanel;
 	private JPanel savePanel;
+	private JPanel tracksPanelWrapper;
+	private JPanel infoPanel;
 
 	private PlaylistEntity currentPlaylist;
 
@@ -38,7 +40,8 @@ public class PlaylistView extends ToolView implements Saveable {
 	protected void build() {
 		super.build();
 
-		this.insertView(this.savePanel, new SaveOption<>(this));
+		this.insertView(this.savePanel, new SaveOption<>(this, false));
+		this.getValidator().register(this.txtName, c -> !c.getText().isBlank(), "El nombre no puede estar vacío");
 	}
 
 	@Override
@@ -46,13 +49,18 @@ public class PlaylistView extends ToolView implements Saveable {
 		super.buildForEntity();
 
 		this.txtName.setText(this.currentPlaylist.getName());
+		this.initPlaylistData();
+	}
+
+	private void initPlaylistData() {
 		this.insertView(this.tracksPanel, new GenericTableView<>(
-			"Canciones", Playlist.getTracksTableInspector(this.currentPlaylist)
+				"Canciones", Playlist.getTracksTableInspector(this.currentPlaylist)
 				.onRowClick(this::onTrackClick)
 				.onNewButtonClick(this::addSong)
 			)
 		);
-
+		this.infoPanel.setBorder(BorderFactory.createTitledBorder("Detalles"));
+		this.tracksPanelWrapper.setVisible(true);
 		this.recalculateDuration();
 	}
 
@@ -117,7 +125,9 @@ public class PlaylistView extends ToolView implements Saveable {
 
 	@Override
 	public void save() {
-		if (this.currentPlaylist == null) {
+		boolean isNew = this.currentPlaylist == null;
+
+		if (isNew) {
 			this.currentPlaylist = new PlaylistEntity();
 		}
 
@@ -126,6 +136,19 @@ public class PlaylistView extends ToolView implements Saveable {
 		HibernateUtil.withSession(s -> {
 			s.merge(this.currentPlaylist);
 		});
+
+		if (!isNew) {
+			ViewStack.current().pop();
+			return;
+		};
+
+		this.initPlaylistData();
+		super.onReMount(); // mostly to update the title
+	}
+
+	@Override
+	public void cancel() {
+		ViewStack.current().pop();
 	}
 
 	@Override
@@ -135,6 +158,7 @@ public class PlaylistView extends ToolView implements Saveable {
 
 	@Override
 	public void delete() {
-		System.out.println("not implemented yet!");
+		Playlist.remove(this.currentPlaylist);
+		ViewStack.current().pop();
 	}
 }
