@@ -3,7 +3,6 @@ package chinookMgr.frontend.toolViews;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.GenreEntity;
-import chinookMgr.backend.entityHelpers.Genre;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.components.SaveOption;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +34,7 @@ public class GenreView extends ToolView implements Saveable {
 		this.tracksPanel.setVisible(true);
 		this.insertView(
 			this.tracksPanel,
-			new GenericTableView<>("Canciones", Genre.getTracksTableInspector(this.genre)
+			new GenericTableView<>("Canciones", GenreEntity.getTracksTableInspector(this.genre)
 				.openViewOnRowClick(TrackView::new))
 		);
 	}

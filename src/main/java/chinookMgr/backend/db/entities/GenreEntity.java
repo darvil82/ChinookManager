@@ -1,6 +1,10 @@
 package chinookMgr.backend.db.entities;
 
+import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.frontend.components.TableInspector;
 import jakarta.persistence.*;
+
+import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 
 @Entity
 @jakarta.persistence.Table(name = "Genre", schema = "Chinook", catalog = "")
@@ -9,6 +13,30 @@ public class GenreEntity {
 	@Id
 	@jakarta.persistence.Column(name = "GenreId", nullable = false)
 	private int genreId;
+
+	public static GenreEntity getById(int id) {
+		return HibernateUtil.withSession(session -> {
+			return session.get(GenreEntity.class, id);
+		});
+	}
+
+	public static TableInspector<GenreEntity> getTableInspector() {
+		return EntityHelper.getTableInspector(GenreEntity.class, "name").submitValueOnRowClick();
+	}
+
+	public static TableInspector<TrackEntity> getTracksTableInspector(GenreEntity genre) {
+		var genreId = genre.getGenreId();
+
+		return new TableInspector<>(
+			(session, search) -> session.createQuery("from TrackEntity where genreId = :genreId and name like :search and enabled = true", TrackEntity.class)
+					.setParameter("genreId", genreId)
+					.setParameter("search", defaultSearch(search)),
+
+			(session, search) -> session.createQuery("select count(*) from TrackEntity where genreId = :genreId and name like :search and enabled = true", Long.class)
+				.setParameter("genreId", genreId)
+				.setParameter("search", defaultSearch(search))
+		);
+	}
 
 	public int getGenreId() {
 		return genreId;

@@ -1,12 +1,8 @@
 package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.db.entities.*;
-import chinookMgr.backend.entityHelpers.Album;
-import chinookMgr.backend.entityHelpers.Genre;
-import chinookMgr.backend.entityHelpers.MediaType;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
-import chinookMgr.backend.entityHelpers.Track;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.components.SaveOption;
@@ -38,8 +34,8 @@ public class TrackView extends ToolView implements Saveable {
 
 	public TrackView(TrackEntity track) {
 		this.track = track;
-		this.selectedAlbum = Album.getById(this.track.getAlbumId());
-		this.selectedGenre = Genre.getById(this.track.getGenreId());
+		this.selectedAlbum = AlbumEntity.getById(this.track.getAlbumId());
+		this.selectedGenre = GenreEntity.getById(this.track.getGenreId());
 		this.buildForEntity();
 	}
 
@@ -55,7 +51,7 @@ public class TrackView extends ToolView implements Saveable {
 		this.txtName.setText(this.track.getName());
 		this.txtComposer.setText(this.track.getComposer());
 		this.numPrice.setValue(this.track.getUnitPrice().doubleValue());
-		this.comboMediaType.setSelectedItem(MediaType.getById(this.track.getMediaTypeId()));
+		this.comboMediaType.setSelectedItem(MediaTypeEntity.getById(this.track.getMediaTypeId()));
 		this.playlistsPanel.setVisible(true);
 		this.insertView(this.playlistsPanel, new GenericTableView<>(
 			"Listas",
@@ -91,8 +87,8 @@ public class TrackView extends ToolView implements Saveable {
 		this.mediaTypeContainer.add(
 			this.comboMediaType = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName)
 		);
-		Utils.attachViewSelectorToButton(this.btnAlbum, () -> this.selectedAlbum, "album", Album.getTableInspector(), this::selectAlbum, AlbumView::new);
-		Utils.attachViewSelectorToButton(this.btnGenre, () -> this.selectedGenre, "género", Genre.getTableInspector(), this::selectGenre, GenreView::new);
+		Utils.attachViewSelectorToButton(this.btnAlbum, () -> this.selectedAlbum, "album", AlbumEntity.getTableInspector(), this::selectAlbum, AlbumView::new);
+		Utils.attachViewSelectorToButton(this.btnGenre, () -> this.selectedGenre, "género", GenreEntity.getTableInspector(), this::selectGenre, GenreView::new);
 
 		this.insertView(this.savePanel, new SaveOption<>(this));
 
@@ -150,7 +146,7 @@ public class TrackView extends ToolView implements Saveable {
 
 	@Override
 	public void delete() {
-		Track.disable(this.track);
+		TrackEntity.disable(this.track);
 	}
 
 	@Override

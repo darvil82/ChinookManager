@@ -1,4 +1,4 @@
-package chinookMgr.backend.entityHelpers;
+package chinookMgr.backend.db.entities;
 
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.components.TableInspector;

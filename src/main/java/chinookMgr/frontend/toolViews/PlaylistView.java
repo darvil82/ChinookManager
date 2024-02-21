@@ -4,8 +4,6 @@ import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.PlaylistEntity;
 import chinookMgr.backend.db.entities.TrackEntity;
-import chinookMgr.backend.entityHelpers.Playlist;
-import chinookMgr.backend.entityHelpers.Track;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.SaveOption;
@@ -54,7 +52,7 @@ public class PlaylistView extends ToolView implements Saveable {
 
 	private void initPlaylistData() {
 		this.insertView(this.tracksPanel, new GenericTableView<>(
-				"Canciones", Playlist.getTracksTableInspector(this.currentPlaylist)
+				"Canciones", PlaylistEntity.getTracksTableInspector(this.currentPlaylist)
 				.onRowClick(this::onTrackClick)
 				.onNewButtonClick(this::addSong)
 			)
@@ -67,7 +65,7 @@ public class PlaylistView extends ToolView implements Saveable {
 	private void onTrackClick(MouseEvent e, TrackEntity track) {
 		// is the user holding the ctrl key?
 		if (e.isControlDown()) {
-			Playlist.removeTrack(this.currentPlaylist, track);
+			PlaylistEntity.removeTrack(this.currentPlaylist, track);
 			this.onReMount();
 			return;
 		}
@@ -78,9 +76,9 @@ public class PlaylistView extends ToolView implements Saveable {
 
 	private void addSong() {
 		ViewStack.current().pushAwait(
-			new GenericTableView<>("Añadir Canción", Track.getTableInspector().submitValueOnRowClick()),
+			new GenericTableView<>("Añadir Canción", TrackEntity.getTableInspector().submitValueOnRowClick()),
 			track -> {
-				Playlist.addTrack(this.currentPlaylist, track);
+				PlaylistEntity.addTrack(this.currentPlaylist, track);
 				this.recalculateDuration();
 			}
 		);
@@ -160,7 +158,7 @@ public class PlaylistView extends ToolView implements Saveable {
 
 	@Override
 	public void delete() {
-		Playlist.remove(this.currentPlaylist);
+		PlaylistEntity.remove(this.currentPlaylist);
 		ViewStack.current().pop();
 	}
 }

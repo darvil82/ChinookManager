@@ -2,8 +2,6 @@ package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.db.entities.AlbumEntity;
 import chinookMgr.backend.db.entities.ArtistEntity;
-import chinookMgr.backend.entityHelpers.Album;
-import chinookMgr.backend.entityHelpers.Artist;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +23,7 @@ public class AlbumView extends ToolView {
 
 	public AlbumView(AlbumEntity album) {
 		this.album = album;
-		this.artist = Artist.getById(this.album.getArtistId());
+		this.artist = ArtistEntity.getById(this.album.getArtistId());
 		this.buildForEntity();
 	}
 
@@ -40,14 +38,14 @@ public class AlbumView extends ToolView {
 		Utils.attachViewSelectorToButton(
 			this.btnArtist,
 			() -> this.artist, "Artista",
-			Artist.getTableInspector(),
+			ArtistEntity.getTableInspector(),
 			e -> this.artist = e,
 			ArtistView::new
 		);
 
 		this.insertView(
 			this.tracksPanel,
-			new GenericTableView<>("Canciones", Album.getTracksTableInspector(this.album)
+			new GenericTableView<>("Canciones", AlbumEntity.getTracksTableInspector(this.album)
 				.openViewOnRowClick(TrackView::new))
 		);
 	}

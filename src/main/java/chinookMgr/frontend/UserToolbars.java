@@ -4,8 +4,8 @@ import chinookMgr.backend.Role;
 import chinookMgr.backend.User;
 import chinookMgr.backend.db.entities.CustomerEntity;
 import chinookMgr.backend.db.entities.EmployeeEntity;
-import chinookMgr.backend.entityHelpers.Playlist;
-import chinookMgr.backend.entityHelpers.Track;
+import chinookMgr.backend.db.entities.PlaylistEntity;
+import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.components.Toolbar;
 import chinookMgr.frontend.toolViews.GenericTableView;
 import chinookMgr.frontend.toolViews.PlaylistView;
@@ -19,12 +19,12 @@ public abstract class UserToolbars {
 
 	public static final Consumer<Toolbar> TRACKS = t -> t.addOption(
 		"Canciones",
-		e -> ViewStack.current().replace(new GenericTableView<>("Canciones", Track.getTableInspector().openViewOnRowClick(TrackView::new)))
+		e -> ViewStack.current().replace(new GenericTableView<>("Canciones", TrackEntity.getTableInspector().openViewOnRowClick(TrackView::new)))
 	);
 
 	public static final Consumer<Toolbar> LISTS = t -> t.addOption(
 		"Listas",
-		e -> ViewStack.current().replace(new GenericTableView<>("Listas", Playlist.getTableInspector().openViewOnRowClick(PlaylistView::new)))
+		e -> ViewStack.current().replace(new GenericTableView<>("Listas", PlaylistEntity.getTableInspector().openViewOnRowClick(PlaylistView::new)))
 	);
 
 	public static final Consumer<Toolbar> CUSTOMERS = t -> t.addOption(

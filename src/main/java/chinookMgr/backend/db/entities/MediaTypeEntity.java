@@ -1,5 +1,7 @@
 package chinookMgr.backend.db.entities;
 
+import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.frontend.components.TableInspector;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,6 +11,16 @@ public class MediaTypeEntity {
 	@Id
 	@jakarta.persistence.Column(name = "MediaTypeId", nullable = false)
 	private int mediaTypeId;
+
+	public static MediaTypeEntity getById(int id) {
+		return HibernateUtil.withSession(session -> {
+			return session.get(MediaTypeEntity.class, id);
+		});
+	}
+
+	public static TableInspector<MediaTypeEntity> getTableInspector() {
+		return EntityHelper.getTableInspector(MediaTypeEntity.class, "name");
+	}
 
 	public int getMediaTypeId() {
 		return mediaTypeId;

@@ -2,17 +2,13 @@ package chinookMgr.backend.db.entities;
 
 import chinookMgr.backend.Role;
 import chinookMgr.backend.User;
-import chinookMgr.backend.db.HibernateUtil;
-import chinookMgr.backend.entityHelpers.EntityHelper;
 import chinookMgr.frontend.components.TableInspector;
-import chinookMgr.shared.ListTableModel;
 import jakarta.persistence.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static chinookMgr.backend.entityHelpers.EntityHelper.defaultSearch;
+import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 
 @Entity
 @jakarta.persistence.Table(name = "Customer", schema = "Chinook", catalog = "")

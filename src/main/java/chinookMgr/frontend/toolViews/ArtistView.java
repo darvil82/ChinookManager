@@ -1,7 +1,6 @@
 package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.db.entities.ArtistEntity;
-import chinookMgr.backend.entityHelpers.Artist;
 import chinookMgr.frontend.ToolView;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +24,7 @@ public class ArtistView extends ToolView {
 		this.albumsPanel.setVisible(true);
 		this.insertView(
 			this.albumsPanel,
-			new GenericTableView<>("álbum", Artist.getAlbumsTableInspector(this.currentArtist)
+			new GenericTableView<>("álbum", ArtistEntity.getAlbumsTableInspector(this.currentArtist)
 				.openViewOnRowClick(AlbumView::new))
 		);
 	}
