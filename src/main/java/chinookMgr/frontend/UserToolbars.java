@@ -1,9 +1,9 @@
 package chinookMgr.frontend;
 
-import chinookMgr.backend.Customer;
-import chinookMgr.backend.Employee;
 import chinookMgr.backend.Role;
 import chinookMgr.backend.User;
+import chinookMgr.backend.db.entities.CustomerEntity;
+import chinookMgr.backend.db.entities.EmployeeEntity;
 import chinookMgr.backend.entityHelpers.Playlist;
 import chinookMgr.backend.entityHelpers.Track;
 import chinookMgr.frontend.components.Toolbar;
@@ -29,12 +29,12 @@ public abstract class UserToolbars {
 
 	public static final Consumer<Toolbar> CUSTOMERS = t -> t.addOption(
 		"Clientes",
-		e -> ViewStack.current().replace(new GenericTableView<>("Clientes", Customer.getTableInspector()))
+		e -> ViewStack.current().replace(new GenericTableView<>("Clientes", CustomerEntity.getTableInspector()))
 	);
 
 	public static final Consumer<Toolbar> EMPLOYEES = t -> t.addOption(
 		"Empleados",
-		e -> ViewStack.current().replace(new GenericTableView<>("Empleados", Employee.getTableInspector()))
+		e -> ViewStack.current().replace(new GenericTableView<>("Empleados", EmployeeEntity.getTableInspector()))
 	);
 
 	public static final Consumer<Toolbar> INVOICES = t -> t.addOption("Facturas", e -> ViewStack.current().replace(new TrackView()));
@@ -48,7 +48,7 @@ public abstract class UserToolbars {
 	};
 
 
-	public static void initializeToolbarForUser(@NotNull User<?> user, @NotNull Toolbar toolbar) {
+	public static void initializeToolbarForUser(@NotNull User user, @NotNull Toolbar toolbar) {
 		toolbar.removeAll();
 		toolbar.addOption("Inicio", e -> ViewStack.current().replaceWithWelcome());
 

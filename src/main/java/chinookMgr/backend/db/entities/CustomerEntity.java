@@ -1,12 +1,22 @@
 package chinookMgr.backend.db.entities;
 
+import chinookMgr.backend.Role;
+import chinookMgr.backend.User;
+import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.backend.entityHelpers.EntityHelper;
+import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.shared.ListTableModel;
 import jakarta.persistence.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.List;
+
+import static chinookMgr.backend.entityHelpers.EntityHelper.defaultSearch;
 
 @Entity
 @jakarta.persistence.Table(name = "Customer", schema = "Chinook", catalog = "")
-public class CustomerEntity {
+public class CustomerEntity implements User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@jakarta.persistence.Column(name = "CustomerId", nullable = false)
@@ -180,8 +190,9 @@ public class CustomerEntity {
 	@Column(name = "Roles", nullable = false)
 	private byte roles;
 
-	public byte getRoles() {
-		return roles;
+	@Override
+	public List<Role> getRoles() {
+		return Role.getRolesFromFlags(this.roles);
 	}
 
 	public void setRoles(byte roles) {
@@ -232,5 +243,22 @@ public class CustomerEntity {
 		result = 31 * result + Arrays.hashCode(password);
 		result = 31 * result + (int)roles;
 		return result;
+	}
+
+
+
+	public static CustomerEntity getById(int id) {
+		return EntityHelper.getById(CustomerEntity.class, id);
+	}
+
+	public static TableInspector<CustomerEntity> getTableInspector() {
+		return new TableInspector<>(
+			(session, search) -> session.createQuery("from CustomerEntity where firstName like :search or lastName like :search", CustomerEntity.class)
+				.setParameter("search", defaultSearch(search)),
+			(session, search) -> session.createQuery("select count(*) from CustomerEntity where firstName like :search or lastName like :search", Long.class)
+				.setParameter("search", defaultSearch(search)),
+
+			User.getTableModel()
+		);
 	}
 }

@@ -1,13 +1,20 @@
 package chinookMgr.backend.db.entities;
 
+import chinookMgr.backend.Role;
+import chinookMgr.backend.User;
+import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.frontend.components.TableInspector;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.List;
+
+import static chinookMgr.backend.entityHelpers.EntityHelper.defaultSearch;
 
 @Entity
 @jakarta.persistence.Table(name = "Employee", schema = "Chinook", catalog = "")
-public class EmployeeEntity {
+public class EmployeeEntity implements User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@jakarta.persistence.Column(name = "EmployeeId", nullable = false)
@@ -185,6 +192,19 @@ public class EmployeeEntity {
 		return email;
 	}
 
+	@Basic
+	@Column(name = "Roles", nullable = false)
+	private byte roles;
+
+	@Override
+	public List<Role> getRoles() {
+		return Role.getRolesFromFlags(this.roles);
+	}
+
+	public void setRoles(byte roles) {
+		this.roles = roles;
+	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -247,5 +267,18 @@ public class EmployeeEntity {
 		result = 31 * result + (email != null ? email.hashCode() : 0);
 		result = 31 * result + Arrays.hashCode(password);
 		return result;
+	}
+
+
+
+	public static TableInspector<EmployeeEntity> getTableInspector() {
+		return new TableInspector<>(
+			(session, search) -> session.createQuery("from EmployeeEntity where firstName like :search or lastName like :search", EmployeeEntity.class)
+				.setParameter("search", defaultSearch(search)),
+			(session, search) -> session.createQuery("select count(*) from EmployeeEntity where firstName like :search or lastName like :search", Long.class)
+				.setParameter("search", defaultSearch(search)),
+
+			User.getTableModel()
+		);
 	}
 }

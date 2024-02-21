@@ -21,10 +21,10 @@ public class UserAccountView extends ToolView {
 	private JPanel rolesContainer;
 	private JPanel mainPanel;
 
-	private final User<?> currentUser;
+	private final User currentUser;
 
 
-	public UserAccountView(User<?> user) {
+	public UserAccountView(User user) {
 		this.currentUser = user;
 		this.buildForEntity();
 	}

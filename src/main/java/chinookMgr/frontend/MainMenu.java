@@ -84,7 +84,7 @@ public class MainMenu extends JFrame {
 		}
 	}
 
-	private void onUserChange(@Nullable User<?> newUser) {
+	private void onUserChange(@Nullable User newUser) {
 		this.btnAccount.setVisible(newUser != null);
 
 		if (newUser == null) return;

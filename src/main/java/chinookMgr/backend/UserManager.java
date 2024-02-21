@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 
 public class UserManager {
 	private static User currentUser;
-	public static Consumer<User<?>> onUserChange;
+	public static Consumer<User> onUserChange;
 
-	public static User<?> getCurrentUser() {
+	public static User getCurrentUser() {
 		return UserManager.currentUser;
 	}
 
@@ -20,7 +20,7 @@ public class UserManager {
 		return UserManager.currentUser != null;
 	}
 
-	private static void setCurrentUser(User<?> user) {
+	private static void setCurrentUser(User user) {
 		UserManager.currentUser = user;
 		if (UserManager.onUserChange != null)
 			UserManager.onUserChange.accept(user);
@@ -41,7 +41,7 @@ public class UserManager {
 				// its an employee
 				var result = query.getResultList();
 				if (result.size() == 1) {
-					setCurrentUser(new Employee(result.getFirst()));
+					setCurrentUser(result.getFirst());
 					return true;
 				}
 			}
@@ -57,7 +57,7 @@ public class UserManager {
 				// its a customer
 				var result = query.getResultList();
 				if (result.size() == 1) {
-					setCurrentUser(new Customer(result.getFirst()));
+					setCurrentUser(result.getFirst());
 					return true;
 				}
 			}
