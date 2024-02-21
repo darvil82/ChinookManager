@@ -1,4 +1,4 @@
-package chinookMgr.frontend;
+package chinookMgr.shared;
 
 
 import org.jetbrains.annotations.NotNull;

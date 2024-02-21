@@ -4,7 +4,7 @@ import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.PlaylistEntity;
 import chinookMgr.backend.db.entities.PlaylistTrackEntity;
 import chinookMgr.backend.db.entities.TrackEntity;
-import chinookMgr.frontend.ListTableModel;
+import chinookMgr.shared.ListTableModel;
 import chinookMgr.frontend.StatusManager;
 import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.ViewStack;

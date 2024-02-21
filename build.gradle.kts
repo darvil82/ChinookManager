@@ -1,5 +1,6 @@
 plugins {
     java
+    application
 }
 
 group = "org.example"
@@ -15,9 +16,14 @@ dependencies {
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("com.formdev:flatlaf:+")
     implementation("com.formdev:flatlaf-intellij-themes:+")
+    compileOnly("com.intellij:forms_rt:+")
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+application {
+    mainClass = "chinookMgr.Main"
 }
 
 tasks.test {

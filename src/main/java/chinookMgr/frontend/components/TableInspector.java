@@ -1,7 +1,7 @@
 package chinookMgr.frontend.components;
 
 import chinookMgr.backend.db.HibernateUtil;
-import chinookMgr.frontend.ListTableModel;
+import chinookMgr.shared.ListTableModel;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.View;
 import chinookMgr.frontend.ViewStack;
@@ -11,16 +11,10 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSpinnerUI;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class TableInspector<T> extends View {
