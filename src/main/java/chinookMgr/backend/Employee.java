@@ -1,11 +1,16 @@
 package chinookMgr.backend;
 
 import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.backend.db.entities.CustomerEntity;
 import chinookMgr.backend.db.entities.EmployeeEntity;
+import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.shared.ListTableModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import static chinookMgr.backend.entityHelpers.EntityHelper.defaultSearch;
 
 public class Employee extends User<EmployeeEntity> {
 	private final @NotNull EmployeeEntity entity;
@@ -80,6 +85,27 @@ public class Employee extends User<EmployeeEntity> {
 				.getSingleResult();
 
 			return Role.getRolesFromFlags(flags);
+		});
+	}
+
+	public static TableInspector<EmployeeEntity> getTableInspector() {
+		return new TableInspector<>(
+			(session, search) -> session.createQuery("from EmployeeEntity where firstName like :search or lastName like :search", EmployeeEntity.class)
+				.setParameter("search", defaultSearch(search)),
+			(session, search) -> session.createQuery("select count(*) from EmployeeEntity where firstName like :search or lastName like :search", Long.class)
+				.setParameter("search", defaultSearch(search)),
+
+			Employee.getTableModel()
+		);
+	}
+
+
+	public static @NotNull ListTableModel<EmployeeEntity> getTableModel() {
+		return new ListTableModel<>(List.of("Nombre", "Apellido", "Email"), (item, column) -> switch (column) {
+			case 0 -> item.getFirstName();
+			case 1 -> item.getLastName();
+			case 2 -> item.getEmail();
+			default -> item.toString();
 		});
 	}
 }

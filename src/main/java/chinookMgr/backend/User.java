@@ -1,5 +1,7 @@
 package chinookMgr.backend;
 
+import chinookMgr.backend.db.entities.CustomerEntity;
+import chinookMgr.shared.ListTableModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
