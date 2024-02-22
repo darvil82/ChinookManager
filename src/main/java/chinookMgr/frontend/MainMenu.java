@@ -4,7 +4,6 @@ package chinookMgr.frontend;
 import chinookMgr.backend.User;
 import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.components.Toolbar;
-import chinookMgr.frontend.toolViews.TrackView;
 import chinookMgr.frontend.toolViews.UserAccountView;
 import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.Nullable;
