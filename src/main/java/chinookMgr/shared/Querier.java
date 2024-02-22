@@ -6,5 +6,4 @@ import org.hibernate.query.Query;
 import java.util.function.BiFunction;
 
 @FunctionalInterface
-public interface Querier<T> extends BiFunction<Session, String, Query<T>> {
-}
+public interface Querier<T> extends BiFunction<Session, String, Query<T>> { }

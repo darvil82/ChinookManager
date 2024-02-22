@@ -10,6 +10,7 @@ import java.util.List;
 
 import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 
+@SuppressWarnings("EqualsReplaceableByObjectsCall")
 @Entity
 @jakarta.persistence.Table(name = "Customer", schema = "Chinook", catalog = "")
 public class CustomerEntity implements User {
@@ -30,6 +31,7 @@ public class CustomerEntity implements User {
 	@Column(name = "FirstName", nullable = false, length = 40)
 	private String firstName;
 
+	@Override
 	public String getFirstName() {
 		return firstName;
 	}
@@ -42,6 +44,7 @@ public class CustomerEntity implements User {
 	@Column(name = "LastName", nullable = false, length = 20)
 	private String lastName;
 
+	@Override
 	public String getLastName() {
 		return lastName;
 	}
@@ -66,6 +69,7 @@ public class CustomerEntity implements User {
 	@Column(name = "Address", nullable = true, length = 70)
 	private String address;
 
+	@Override
 	public String getAddress() {
 		return address;
 	}
@@ -78,6 +82,7 @@ public class CustomerEntity implements User {
 	@Column(name = "City", nullable = true, length = 40)
 	private String city;
 
+	@Override
 	public String getCity() {
 		return city;
 	}
@@ -90,6 +95,7 @@ public class CustomerEntity implements User {
 	@Column(name = "State", nullable = true, length = 40)
 	private String state;
 
+	@Override
 	public String getState() {
 		return state;
 	}
@@ -102,6 +108,7 @@ public class CustomerEntity implements User {
 	@Column(name = "Country", nullable = true, length = 40)
 	private String country;
 
+	@Override
 	public String getCountry() {
 		return country;
 	}
@@ -114,6 +121,7 @@ public class CustomerEntity implements User {
 	@Column(name = "PostalCode", nullable = true, length = 10)
 	private String postalCode;
 
+	@Override
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -126,6 +134,7 @@ public class CustomerEntity implements User {
 	@Column(name = "Phone", nullable = true, length = 24)
 	private String phone;
 
+	@Override
 	public String getPhone() {
 		return phone;
 	}
@@ -138,6 +147,7 @@ public class CustomerEntity implements User {
 	@Column(name = "Fax", nullable = true, length = 24)
 	private String fax;
 
+	@Override
 	public String getFax() {
 		return fax;
 	}
@@ -150,6 +160,7 @@ public class CustomerEntity implements User {
 	@Column(name = "Email", nullable = false, length = 60)
 	private String email;
 
+	@Override
 	public String getEmail() {
 		return email;
 	}

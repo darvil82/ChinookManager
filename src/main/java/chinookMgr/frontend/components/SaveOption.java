@@ -16,9 +16,9 @@ public class SaveOption<T extends ToolView & Saveable> extends View {
 	private final boolean autoPop;
 
 	public SaveOption(@NotNull T parent, boolean autoPop) {
-		parent.addOnReMountListener(this::whenRemounted);
 		this.parent = parent;
 		this.autoPop = autoPop;
+
 		this.build();
 	}
 
@@ -27,15 +27,19 @@ public class SaveOption<T extends ToolView & Saveable> extends View {
 	}
 
 	private void whenRemounted(View view) {
+		this.btnDelete.setVisible(parent.isDeletable());
+	}
 
+	private void performDelete() {
+		if (parent.isDeletable())
+			this.onDelete();
 	}
 
 	@Override
 	protected void build() {
-		if (parent.isDeletable()) {
-			this.btnDelete.setVisible(true);
-			this.btnDelete.addActionListener(e -> this.onDelete());
-		}
+		parent.addOnReMountListener(this::whenRemounted);
+		this.whenRemounted(null);
+		this.btnDelete.addActionListener(e -> this.performDelete());
 		this.btnSave.addActionListener(e -> this.onSave());
 		this.btnCancel.addActionListener(e -> this.onCancel());
 	}

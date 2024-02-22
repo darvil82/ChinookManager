@@ -4,6 +4,7 @@ import chinookMgr.backend.Role;
 import chinookMgr.backend.User;
 import chinookMgr.frontend.components.TableInspector;
 import jakarta.persistence.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 
+@SuppressWarnings({"EqualsReplaceableByObjectsCall", "JpaDataSourceORMInspection"})
 @Entity
 @jakarta.persistence.Table(name = "Employee", schema = "Chinook", catalog = "")
 public class EmployeeEntity implements User {
@@ -31,7 +33,8 @@ public class EmployeeEntity implements User {
 	@Column(name = "LastName", nullable = false, length = 20)
 	private String lastName;
 
-	public String getLastName() {
+	@Override
+	public @NotNull String getLastName() {
 		return lastName;
 	}
 
@@ -43,7 +46,8 @@ public class EmployeeEntity implements User {
 	@Column(name = "FirstName", nullable = false, length = 20)
 	private String firstName;
 
-	public String getFirstName() {
+	@Override
+	public @NotNull String getFirstName() {
 		return firstName;
 	}
 
@@ -103,6 +107,7 @@ public class EmployeeEntity implements User {
 	@Column(name = "Address", nullable = true, length = 70)
 	private String address;
 
+	@Override
 	public String getAddress() {
 		return address;
 	}
@@ -115,6 +120,7 @@ public class EmployeeEntity implements User {
 	@Column(name = "City", nullable = true, length = 40)
 	private String city;
 
+	@Override
 	public String getCity() {
 		return city;
 	}
@@ -127,6 +133,7 @@ public class EmployeeEntity implements User {
 	@Column(name = "State", nullable = true, length = 40)
 	private String state;
 
+	@Override
 	public String getState() {
 		return state;
 	}
@@ -139,6 +146,7 @@ public class EmployeeEntity implements User {
 	@Column(name = "Country", nullable = true, length = 40)
 	private String country;
 
+	@Override
 	public String getCountry() {
 		return country;
 	}
@@ -151,6 +159,7 @@ public class EmployeeEntity implements User {
 	@Column(name = "PostalCode", nullable = true, length = 10)
 	private String postalCode;
 
+	@Override
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -163,6 +172,7 @@ public class EmployeeEntity implements User {
 	@Column(name = "Phone", nullable = true, length = 24)
 	private String phone;
 
+	@Override
 	public String getPhone() {
 		return phone;
 	}
@@ -175,6 +185,7 @@ public class EmployeeEntity implements User {
 	@Column(name = "Fax", nullable = true, length = 24)
 	private String fax;
 
+	@Override
 	public String getFax() {
 		return fax;
 	}
@@ -187,22 +198,17 @@ public class EmployeeEntity implements User {
 	@Column(name = "Email", nullable = true, length = 60)
 	private String email;
 
+	@Override
 	public String getEmail() {
 		return email;
 	}
 
-	@Basic
-	@Column(name = "Roles", nullable = false)
-	private byte roles;
-
 	@Override
 	public List<Role> getRoles() {
-		return Role.getRolesFromFlags(this.roles);
+//		return Role.getRolesFromFlags(this.roles);
+		return null;
 	}
 
-	public void setRoles(byte roles) {
-		this.roles = roles;
-	}
 
 	public void setEmail(String email) {
 		this.email = email;
