@@ -4,7 +4,7 @@ package chinookMgr.frontend;
 import chinookMgr.backend.User;
 import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.components.Toolbar;
-import chinookMgr.frontend.toolViews.UserAccountView;
+import chinookMgr.frontend.toolViews.UserView;
 import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,7 +102,7 @@ public class MainMenu extends JFrame {
 //		this.toolbar.setVisible(false);
 		this.toolbarContainer.add(this.toolbar);
 		this.btnPrev.addActionListener(e -> ViewStack.current().pop());
-		this.btnAccount.addActionListener(e -> ViewStack.current().replace(new UserAccountView(UserManager.getCurrentUser())));
+		this.btnAccount.addActionListener(e -> ViewStack.current().replace(new UserView(UserManager.getCurrentUser())));
 
 		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 			KeyStroke.getKeyStroke("ctrl W"), "popViewStack"

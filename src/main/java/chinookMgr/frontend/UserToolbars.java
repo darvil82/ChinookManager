@@ -7,6 +7,7 @@ import chinookMgr.backend.db.entities.EmployeeEntity;
 import chinookMgr.backend.db.entities.PlaylistEntity;
 import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.components.Toolbar;
+import chinookMgr.frontend.toolViews.EmployeeView;
 import chinookMgr.frontend.toolViews.GenericTableView;
 import chinookMgr.frontend.toolViews.PlaylistView;
 import chinookMgr.frontend.toolViews.TrackView;
@@ -34,7 +35,7 @@ public abstract class UserToolbars {
 
 	public static final Consumer<Toolbar> EMPLOYEES = t -> t.addOption(
 		"Empleados",
-		e -> ViewStack.current().replace(new GenericTableView<>("Empleados", EmployeeEntity.getTableInspector()))
+		e -> ViewStack.current().replace(new GenericTableView<>("Empleados", EmployeeEntity.getTableInspector().openViewOnRowClick(EmployeeView::new)))
 	);
 
 	public static final Consumer<Toolbar> INVOICES = t -> t.addOption("Facturas", e -> ViewStack.current().replace(new TrackView()));

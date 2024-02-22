@@ -1,13 +1,12 @@
 package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.User;
-import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.ToolView;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class UserAccountView extends ToolView {
+public class UserView extends ToolView {
 	private JTextField txtName;
 	private JTextField txtCountry;
 	private JTextField txtSurname;
@@ -24,9 +23,14 @@ public class UserAccountView extends ToolView {
 	private final User currentUser;
 
 
-	public UserAccountView(User user) {
+	public UserView(User user) {
 		this.currentUser = user;
 		this.buildForEntity();
+	}
+
+	public UserView() {
+		this.currentUser = null;
+		this.buildForNew();
 	}
 
 	@Override
