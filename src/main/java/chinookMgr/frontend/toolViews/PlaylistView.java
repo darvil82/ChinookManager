@@ -100,6 +100,7 @@ public class PlaylistView extends ToolView implements Saveable {
 	protected void onReMount(@Nullable ToolView prevView) {
 		super.onReMount(prevView);
 		this.recalculateDuration();
+		ViewStack.current().notifyViewChange(); // to update the title
 	}
 
 	private void recalculateDuration() {

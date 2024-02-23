@@ -37,7 +37,7 @@ public class InputValidator {
 		}
 
 		if (!errors.isEmpty()) {
-			JOptionPane.showMessageDialog(ViewStack.currentPanel(), String.join(".\n", errors), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(ViewStack.currentPanel(), String.join(".\n", errors) + ".", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 		return errors.isEmpty();

@@ -26,13 +26,9 @@ public class ViewStack {
 		return current().getTop().getPanel();
 	}
 
-	public static void pushViewStack(ViewStack stack) {
-		stacks.add(stack);
-	}
-
 	public static ViewStack pushViewStack() {
 		var stack = new ViewStack();
-		pushViewStack(stack);
+		stacks.add(stack);
 		return stack;
 	}
 

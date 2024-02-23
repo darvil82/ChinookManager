@@ -21,7 +21,6 @@ public abstract class View extends JFrame {
 	protected void onReMount(@Nullable ToolView prevView) {
 		this.children.forEach(c -> c.onReMount(prevView));
 		this.onReMountListeners.forEach(l -> l.accept(this));
-		ViewStack.current().notifyViewChange();
 	}
 
 	public final void onReMount() {

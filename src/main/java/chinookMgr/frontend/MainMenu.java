@@ -104,17 +104,7 @@ public class MainMenu extends JFrame {
 		this.btnPrev.addActionListener(e -> ViewStack.current().pop());
 		this.btnAccount.addActionListener(e -> ViewStack.current().replace(new UserView(UserManager.getCurrentUser())));
 
-		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-			KeyStroke.getKeyStroke("ctrl W"), "popViewStack"
-		);
-		this.getRootPane().getActionMap().put("popViewStack", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!btnPrev.isEnabled()) return;
-				ViewStack.current().pop();
-			}
-		});
-
+		Utils.addViewStackHotkeys(this, this.btnPrev);
 
 		this.menuViewStack.onViewChange = this::onViewStackChange;
 		LoadingManager.onTaskChange = this::onLoadingTaskChange;

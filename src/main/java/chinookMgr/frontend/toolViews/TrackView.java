@@ -87,8 +87,8 @@ public class TrackView extends ToolView implements Saveable {
 		this.mediaTypeContainer.add(
 			this.comboMediaType = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName)
 		);
-		Utils.attachViewSelectorToButton(this.btnAlbum, () -> this.selectedAlbum, "album", AlbumEntity.getTableInspector(), this::selectAlbum, AlbumView::new);
-		Utils.attachViewSelectorToButton(this.btnGenre, () -> this.selectedGenre, "género", GenreEntity.getTableInspector(), this::selectGenre, GenreView::new);
+		Utils.attachViewSelectorToButton(this.btnAlbum, () -> this.selectedAlbum, "album", AlbumEntity.getTableInspector(), a -> this.selectedAlbum = a, AlbumView::new);
+		Utils.attachViewSelectorToButton(this.btnGenre, () -> this.selectedGenre, "género", GenreEntity.getTableInspector(), g -> this.selectedGenre = g, GenreView::new);
 
 		this.insertView(this.savePanel, new SaveOption<>(this));
 
@@ -99,14 +99,6 @@ public class TrackView extends ToolView implements Saveable {
 		this.numMinutes.setEditor(new JSpinner.NumberEditor(this.numMinutes, "0 min"));
 		this.numSeconds.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 		this.numSeconds.setEditor(new JSpinner.NumberEditor(this.numSeconds, "0 s"));
-	}
-
-	private void selectAlbum(@NotNull AlbumEntity album) {
-		this.selectedAlbum = album;
-	}
-
-	private void selectGenre(@NotNull GenreEntity genre) {
-		this.selectedGenre = genre;
 	}
 
 	@Override

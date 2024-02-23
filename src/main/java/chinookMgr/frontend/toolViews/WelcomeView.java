@@ -32,6 +32,7 @@ public class WelcomeView extends ToolView {
 		return "Inicio";
 	}
 
+	@Override
 	public boolean enableBackButton() {
 		return false;
 	}

@@ -6,31 +6,53 @@ import chinookMgr.shared.ListTableModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public interface User {
-	@NotNull String getFirstName();
-	@NotNull String getLastName();
-	@Nullable String getAddress();
-	@Nullable String getCity();
-	@Nullable String getState();
-	@Nullable String getCountry();
-	@Nullable String getPostalCode();
-	@Nullable String getPhone();
-	@Nullable String getFax();
-	@NotNull String getEmail();
+public abstract class User {
+	public abstract @NotNull String getFirstName();
+	public abstract @NotNull String getLastName();
+	public abstract @Nullable String getAddress();
+	public abstract @Nullable String getCity();
+	public abstract @Nullable String getState();
+	public abstract @Nullable String getCountry();
+	public abstract @Nullable String getPostalCode();
+	public abstract @Nullable String getPhone();
+	public abstract @Nullable String getFax();
+	public abstract @NotNull String getEmail();
 
-	List<Role> getRoles();
+	public abstract @NotNull List<Role> getRoles();
 
-	default @NotNull String getFullName() {
+	public abstract void setRoles(@NotNull List<Role> roles);
+
+	public void addRole(@NotNull Role role) {
+		var roles = new ArrayList<>(this.getRoles());
+		if (roles.contains(role)) return;
+		roles.add(role);
+		this.setRoles(roles);
+	}
+
+	public void removeRole(@NotNull Role role) {
+		var roles = new ArrayList<>(this.getRoles());
+		roles.remove(role);
+		this.setRoles(roles);
+	}
+
+
+	public @NotNull String getFullName() {
 		return this.getFirstName() + " " + this.getLastName();
 	}
 
-	default boolean hasPermission(@NotNull Role role) {
+	public boolean hasPermission(@NotNull Role role) {
 		return this.getRoles().contains(role) || this.getRoles().contains(Role.ADMIN);
 	}
 
-	static @NotNull <T extends User> ListTableModel<T> getTableModel() {
+	@Override
+	public String toString() {
+		return this.getFullName();
+	}
+
+	public static @NotNull <T extends User> ListTableModel<T> getTableModel() {
 		return new ListTableModel<>(List.of("Nombre", "Apellido", "Email"), (item, column) -> switch (column) {
 			case 0 -> item.getFirstName();
 			case 1 -> item.getLastName();

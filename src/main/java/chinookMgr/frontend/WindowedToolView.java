@@ -23,6 +23,7 @@ public class WindowedToolView extends JDialog {
 		this.viewStack.push(view);
 		this.btnPrev.addActionListener(e -> this.viewStack.pop());
 		this.setContentPane(this.mainPanel);
+		Utils.addViewStackHotkeys(this, this.btnPrev);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setMinimumSize(new Dimension(450, 400));
 		this.pack();

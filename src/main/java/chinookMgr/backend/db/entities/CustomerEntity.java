@@ -4,6 +4,7 @@ import chinookMgr.backend.Role;
 import chinookMgr.backend.User;
 import chinookMgr.frontend.components.TableInspector;
 import jakarta.persistence.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +14,7 @@ import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 @SuppressWarnings("EqualsReplaceableByObjectsCall")
 @Entity
 @jakarta.persistence.Table(name = "Customer", schema = "Chinook", catalog = "")
-public class CustomerEntity implements User {
+public class CustomerEntity extends User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@jakarta.persistence.Column(name = "CustomerId", nullable = false)
@@ -32,7 +33,7 @@ public class CustomerEntity implements User {
 	private String firstName;
 
 	@Override
-	public String getFirstName() {
+	public @NotNull String getFirstName() {
 		return firstName;
 	}
 
@@ -45,7 +46,7 @@ public class CustomerEntity implements User {
 	private String lastName;
 
 	@Override
-	public String getLastName() {
+	public @NotNull String getLastName() {
 		return lastName;
 	}
 
@@ -161,7 +162,7 @@ public class CustomerEntity implements User {
 	private String email;
 
 	@Override
-	public String getEmail() {
+	public @NotNull String getEmail() {
 		return email;
 	}
 
@@ -198,8 +199,13 @@ public class CustomerEntity implements User {
 	private byte roles;
 
 	@Override
-	public List<Role> getRoles() {
+	public @NotNull List<Role> getRoles() {
 		return Role.getRolesFromFlags(this.roles);
+	}
+
+	@Override
+	public void setRoles(@NotNull List<Role> roles) {
+		this.roles = Role.getFlagsFromRoles(roles);
 	}
 
 	public void setRoles(byte roles) {

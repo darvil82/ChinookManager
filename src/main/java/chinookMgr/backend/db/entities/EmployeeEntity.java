@@ -2,6 +2,7 @@ package chinookMgr.backend.db.entities;
 
 import chinookMgr.backend.Role;
 import chinookMgr.backend.User;
+import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.components.TableInspector;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,7 @@ import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 @SuppressWarnings({"EqualsReplaceableByObjectsCall", "JpaDataSourceORMInspection"})
 @Entity
 @jakarta.persistence.Table(name = "Employee", schema = "Chinook", catalog = "")
-public class EmployeeEntity implements User {
+public class EmployeeEntity extends User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@jakarta.persistence.Column(name = "EmployeeId", nullable = false)
@@ -199,16 +200,23 @@ public class EmployeeEntity implements User {
 	private String email;
 
 	@Override
-	public String getEmail() {
+	public @NotNull String getEmail() {
 		return email;
 	}
 
 	@Override
-	public List<Role> getRoles() {
-//		return Role.getRolesFromFlags(this.roles);
-		return null;
+	public @NotNull List<Role> getRoles() {
+		return Role.getRolesFromFlags(TitleEntity.getById(this.title).getRoles());
 	}
 
+	@Override
+	public void setRoles(@NotNull List<Role> roles) {
+		var title = TitleEntity.getById(this.title);
+		title.setRoles(Role.getFlagsFromRoles(roles));
+		HibernateUtil.withSession(s -> {
+			s.merge(title);
+		});
+	}
 
 	public void setEmail(String email) {
 		this.email = email;
@@ -275,6 +283,9 @@ public class EmployeeEntity implements User {
 	}
 
 
+	public static EmployeeEntity getById(int id) {
+		return EntityHelper.getById(EmployeeEntity.class, id);
+	}
 
 	public static TableInspector<EmployeeEntity> getTableInspector() {
 		return new TableInspector<>(

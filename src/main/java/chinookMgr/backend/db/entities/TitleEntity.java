@@ -61,4 +61,8 @@ public class TitleEntity {
 		result = 31 * result + (int)roles;
 		return result;
 	}
+
+	public static TitleEntity getById(int id) {
+		return EntityHelper.getById(TitleEntity.class, id);
+	}
 }

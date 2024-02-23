@@ -27,16 +27,22 @@ public final class Utils {
 		button.setText(atAttachValue == null ? "Seleccionar " + title + "..." : atAttachValue.toString());
 
 		button.addActionListener(e -> {
-			// if user is holding ctrl...
-			if ((e.getModifiers() & ActionEvent.CTRL_MASK) != 0) {
+			if ((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
 				var value = valueRef.get();
 				if (value == null) return;
 				WindowedToolView.display(MainMenu.INSTANCE, onNew.apply(value));
 				return;
 			}
 
+			if ((e.getModifiers() & ActionEvent.CTRL_MASK) != 0) {
+				onSelection.accept(null);
+				button.setText("Seleccionar " + title + "...");
+				return;
+			}
+
 			ViewStack.current().pushAwait(
-				new GenericTableView<>("Selección de " + title, tableInspector.submitValueOnRowClick()), v -> {
+				new GenericTableView<>("Selección de " + title, tableInspector.submitValueOnRowClick()),
+				v -> {
 					onSelection.accept(v);
 					button.setText(v.toString());
 				}
@@ -49,5 +55,19 @@ public final class Utils {
 		int minutes = (int) (millis / (1000 * 60)) % 60;
 		int seconds = (int) (millis / 1000) % 60;
 		return String.format("%02d:%02d", minutes, seconds);
+	}
+
+
+	public static void addViewStackHotkeys(@NotNull RootPaneContainer frame, @NotNull JButton btnPrev) {
+		frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+			KeyStroke.getKeyStroke("ctrl W"), "popViewStack"
+		);
+		frame.getRootPane().getActionMap().put("popViewStack", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!btnPrev.isEnabled()) return;
+				ViewStack.current().pop();
+			}
+		});
 	}
 }

@@ -17,6 +17,7 @@ public abstract class ToolView extends View {
 		return this.validator;
 	}
 
+	@Override
 	public abstract @NotNull String getName();
 
 	public boolean enableBackButton() {

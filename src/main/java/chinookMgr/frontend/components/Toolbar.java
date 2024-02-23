@@ -45,11 +45,6 @@ public class Toolbar extends JComponent {
 			.forEach(b -> b.setActive(false));
 	}
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-	}
 
 	public class ToolButton extends JButton {
 		private boolean isActive = false;
@@ -60,7 +55,6 @@ public class Toolbar extends JComponent {
 			this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 			// set text alignment to left
 			this.setHorizontalAlignment(SwingConstants.LEFT);
-			this.setBackground(new Color(0, 0, 0.05f, 0.4f));
 			this.setFont(this.getFont().deriveFont(16f).deriveFont(Font.BOLD));
 			this.addActionListener(e -> {
 				Toolbar.this.deactivateAll();
@@ -71,7 +65,7 @@ public class Toolbar extends JComponent {
 
 		public void setActive(boolean active) {
 			this.isActive = active;
-			this.setBackground(active ? this.originalBackground : new Color(0, 0, 0.05f, 0.4f));
+			this.setBackground(active ? this.originalBackground : new Color(0, 0, 0.1f, 0.2f));
 			this.repaint();
 		}
 

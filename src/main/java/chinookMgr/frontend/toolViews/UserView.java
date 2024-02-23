@@ -57,4 +57,8 @@ public class UserView extends ToolView {
 	public @NotNull JPanel getPanel() {
 		return this.mainPanel;
 	}
+
+	public @NotNull String getFullUsername() {
+		return this.txtName.getText() + " " + this.txtSurname.getText();
+	}
 }

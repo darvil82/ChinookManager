@@ -177,6 +177,7 @@ public class TableInspector<T> extends View {
 		return this;
 	}
 
+	@Override
 	public @NotNull JPanel getPanel() {
 		return this.mainPanel;
 	}
