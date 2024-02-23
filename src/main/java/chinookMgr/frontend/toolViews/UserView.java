@@ -1,5 +1,6 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Role;
 import chinookMgr.backend.User;
 import chinookMgr.frontend.ToolView;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +18,8 @@ public class UserView extends ToolView {
 	private JTextField txtPhone;
 	private JTextField txtEmail;
 	private JTextField txtFax;
-	private JPanel rolesContainer;
 	private JPanel mainPanel;
+	private JList<Role> listRoles;
 
 	private final User currentUser;
 
@@ -34,6 +35,13 @@ public class UserView extends ToolView {
 	}
 
 	@Override
+	protected void build() {
+		super.build();
+		this.listRoles.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		this.listRoles.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+	}
+
+	@Override
 	protected void buildForEntity() {
 		this.txtName.setText(this.currentUser.getFirstName());
 		this.txtSurname.setText(this.currentUser.getLastName());
@@ -45,6 +53,11 @@ public class UserView extends ToolView {
 		this.txtPhone.setText(this.currentUser.getPhone());
 		this.txtEmail.setText(this.currentUser.getEmail());
 		this.txtFax.setText(this.currentUser.getFax());
+		this.listRoles.setSelectedIndices(
+			this.currentUser.getRoles().stream()
+				.mapToInt(Role::ordinal)
+				.toArray()
+		);
 	}
 
 
@@ -60,5 +73,9 @@ public class UserView extends ToolView {
 
 	public @NotNull String getFullUsername() {
 		return this.txtName.getText() + " " + this.txtSurname.getText();
+	}
+
+	private void createUIComponents() {
+		this.listRoles = new JList<>(Role.values());
 	}
 }

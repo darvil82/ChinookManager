@@ -53,6 +53,7 @@ public class Toolbar extends JComponent {
 		public ToolButton(String name, ActionListener listener) {
 			super(name);
 			this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			this.setBg(false);
 			// set text alignment to left
 			this.setHorizontalAlignment(SwingConstants.LEFT);
 			this.setFont(this.getFont().deriveFont(16f).deriveFont(Font.BOLD));
@@ -65,8 +66,12 @@ public class Toolbar extends JComponent {
 
 		public void setActive(boolean active) {
 			this.isActive = active;
-			this.setBackground(active ? this.originalBackground : new Color(0, 0, 0.1f, 0.2f));
+			this.setBg(active);
 			this.repaint();
+		}
+
+		private void setBg(boolean active) {
+			this.setBackground(active ? this.originalBackground : new Color(0, 0, 0.1f, 0.2f));
 		}
 
 		public boolean isActive() {

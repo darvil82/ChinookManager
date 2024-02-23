@@ -16,12 +16,14 @@ public class EmployeeView extends ToolView {
 	private JPanel hireDatePanel;
 	private JButton btnBoss;
 	private JPanel titleContainer;
+	private JPanel birthDatePanel;
 
 	private final EmployeeEntity currentEmployee;
 	private final UserView userView;
 
 	private EmployeeEntity selectedBoss;
 	private JDateChooser hireDateChooser;
+	private JDateChooser birthDateChooser;
 	private TableComboBox<TitleEntity> titleCombo;
 
 
@@ -45,7 +47,10 @@ public class EmployeeView extends ToolView {
 		this.insertView(this.userViewPanel, this.userView);
 		this.titleContainer.add(this.titleCombo = new TableComboBox<>(TitleEntity.class, TitleEntity::getName));
 		this.hireDatePanel.add(this.hireDateChooser = new JDateChooser());
-		Utils.attachViewSelectorToButton(this.btnBoss, () -> this.selectedBoss, "jefe", EmployeeEntity.getTableInspector(), e -> this.selectedBoss = e, EmployeeView::new);
+		this.birthDatePanel.add(this.birthDateChooser = new JDateChooser());
+		Utils.attachViewSelectorToButton(this.btnBoss, () -> this.selectedBoss, "superior", EmployeeEntity.getTableInspector(), e -> this.selectedBoss = e, EmployeeView::new);
+
+		this.getValidator().register(this.btnBoss, e -> this.selectedBoss.getEmployeeId() != this.currentEmployee.getEmployeeId(), "El empleado no puede ser su propio superior.");
 	}
 
 	@Override
@@ -53,6 +58,7 @@ public class EmployeeView extends ToolView {
 		super.buildForEntity();
 		this.titleCombo.setSelectedEntity(TitleEntity.getById(this.currentEmployee.getTitle()));
 		this.hireDateChooser.setDate(this.currentEmployee.getHireDate());
+		this.birthDateChooser.setDate(this.currentEmployee.getBirthDate());
 	}
 
 	@Override

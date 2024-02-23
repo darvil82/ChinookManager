@@ -35,7 +35,7 @@ public class MainMenu extends JFrame {
 		this.menuViewStack = ViewStack.pushViewStack();
 		this.setContentPane(this.mainPanel);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setMinimumSize(new Dimension(600, 400));
+		this.setMinimumSize(new Dimension(700, 500));
 		this.setPreferredSize(new Dimension(1000, 700));
 		this.pack();
 		this.build();

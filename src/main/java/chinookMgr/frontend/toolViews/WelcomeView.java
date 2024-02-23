@@ -11,6 +11,7 @@ public class WelcomeView extends ToolView {
 	private JPanel mainPanel;
 	private JButton btnLogin;
 	private JLabel txtWelcome;
+	private JButton btnDebugLogin;
 
 	public WelcomeView() {
 		this.build();
@@ -20,6 +21,10 @@ public class WelcomeView extends ToolView {
 	@Override
 	protected void build() {
 		this.btnLogin.addActionListener(e -> ViewStack.current().push(new LoginView()));
+		this.btnDebugLogin.addActionListener(e -> {
+			UserManager.login("david@gmail.com", "bartolo");
+			this.onReMount();
+		});
 	}
 
 	@Override
@@ -42,6 +47,7 @@ public class WelcomeView extends ToolView {
 		if (!UserManager.isLoggedIn()) return;
 
 		this.btnLogin.setVisible(false);
+		this.btnDebugLogin.setVisible(false);
 		this.txtWelcome.setText("Bienvenido, " + UserManager.getCurrentUser().getFullName() + "!");
 	}
 }
