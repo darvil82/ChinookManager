@@ -1,9 +1,14 @@
 package chinookMgr.backend.db.entities;
 
+import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.shared.ListTableModel;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
+
+import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 
 @Entity
 @jakarta.persistence.Table(name = "Invoice", schema = "Chinook", catalog = "")
@@ -152,5 +157,36 @@ public class InvoiceEntity {
 		result = 31 * result + (billingPostalCode != null ? billingPostalCode.hashCode() : 0);
 		result = 31 * result + (total != null ? total.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Factura Nº" + this.invoiceId;
+	}
+
+	public static TableInspector<InvoiceEntity> getTableInspector() {
+		return new TableInspector<>(
+			(session, s) ->
+				session.createQuery(
+					"select i from InvoiceEntity i join CustomerEntity c on i.customerId = c.customerId where c.company like :search or c.firstName like :search",
+					InvoiceEntity.class
+				)
+					.setParameter("search", defaultSearch(s)),
+
+			(session, s) ->
+				session.createQuery(
+					"select count(i) from InvoiceEntity i join CustomerEntity c on i.customerId = c.customerId where c.company like :search or c.firstName like :search",
+					Long.class
+				)
+					.setParameter("search", defaultSearch(s)),
+
+			new ListTableModel<>(List.of("Número", "Empresa", "Cliente", "Total"), (ent, col) -> switch (col) {
+				case 0 -> String.valueOf(ent.getInvoiceId());
+				case 1 -> CustomerEntity.getById(ent.getCustomerId()).getCompany();
+				case 2 -> CustomerEntity.getById(ent.getCustomerId()).getFullName();
+				case 3 -> ent.getTotal() + " €";
+				default -> null;
+			})
+		);
 	}
 }

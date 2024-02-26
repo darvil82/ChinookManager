@@ -2,10 +2,7 @@ package chinookMgr.frontend;
 
 import chinookMgr.backend.Role;
 import chinookMgr.backend.User;
-import chinookMgr.backend.db.entities.CustomerEntity;
-import chinookMgr.backend.db.entities.EmployeeEntity;
-import chinookMgr.backend.db.entities.PlaylistEntity;
-import chinookMgr.backend.db.entities.TrackEntity;
+import chinookMgr.backend.db.entities.*;
 import chinookMgr.frontend.components.Toolbar;
 import chinookMgr.frontend.toolViews.*;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +34,10 @@ public abstract class UserToolbars {
 		e -> ViewStack.current().replace(new GenericTableView<>("Empleados", EmployeeEntity.getTableInspector().openViewOnRowClick(EmployeeView::new)))
 	);
 
-	public static final Consumer<Toolbar> INVOICES = t -> t.addOption("Facturas", e -> ViewStack.current().replace(new TrackView()));
+	public static final Consumer<Toolbar> INVOICES = t -> t.addOption(
+		"Facturas",
+		e -> ViewStack.current().replace(new GenericTableView<>("Facturas", InvoiceEntity.getTableInspector().openViewOnRowClick(InvoiceView::new)))
+	);
 
 	public static final Consumer<Toolbar> DEBUG = t -> {
 		WELCOME.accept(t);

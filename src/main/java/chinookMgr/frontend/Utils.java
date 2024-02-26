@@ -21,7 +21,7 @@ public final class Utils {
 		@NotNull Supplier<TEnt> valueRef, @NotNull String title,
 		@NotNull TableInspector<TEnt> tableInspector,
 		@NotNull Consumer<TEnt> onSelection,
-		@NotNull Function<TEnt, TView> onNew
+		@NotNull Function<TEnt, TView> viewOnWindow
 	) {
 		var atAttachValue = valueRef.get();
 		button.setText(atAttachValue == null ? "Seleccionar " + title + "..." : atAttachValue.toString());
@@ -30,7 +30,7 @@ public final class Utils {
 			if ((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
 				var value = valueRef.get();
 				if (value == null) return;
-				WindowedToolView.display(MainMenu.INSTANCE, onNew.apply(value));
+				WindowedToolView.display(MainMenu.INSTANCE, viewOnWindow.apply(value));
 				return;
 			}
 
