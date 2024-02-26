@@ -117,7 +117,7 @@ public class TableInspector<T> extends View {
 				return;
 			}
 
-			this.setPage(this.currentPage);
+			this.setPage(Math.min(this.currentPage, this.pageCount - 1));
 			this.txtResultCount.setText(valueCount + " resultado/s");
 		});
 	}
@@ -138,7 +138,7 @@ public class TableInspector<T> extends View {
 				.setMaxResults(PAGE_SIZE)
 				.setFirstResult(page * PAGE_SIZE)
 				.stream()
-				.forEach(r -> this.getTableModel().addItem(r));
+				.forEach(this.getTableModel()::addItem);
 		});
 
 		this.numPage.setValue(page + 1);
@@ -184,6 +184,8 @@ public class TableInspector<T> extends View {
 
 	@Override
 	protected void onReMount(@Nullable ToolView prevView) {
+		super.onReMount(prevView);
+
 		this.inputSearch.requestFocus();
 		int prevScroll = this.tableScrollPane.getVerticalScrollBar().getValue();
 		int tableSelection = this.resultTable.getSelectedRow();
