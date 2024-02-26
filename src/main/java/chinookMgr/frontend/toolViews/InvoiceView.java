@@ -36,7 +36,6 @@ public class InvoiceView extends ToolView {
 		super.build();
 
 		Utils.attachViewSelectorToButton(this.btnCustomer, () -> this.currentCustomer, "cliente", CustomerEntity.getTableInspector(), c -> this.currentCustomer = c, CustomerView::new);
-//		this.insertView(this.invoiceLinesPanel, new GenericTableView<>("Productos", ));
 		this.datePanel.add(this.dateChooser = new JDateChooser());
 	}
 
@@ -51,6 +50,7 @@ public class InvoiceView extends ToolView {
 		this.txtAddress.setText(this.currentCustomer.getAddress());
 		this.dateChooser.setDate(this.currentInvoice.getInvoiceDate());
 		this.lblTotal.setText(this.currentInvoice.getTotal() + " €");
+		this.insertView(this.invoiceLinesPanel, new GenericTableView<>("Productos", InvoiceEntity.getLinesTableInspector(this.currentInvoice)));
 	}
 
 	@Override

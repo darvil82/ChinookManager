@@ -1,8 +1,10 @@
 package chinookMgr.backend.db.entities;
 
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.TrackView;
 import chinookMgr.shared.ListTableModel;
 import jakarta.persistence.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -188,5 +190,33 @@ public class InvoiceEntity {
 				default -> null;
 			})
 		);
+	}
+
+	public static TableInspector<InvoiceLineEntity> getLinesTableInspector(@NotNull InvoiceEntity invoice) {
+		return new TableInspector<>(
+			(session, s) ->
+				session.createQuery(
+					"select il from InvoiceLineEntity il join TrackEntity t on il.trackId = t.trackId where il.invoiceId = :invoiceId and t.name like :search",
+					InvoiceLineEntity.class
+				)
+					.setParameter("search", defaultSearch(s))
+					.setParameter("invoiceId", invoice.getInvoiceId()),
+
+			(session, s) ->
+				session.createQuery(
+					"select count(il) from InvoiceLineEntity il join TrackEntity t on il.trackId = t.trackId where il.invoiceId = :invoiceId and t.name like :search",
+					Long.class
+				)
+					.setParameter("search", defaultSearch(s))
+					.setParameter("invoiceId", invoice.getInvoiceId()),
+
+			new ListTableModel<>(List.of("Producto", "Precio", "Cantidad", "Total"), (ent, col) -> switch (col) {
+				case 0 -> TrackEntity.getById(ent.getTrackId()).getName();
+				case 1 -> ent.getUnitPrice() + " €";
+				case 2 -> String.valueOf(ent.getQuantity());
+				case 3 -> (ent.getUnitPrice().doubleValue() * ent.getQuantity()) + " €";
+				default -> null;
+			})
+		).openViewOnRowClick(line -> new TrackView(TrackEntity.getById(line.getTrackId())));
 	}
 }

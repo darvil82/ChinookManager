@@ -3,10 +3,14 @@ package chinookMgr.backend.db.entities;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.PlaylistView;
 import chinookMgr.frontend.toolViews.TrackView;
 import jakarta.persistence.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
+
+import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 
 @Entity
 @Table(name = "Track", schema = "Chinook", catalog = "")
@@ -51,10 +55,10 @@ public class TrackEntity {
 	public static TableInspector<TrackEntity> getTableInspector() {
 		return new TableInspector<>(
 			(session, search) -> session.createQuery("from TrackEntity where name like :search and enabled = true", TrackEntity.class)
-				.setParameter("search", EntityHelper.defaultSearch(search)),
+				.setParameter("search", defaultSearch(search)),
 
 			(session, search) -> session.createQuery("select count(*) from TrackEntity where name like :search and enabled = true", Long.class)
-				.setParameter("search", EntityHelper.defaultSearch(search))
+				.setParameter("search", defaultSearch(search))
 		)
 			.onNewButtonClick(() -> ViewStack.current().push(new TrackView()));
 	}
@@ -189,5 +193,26 @@ public class TrackEntity {
 	@Override
 	public String toString() {
 		return this.name;
+	}
+
+
+	public static TableInspector<PlaylistEntity> getPlaylistsTableInspector(@NotNull TrackEntity track) {
+		var trackId = track.getTrackId();
+
+		return new TableInspector<>(
+			(session, search) -> session.createQuery(
+				"select p from PlaylistEntity p join PlaylistTrackEntity pt on p.playlistId = pt.playlistId where pt.trackId = :trackId and p.name like :search",
+				PlaylistEntity.class
+			)
+				.setParameter("trackId", trackId)
+				.setParameter("search", defaultSearch(search)),
+
+			(session, search) -> session.createQuery(
+				"select count(p) from PlaylistEntity p join PlaylistTrackEntity pt on p.playlistId = pt.playlistId where pt.trackId = :trackId and p.name like :search",
+				Long.class
+			)
+				.setParameter("trackId", trackId)
+				.setParameter("search", defaultSearch(search))
+		).openViewOnRowClick(PlaylistView::new);
 	}
 }

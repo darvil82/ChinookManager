@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.math.BigDecimal;
 
+import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
+
 public class TrackView extends ToolView implements Saveable {
 	private JTextField txtName;
 	private JTextField txtComposer;
@@ -53,20 +55,7 @@ public class TrackView extends ToolView implements Saveable {
 		this.numPrice.setValue(this.track.getUnitPrice().doubleValue());
 		this.comboMediaType.setSelectedItem(MediaTypeEntity.getById(this.track.getMediaTypeId()));
 		this.playlistsPanel.setVisible(true);
-		this.insertView(this.playlistsPanel, new GenericTableView<>(
-			"Listas",
-			new TableInspector<>(
-				(session, input) -> session.createQuery(
-					"select p from PlaylistEntity p, PlaylistTrackEntity pt where trackId = :id and p.playlistId = pt.playlistId"
-					, PlaylistEntity.class
-				)
-					.setParameter("id", this.track.getTrackId()),
-
-				(session, input) -> session.createQuery("select count(*) from PlaylistTrackEntity where trackId = :id", Long.class)
-					.setParameter("id", this.track.getTrackId())
-			)
-				.openViewOnRowClick(PlaylistView::new)
-		));
+		this.insertView(this.playlistsPanel, new GenericTableView<>("Listas", TrackEntity.getPlaylistsTableInspector(this.track)));
 
 		int millis = track.getMilliseconds();
 		int minutes = millis / 60000;
