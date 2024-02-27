@@ -29,19 +29,13 @@ public class LoginView extends ToolView {
 	}
 
 	private void login() {
-		this.btnLogin.setEnabled(false);
-		this.inputEmail.setEnabled(false);
-		this.inputPassword.setEnabled(false);
 		StatusManager.disableBackButton();
 
 		LoadingManager.pushPop("Iniciando sesión...", () -> {
 			boolean loginResult = UserManager.login(this.inputEmail.getText().trim(), new String(this.inputPassword.getPassword()));
 			StatusManager.enableBackButton();
 
-			if (loginResult) {
-				ViewStack.current().pop();
-				StatusManager.showUpdate("Sesión iniciada.");
-			} else {
+			if (!loginResult) {
 				JOptionPane.showMessageDialog(
 					this.mainPanel,
 					"El correo electrónico o la contraseña son incorrectos",
@@ -49,11 +43,12 @@ public class LoginView extends ToolView {
 					JOptionPane.ERROR_MESSAGE
 				);
 
-				this.btnLogin.setEnabled(true);
-				this.inputEmail.setEnabled(true);
-				this.inputPassword.setEnabled(true);
 				this.inputPassword.grabFocus();
+				return;
 			}
+
+			ViewStack.current().pop();
+			StatusManager.showUpdate("Sesión iniciada.");
 		});
 	}
 

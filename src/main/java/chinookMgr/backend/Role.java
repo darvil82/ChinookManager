@@ -9,7 +9,9 @@ public enum Role {
 	ADMIN("Administrador"),
 	MANAGE_EMPLOYEES("Gestionar empleados"),
 	MANAGE_CUSTOMERS("Gestionar clientes"),
-	MANAGE_INVENTORY("Gestionar inventario"),;
+	MANAGE_ROLES("Gestionar roles"),
+	MANAGE_INVENTORY("Gestionar inventario"),
+	SEE_REPORTS("Ver reportes");
 
 	public final byte flag_value;
 	public final @NotNull String name;

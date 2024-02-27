@@ -66,7 +66,7 @@ public class UserManager {
 		});
 	}
 
-	public static Boolean registerCustomer(@NotNull String email, @NotNull String password, @NotNull String firstName, @NotNull String lastName) {
+	public static Boolean registerCustomer(@NotNull String email, @NotNull String password, @NotNull String firstName, @NotNull String lastName, boolean loginOnSuccess) {
 		byte[] passwordHash = Utils.toMD5(password.getBytes());
 
 		return HibernateUtil.withSession(s -> {
@@ -83,6 +83,8 @@ public class UserManager {
 			customer.setFirstName(firstName);
 			customer.setLastName(lastName);
 			s.merge(customer);
+
+			if (loginOnSuccess) setCurrentUser(customer);
 
 			return true;
 		});

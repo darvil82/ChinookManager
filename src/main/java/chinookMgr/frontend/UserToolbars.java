@@ -5,6 +5,7 @@ import chinookMgr.backend.User;
 import chinookMgr.backend.db.entities.*;
 import chinookMgr.frontend.components.Toolbar;
 import chinookMgr.frontend.toolViews.*;
+import chinookMgr.frontend.toolViews.reports.ReportsView;
 import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
@@ -39,19 +40,32 @@ public abstract class UserToolbars {
 		e -> ViewStack.current().replace(new GenericTableView<>("Facturas", InvoiceEntity.getTableInspector().openViewOnRowClick(InvoiceView::new)))
 	);
 
+	public static final Consumer<Toolbar> ALBUMS = t -> t.addOption(
+		"Albums",
+		e -> ViewStack.current().replace(new GenericTableView<>("Álbumes", AlbumEntity.getTableInspector().openViewOnRowClick(AlbumView::new)))
+	);
+
+	public static final Consumer<Toolbar> REPORTS = t -> t.addOption(
+		"Reportes",
+		e -> ViewStack.current().replace(new ReportsView())
+	);
+
 	public static final Consumer<Toolbar> DEBUG = t -> {
 		WELCOME.accept(t);
 		TRACKS.accept(t);
 		LISTS.accept(t);
+		ALBUMS.accept(t);
 		CUSTOMERS.accept(t);
 		EMPLOYEES.accept(t);
 		INVOICES.accept(t);
+		REPORTS.accept(t);
+		t.addOption("Debug", e -> ViewStack.current().replace(new TestView()));
 	};
 
 
 	public static void initializeToolbarForUser(@NotNull User user, @NotNull Toolbar toolbar) {
 		toolbar.removeAll();
-		WELCOME.accept(toolbar);
+		setTools(toolbar, WELCOME, TRACKS, LISTS, ALBUMS);
 
 		if (user.hasPermission(Role.MANAGE_CUSTOMERS))
 			setTools(toolbar, CUSTOMERS);
@@ -60,7 +74,12 @@ public abstract class UserToolbars {
 			setTools(toolbar, EMPLOYEES);
 
 		if (user.hasPermission(Role.MANAGE_INVENTORY))
-			setTools(toolbar, TRACKS, INVOICES);
+			setTools(toolbar, INVOICES);
+
+		if (user.hasPermission(Role.SEE_REPORTS))
+			setTools(toolbar, REPORTS);
+
+		toolbar.toggleOption("Inicio", true);
 	}
 
 	@SafeVarargs

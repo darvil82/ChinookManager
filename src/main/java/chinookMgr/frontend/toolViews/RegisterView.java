@@ -1,7 +1,10 @@
 package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.UserManager;
+import chinookMgr.frontend.LoadingManager;
+import chinookMgr.frontend.StatusManager;
 import chinookMgr.frontend.ToolView;
+import chinookMgr.frontend.ViewStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,7 +39,27 @@ public class RegisterView extends ToolView {
 	private void register() {
 		if (!this.getValidator().validate()) return;
 
-		UserManager.registerCustomer(this.inputEmail.getText(), new String(this.inputPassword.getPassword()), this.inputFirstName.getText(), this.inputLastName.getText());
+		StatusManager.disableBackButton();
+		LoadingManager.pushPop("Registrando usuario...", () -> {
+			boolean result = UserManager.registerCustomer(
+				this.inputEmail.getText(), new String(this.inputPassword.getPassword()), this.inputFirstName.getText(), this.inputLastName.getText(), true
+			);
+
+			StatusManager.enableBackButton();
+
+			if (!result) {
+				JOptionPane.showMessageDialog(
+					this.mainPanel,
+					"El correo electrónico ya está en uso",
+					"Error",
+					JOptionPane.ERROR_MESSAGE
+				);
+				return;
+			}
+
+			ViewStack.current().pop();
+			StatusManager.showUpdate("Usuario registrado con éxito.");
+		});
 	}
 
 	@Override
