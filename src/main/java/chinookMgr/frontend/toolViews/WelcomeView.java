@@ -49,6 +49,7 @@ public class WelcomeView extends ToolView {
 		if (!UserManager.isLoggedIn()) return;
 
 		this.btnLogin.setVisible(false);
+		this.btnRegister.setVisible(false);
 		this.btnDebugLogin.setVisible(false);
 		this.txtWelcome.setText("Bienvenido, " + UserManager.getCurrentUser().getFullName() + "!");
 	}

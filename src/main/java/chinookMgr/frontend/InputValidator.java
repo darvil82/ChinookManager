@@ -1,16 +1,19 @@
 package chinookMgr.frontend;
 
+import chinookMgr.shared.Pair;
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class InputValidator {
 	private final List<Validator<JComponent>> validators = new ArrayList<>();
+	private final Hashtable<JComponent, Color> failedComponents = new Hashtable<>();
 
 
 	public record Validator<T extends JComponent>(T component, Predicate<T> predicate, String errorMessage) {}
@@ -29,10 +32,20 @@ public class InputValidator {
 		var errors = new ArrayList<String>();
 
 		for (var validator : validators) {
-			if (!validator.predicate.test(validator.component())) {
-				if (validator.component() != null)
-					validator.component().setBackground(Color.decode("#4d3636"));
+			var component = validator.component();
+
+			if (!validator.predicate.test(component)) {
+				if (component != null && !this.failedComponents.containsKey(component)) {
+					this.failedComponents.put(component, component.getBackground());
+					component.setBackground(Color.decode("#4d3636"));
+				}
 				errors.add(validator.errorMessage);
+				continue;
+			}
+
+			if (component != null && this.failedComponents.containsKey(component)) {
+				component.setBackground(this.failedComponents.get(component));
+				this.failedComponents.remove(component);
 			}
 		}
 

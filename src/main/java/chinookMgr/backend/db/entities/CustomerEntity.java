@@ -38,7 +38,7 @@ public class CustomerEntity extends User {
 	}
 
 	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		this.firstName = firstName.trim();
 	}
 
 	@Basic
@@ -51,7 +51,7 @@ public class CustomerEntity extends User {
 	}
 
 	public void setLastName(String lastName) {
-		this.lastName = lastName;
+		this.lastName = lastName.trim();
 	}
 
 	@Basic
@@ -167,7 +167,7 @@ public class CustomerEntity extends User {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = email.trim();
 	}
 
 	@Basic

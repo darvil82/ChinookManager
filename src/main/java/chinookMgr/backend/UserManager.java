@@ -27,7 +27,7 @@ public class UserManager {
 	}
 
 	public static Boolean login(@NotNull String email, @NotNull String password) {
-		byte[] passwordHash = Utils.toMD5(password);
+		byte[] passwordHash = Utils.toMD5(password.getBytes());
 
 		return HibernateUtil.withSession(session -> {
 			{
@@ -63,6 +63,28 @@ public class UserManager {
 			}
 
 			return false;
+		});
+	}
+
+	public static Boolean registerCustomer(@NotNull String email, @NotNull String password, @NotNull String firstName, @NotNull String lastName) {
+		byte[] passwordHash = Utils.toMD5(password.getBytes());
+
+		return HibernateUtil.withSession(s -> {
+			boolean foundCustomer = !s.createQuery("from CustomerEntity where email = :email", CustomerEntity.class)
+				.setParameter("email", email)
+				.getResultList()
+				.isEmpty();
+
+			if (foundCustomer) return false;
+
+			var customer = new CustomerEntity();
+			customer.setEmail(email);
+			customer.setPassword(passwordHash);
+			customer.setFirstName(firstName);
+			customer.setLastName(lastName);
+			s.merge(customer);
+
+			return true;
 		});
 	}
 

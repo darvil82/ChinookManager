@@ -73,9 +73,7 @@ public class TrackView extends ToolView implements Saveable {
 		this.getValidator().register(this.btnAlbum, c -> this.selectedAlbum != null, "No se ha seleccionado un album");
 		this.getValidator().register(this.btnGenre, c -> this.selectedGenre != null, "No se ha seleccionado un género");
 
-		this.mediaTypeContainer.add(
-			this.comboMediaType = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName)
-		);
+		this.mediaTypeContainer.add(this.comboMediaType = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName));
 		Utils.attachViewSelectorToButton(this.btnAlbum, () -> this.selectedAlbum, "album", AlbumEntity.getTableInspector(), a -> this.selectedAlbum = a, AlbumView::new);
 		Utils.attachViewSelectorToButton(this.btnGenre, () -> this.selectedGenre, "género", GenreEntity.getTableInspector(), g -> this.selectedGenre = g, GenreView::new);
 
