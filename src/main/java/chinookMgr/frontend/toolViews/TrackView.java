@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 
@@ -130,5 +131,10 @@ public class TrackView extends ToolView implements Saveable {
 	@Override
 	public boolean isDeletable() {
 		return this.track != null;
+	}
+
+	@Override
+	public @NotNull List<Class<? extends ToolView>> getAffectedViews() {
+		return List.of(GenreView.class, AlbumView.class, PlaylistView.class);
 	}
 }

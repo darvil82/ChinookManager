@@ -1,8 +1,11 @@
 package chinookMgr.backend.db.entities;
 
 import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.GenreView;
 import jakarta.persistence.*;
+import org.jetbrains.annotations.NotNull;
 
 import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 
@@ -15,7 +18,6 @@ public class GenreEntity {
 	private int genreId;
 
 
-
 	public int getGenreId() {
 		return genreId;
 	}
@@ -25,14 +27,14 @@ public class GenreEntity {
 	}
 
 	@Basic
-	@Column(name = "Name", nullable = true, length = 120)
+	@Column(name = "Name", length = 120)
 	private String name;
 
-	public String getName() {
+	public @NotNull String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(@NotNull String name) {
 		this.name = name;
 	}
 
@@ -67,7 +69,8 @@ public class GenreEntity {
 	}
 
 	public static TableInspector<GenreEntity> getTableInspector() {
-		return EntityHelper.getTableInspector(GenreEntity.class, "name");
+		return EntityHelper.getTableInspector(GenreEntity.class, "name")
+			.onNewButtonClick(() -> ViewStack.current().push(new GenreView()));
 	}
 
 	public static TableInspector<TrackEntity> getTracksTableInspector(GenreEntity genre) {
@@ -82,5 +85,11 @@ public class GenreEntity {
 				.setParameter("genreId", genreId)
 				.setParameter("search", defaultSearch(search))
 		);
+	}
+
+	public void remove() {
+		HibernateUtil.withSession(s -> {
+			s.remove(this);
+		});
 	}
 }

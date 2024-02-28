@@ -10,7 +10,6 @@ import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.SaveOption;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -120,8 +119,7 @@ public class AlbumView extends ToolView implements Saveable {
 		}
 
 		this.initTracksView();
-		ViewStack.current().notifyViewChange(); // to update the title
-		this.onReMount(); // make saveOption notice the change of isDeletable
+		this.notifyChange();
 	}
 
 	@Override

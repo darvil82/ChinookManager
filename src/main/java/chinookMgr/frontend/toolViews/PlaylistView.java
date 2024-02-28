@@ -134,8 +134,7 @@ public class PlaylistView extends ToolView implements Saveable {
 		};
 
 		this.initPlaylistData();
-		super.onReMount(); // make saveOption notice the change of isDeletable
-		ViewStack.current().notifyViewChange(); // to update the title
+		this.notifyChange();
 	}
 
 	@Override

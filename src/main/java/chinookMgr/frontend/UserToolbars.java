@@ -50,6 +50,12 @@ public abstract class UserToolbars {
 		e -> ViewStack.current().replace(new GenericTableView<>("Artistas", ArtistEntity.getTableInspector().openViewOnRowClick(ArtistView::new)))
 	);
 
+	public static final Consumer<Toolbar> GENRES = t -> t.addOption(
+		"Géneros",
+		e -> ViewStack.current().replace(new GenericTableView<>("Géneros", GenreEntity.getTableInspector().openViewOnRowClick(GenreView::new)))
+	);
+
+
 
 	public static final Consumer<Toolbar> REPORTS = t -> t.addOption(
 		"Reportes",
@@ -57,7 +63,7 @@ public abstract class UserToolbars {
 	);
 
 	public static final Consumer<Toolbar> DEBUG = t -> {
-		addTools(t, WELCOME, TRACKS, PLAYLISTS, ALBUMS, ARTISTS, CUSTOMERS, EMPLOYEES, INVOICES, REPORTS);
+		addTools(t, WELCOME, TRACKS, PLAYLISTS, ALBUMS, ARTISTS, GENRES, CUSTOMERS, EMPLOYEES, INVOICES, REPORTS);
 		t.addOption("Debug", e -> ViewStack.current().replace(new TestView()));
 	};
 

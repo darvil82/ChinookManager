@@ -18,7 +18,8 @@ public final class Utils {
 
 	public static <TView extends ToolView, TEnt> void attachViewSelectorToButton(
 		@NotNull JButton button,
-		@NotNull Supplier<TEnt> valueRef, @NotNull String title,
+		@NotNull Supplier<TEnt> valueRef,
+		@NotNull String title,
 		@NotNull TableInspector<TEnt> tableInspector,
 		@NotNull Consumer<TEnt> onSelection,
 		@NotNull Function<TEnt, TView> viewOnWindow

@@ -4,6 +4,7 @@ import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.GenreEntity;
 import chinookMgr.frontend.ToolView;
+import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.SaveOption;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,34 +15,48 @@ public class GenreView extends ToolView implements Saveable {
 	private JPanel mainPanel;
 	private JPanel tracksPanel;
 	private JPanel savePanel;
+	private JPanel infoPanel;
 
-	private GenreEntity genre;
+	private GenreEntity currentGenre;
 
 	public GenreView() {
 		this.buildForNew();
 	}
 
-	public GenreView(GenreEntity genre) {
-		this.genre = genre;
+	public GenreView(GenreEntity currentGenre) {
+		this.currentGenre = currentGenre;
 		this.buildForEntity();
 	}
 
 
 	@Override
 	protected void build() {
-		this.insertView(this.savePanel, new SaveOption<>(this));
-		this.txtName.setText(this.genre.getName());
+		this.insertView(this.savePanel, new SaveOption<>(this, false));
+
+		this.getValidator().register(this.txtName, c -> !c.getText().isBlank(), "El nombre no puede estar vacío");
+	}
+
+	@Override
+	protected void buildForEntity() {
+		super.buildForEntity();
+		this.txtName.setText(this.currentGenre.getName());
+
+		this.initTracksPanel();
+	}
+
+	private void initTracksPanel() {
 		this.tracksPanel.setVisible(true);
+		this.infoPanel.setBorder(BorderFactory.createTitledBorder("Información"));
 		this.insertView(
 			this.tracksPanel,
-			new GenericTableView<>("Canciones", GenreEntity.getTracksTableInspector(this.genre)
+			new GenericTableView<>("Canciones", GenreEntity.getTracksTableInspector(this.currentGenre)
 				.openViewOnRowClick(TrackView::new))
 		);
 	}
 
 	@Override
 	public @NotNull String getName() {
-		if (this.genre == null)
+		if (this.currentGenre == null)
 			return "Nuevo género";
 		else
 			return "Género (" + this.txtName.getText() + ")";
@@ -54,14 +69,40 @@ public class GenreView extends ToolView implements Saveable {
 
 	@Override
 	public void save() {
-		if (this.genre == null) {
-			this.genre = new GenreEntity();
+		boolean isNew = this.currentGenre == null;
+
+		if (isNew) {
+			this.currentGenre = new GenreEntity();
 		}
 
-		this.genre.setName(this.txtName.getText());
+		this.currentGenre.setName(this.txtName.getText());
 
 		HibernateUtil.withSession(session -> {
-			session.persist(this.genre);
+			session.merge(this.currentGenre);
 		});
+
+		if (!isNew) {
+			ViewStack.current().popAffect();
+			return;
+		}
+
+		this.initTracksPanel();
+		this.notifyChange();
+	}
+
+	@Override
+	public boolean isDeletable() {
+		return this.currentGenre != null;
+	}
+
+	@Override
+	public void cancel() {
+		ViewStack.current().pop();
+	}
+
+	@Override
+	public void delete() {
+		this.currentGenre.remove();
+		ViewStack.current().pop();
 	}
 }

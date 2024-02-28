@@ -37,6 +37,9 @@ public class ViewStack {
 
 		if (cb != null)
 			cb.run();
+
+		if (!stacks.isEmpty())
+			current().getTop().onReMount(); // Re-mount the top view
 	}
 
 	public static void popAllButLast() {
@@ -87,6 +90,12 @@ public class ViewStack {
 		getTop().onReMount(prevTop);
 	}
 
+	public void popAffect() {
+		var prevTop = views.getLast();
+		pop();
+		checkForAffectedViews(prevTop);
+	}
+
 	@SuppressWarnings("unchecked")
 	public void popSubmit(@NotNull Object obj) {
 		var prevTop = views.removeLast();
@@ -121,5 +130,17 @@ public class ViewStack {
 		views.forEach(ToolView::dispose);
 		views.clear();
 		notifyViewChange();
+	}
+
+	private void checkForAffectedViews(@NotNull ToolView prevTop) {
+		var viewInPlace = getTop();
+
+		for (var affectedView : viewInPlace.getAffectedViews()) {
+			if (affectedView.isInstance(prevTop)) {
+				StatusManager.showUpdate("Detectados posibles cambios irreversibles. Volviendo atrás.");
+				pop();
+				return;
+			}
+		}
 	}
 }

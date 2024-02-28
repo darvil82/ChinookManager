@@ -2,6 +2,9 @@ package chinookMgr.frontend;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class ToolView extends View {
 	private final InputValidator validator = new InputValidator();
 
@@ -13,6 +16,11 @@ public abstract class ToolView extends View {
 		this.build();
 	}
 
+	protected final void notifyChange() {
+		this.onReMount();
+		ViewStack.current().notifyViewChange();
+	}
+
 	public InputValidator getValidator() {
 		return this.validator;
 	}
@@ -22,6 +30,10 @@ public abstract class ToolView extends View {
 
 	public boolean enableBackButton() {
 		return true;
+	}
+
+	public @NotNull List<Class<? extends ToolView>> getAffectedViews() {
+		return List.of();
 	}
 
 	public static abstract class Supplier<T> extends ToolView { }

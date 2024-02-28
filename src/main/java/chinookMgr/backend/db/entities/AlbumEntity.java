@@ -104,13 +104,7 @@ public class AlbumEntity {
 	}
 
 	public void remove() {
-		// first we remove all the tracks
 		HibernateUtil.withSession(s -> {
-			s.createMutationQuery("update TrackEntity set albumId = null where albumId = :albumId")
-				.setParameter("albumId", this.getAlbumId())
-				.executeUpdate();
-
-			// then we remove the album
 			s.remove(this);
 		});
 	}
