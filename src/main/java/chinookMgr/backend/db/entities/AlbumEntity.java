@@ -103,15 +103,22 @@ public class AlbumEntity {
 		);
 	}
 
-	public static void remove(AlbumEntity album) {
+	public void remove() {
 		// first we remove all the tracks
 		HibernateUtil.withSession(s -> {
 			s.createMutationQuery("update TrackEntity set albumId = null where albumId = :albumId")
-				.setParameter("albumId", album.getAlbumId())
+				.setParameter("albumId", this.getAlbumId())
 				.executeUpdate();
 
 			// then we remove the album
-			s.remove(album);
+			s.remove(this);
+		});
+	}
+
+	public void removeTrack(@NotNull TrackEntity track) {
+		HibernateUtil.withSession(s -> {
+			track.setAlbumId(null);
+			s.merge(track);
 		});
 	}
 }

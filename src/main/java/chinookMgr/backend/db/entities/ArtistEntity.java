@@ -13,27 +13,7 @@ public class ArtistEntity {
 	@jakarta.persistence.Column(name = "ArtistId", nullable = false)
 	private int artistId;
 
-	public static ArtistEntity getById(int id) {
-		return EntityHelper.getById(ArtistEntity.class, id);
-	}
 
-	public static TableInspector<ArtistEntity> getTableInspector() {
-		return EntityHelper.getTableInspector(ArtistEntity.class, "name");
-	}
-
-	public static TableInspector<AlbumEntity> getAlbumsTableInspector(ArtistEntity artist) {
-		return new TableInspector<>(
-			(session, s) ->
-				session.createQuery("from AlbumEntity where artistId = :id and title like :input", AlbumEntity.class)
-					.setParameter("id", artist.getArtistId())
-					.setParameter("input", defaultSearch(s))
-			,
-			(session, s) ->
-				session.createQuery("select count(*) from AlbumEntity where artistId = :id and title like :input", Long.class)
-					.setParameter("id", artist.getArtistId())
-					.setParameter("input", defaultSearch(s))
-		);
-	}
 
 	public int getArtistId() {
 		return artistId;
@@ -78,5 +58,28 @@ public class ArtistEntity {
 	@Override
 	public String toString() {
 		return this.name;
+	}
+
+
+	public static ArtistEntity getById(int id) {
+		return EntityHelper.getById(ArtistEntity.class, id);
+	}
+
+	public static TableInspector<ArtistEntity> getTableInspector() {
+		return EntityHelper.getTableInspector(ArtistEntity.class, "name");
+	}
+
+	public static TableInspector<AlbumEntity> getAlbumsTableInspector(ArtistEntity artist) {
+		return new TableInspector<>(
+			(session, s) ->
+				session.createQuery("from AlbumEntity where artistId = :id and title like :input", AlbumEntity.class)
+					.setParameter("id", artist.getArtistId())
+					.setParameter("input", defaultSearch(s))
+			,
+			(session, s) ->
+				session.createQuery("select count(*) from AlbumEntity where artistId = :id and title like :input", Long.class)
+					.setParameter("id", artist.getArtistId())
+					.setParameter("input", defaultSearch(s))
+		);
 	}
 }

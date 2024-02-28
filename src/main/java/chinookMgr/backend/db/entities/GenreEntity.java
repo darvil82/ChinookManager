@@ -14,27 +14,7 @@ public class GenreEntity {
 	@jakarta.persistence.Column(name = "GenreId", nullable = false)
 	private int genreId;
 
-	public static GenreEntity getById(Integer id) {
-		return EntityHelper.getById(GenreEntity.class, id);
-	}
 
-	public static TableInspector<GenreEntity> getTableInspector() {
-		return EntityHelper.getTableInspector(GenreEntity.class, "name");
-	}
-
-	public static TableInspector<TrackEntity> getTracksTableInspector(GenreEntity genre) {
-		var genreId = genre.getGenreId();
-
-		return new TableInspector<>(
-			(session, search) -> session.createQuery("from TrackEntity where genreId = :genreId and name like :search and enabled = true", TrackEntity.class)
-					.setParameter("genreId", genreId)
-					.setParameter("search", defaultSearch(search)),
-
-			(session, search) -> session.createQuery("select count(*) from TrackEntity where genreId = :genreId and name like :search and enabled = true", Long.class)
-				.setParameter("genreId", genreId)
-				.setParameter("search", defaultSearch(search))
-		);
-	}
 
 	public int getGenreId() {
 		return genreId;
@@ -79,5 +59,28 @@ public class GenreEntity {
 	@Override
 	public String toString() {
 		return this.name;
+	}
+
+
+	public static GenreEntity getById(Integer id) {
+		return EntityHelper.getById(GenreEntity.class, id);
+	}
+
+	public static TableInspector<GenreEntity> getTableInspector() {
+		return EntityHelper.getTableInspector(GenreEntity.class, "name");
+	}
+
+	public static TableInspector<TrackEntity> getTracksTableInspector(GenreEntity genre) {
+		var genreId = genre.getGenreId();
+
+		return new TableInspector<>(
+			(session, search) -> session.createQuery("from TrackEntity where genreId = :genreId and name like :search and enabled = true", TrackEntity.class)
+				.setParameter("genreId", genreId)
+				.setParameter("search", defaultSearch(search)),
+
+			(session, search) -> session.createQuery("select count(*) from TrackEntity where genreId = :genreId and name like :search and enabled = true", Long.class)
+				.setParameter("genreId", genreId)
+				.setParameter("search", defaultSearch(search))
+		);
 	}
 }

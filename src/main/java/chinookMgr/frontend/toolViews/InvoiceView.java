@@ -50,7 +50,7 @@ public class InvoiceView extends ToolView {
 		this.txtAddress.setText(this.currentCustomer.getAddress());
 		this.dateChooser.setDate(this.currentInvoice.getInvoiceDate());
 		this.lblTotal.setText(this.currentInvoice.getTotal() + " €");
-		this.insertView(this.invoiceLinesPanel, new GenericTableView<>("Productos", InvoiceEntity.getLinesTableInspector(this.currentInvoice)));
+		this.insertView(this.invoiceLinesPanel, new GenericTableView<>("Productos", this.currentInvoice.getLinesTableInspector()));
 	}
 
 	@Override

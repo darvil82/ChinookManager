@@ -50,7 +50,7 @@ public class PlaylistView extends ToolView implements Saveable {
 
 	private void initPlaylistData() {
 		this.insertView(this.tracksPanel, new GenericTableView<>(
-				"Canciones", PlaylistEntity.getTracksTableInspector(this.currentPlaylist)
+				"Canciones", this.currentPlaylist.getTracksTableInspector()
 				.onRowClick(GenericTableView.handleSpecial(this::removeSong, TrackView::new))
 				.onNewButtonClick(this::addSong)
 			)
@@ -61,7 +61,7 @@ public class PlaylistView extends ToolView implements Saveable {
 	}
 
 	private void removeSong(TrackEntity track) {
-		PlaylistEntity.removeTrack(this.currentPlaylist, track);
+		this.currentPlaylist.removeTrack(track);
 		this.onReMount();
 	}
 
@@ -69,7 +69,7 @@ public class PlaylistView extends ToolView implements Saveable {
 		ViewStack.current().pushAwait(
 			new GenericTableView<>("Añadir Canción", TrackEntity.getTableInspector().submitValueOnRowClick()),
 			track -> {
-				PlaylistEntity.addTrack(this.currentPlaylist, track);
+				this.currentPlaylist.addTrack(track);
 				this.recalculateDuration();
 			}
 		);
@@ -91,7 +91,6 @@ public class PlaylistView extends ToolView implements Saveable {
 	protected void onReMount(@Nullable ToolView prevView) {
 		super.onReMount(prevView);
 		this.recalculateDuration();
-		ViewStack.current().notifyViewChange(); // to update the title
 	}
 
 	private void recalculateDuration() {
@@ -135,7 +134,8 @@ public class PlaylistView extends ToolView implements Saveable {
 		};
 
 		this.initPlaylistData();
-		super.onReMount(); // mostly to update the title
+		super.onReMount(); // make saveOption notice the change of isDeletable
+		ViewStack.current().notifyViewChange(); // to update the title
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class PlaylistView extends ToolView implements Saveable {
 
 	@Override
 	public void delete() {
-		PlaylistEntity.remove(this.currentPlaylist);
+		this.currentPlaylist.remove();
 		ViewStack.current().pop();
 	}
 }

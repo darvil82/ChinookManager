@@ -10,6 +10,7 @@ import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.SaveOption;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -73,12 +74,7 @@ public class AlbumView extends ToolView implements Saveable {
 	}
 
 	private void removeSong(TrackEntity track) {
-		track.setAlbumId(null);
-
-		HibernateUtil.withSession(s -> {
-			s.merge(track);
-		});
-
+		this.currentAlbum.removeTrack(track);
 		this.onReMount();
 	}
 
@@ -124,7 +120,8 @@ public class AlbumView extends ToolView implements Saveable {
 		}
 
 		this.initTracksView();
-		this.onReMount(); // to update the title
+		ViewStack.current().notifyViewChange(); // to update the title
+		this.onReMount(); // make saveOption notice the change of isDeletable
 	}
 
 	@Override

@@ -192,7 +192,7 @@ public class InvoiceEntity {
 		);
 	}
 
-	public static TableInspector<InvoiceLineEntity> getLinesTableInspector(@NotNull InvoiceEntity invoice) {
+	public TableInspector<InvoiceLineEntity> getLinesTableInspector() {
 		return new TableInspector<>(
 			(session, s) ->
 				session.createQuery(
@@ -200,7 +200,7 @@ public class InvoiceEntity {
 					InvoiceLineEntity.class
 				)
 					.setParameter("search", defaultSearch(s))
-					.setParameter("invoiceId", invoice.getInvoiceId()),
+					.setParameter("invoiceId", this.getInvoiceId()),
 
 			(session, s) ->
 				session.createQuery(
@@ -208,7 +208,7 @@ public class InvoiceEntity {
 					Long.class
 				)
 					.setParameter("search", defaultSearch(s))
-					.setParameter("invoiceId", invoice.getInvoiceId()),
+					.setParameter("invoiceId", this.getInvoiceId()),
 
 			new ListTableModel<>(List.of("Producto", "Precio", "Cantidad", "Total"), (ent, col) -> switch (col) {
 				case 0 -> TrackEntity.getById(ent.getTrackId()).getName();

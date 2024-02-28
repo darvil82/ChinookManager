@@ -196,22 +196,20 @@ public class TrackEntity {
 	}
 
 
-	public static TableInspector<PlaylistEntity> getPlaylistsTableInspector(@NotNull TrackEntity track) {
-		var trackId = track.getTrackId();
-
+	public TableInspector<PlaylistEntity> getPlaylistsTableInspector() {
 		return new TableInspector<>(
 			(session, search) -> session.createQuery(
 				"select p from PlaylistEntity p join PlaylistTrackEntity pt on p.playlistId = pt.playlistId where pt.trackId = :trackId and p.name like :search",
 				PlaylistEntity.class
 			)
-				.setParameter("trackId", trackId)
+				.setParameter("trackId", this.trackId)
 				.setParameter("search", defaultSearch(search)),
 
 			(session, search) -> session.createQuery(
 				"select count(p) from PlaylistEntity p join PlaylistTrackEntity pt on p.playlistId = pt.playlistId where pt.trackId = :trackId and p.name like :search",
 				Long.class
 			)
-				.setParameter("trackId", trackId)
+				.setParameter("trackId", this.trackId)
 				.setParameter("search", defaultSearch(search))
 		).openViewOnRowClick(PlaylistView::new);
 	}

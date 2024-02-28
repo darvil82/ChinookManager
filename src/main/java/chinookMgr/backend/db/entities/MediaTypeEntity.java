@@ -12,15 +12,7 @@ public class MediaTypeEntity {
 	@jakarta.persistence.Column(name = "MediaTypeId", nullable = false)
 	private int mediaTypeId;
 
-	public static MediaTypeEntity getById(int id) {
-		return HibernateUtil.withSession(session -> {
-			return session.get(MediaTypeEntity.class, id);
-		});
-	}
 
-	public static TableInspector<MediaTypeEntity> getTableInspector() {
-		return EntityHelper.getTableInspector(MediaTypeEntity.class, "name");
-	}
 
 	public int getMediaTypeId() {
 		return mediaTypeId;
@@ -60,5 +52,16 @@ public class MediaTypeEntity {
 		int result = mediaTypeId;
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		return result;
+	}
+
+
+	public static MediaTypeEntity getById(int id) {
+		return HibernateUtil.withSession(session -> {
+			return session.get(MediaTypeEntity.class, id);
+		});
+	}
+
+	public static TableInspector<MediaTypeEntity> getTableInspector() {
+		return EntityHelper.getTableInspector(MediaTypeEntity.class, "name");
 	}
 }

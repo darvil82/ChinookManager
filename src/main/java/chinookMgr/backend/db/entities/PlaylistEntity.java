@@ -78,27 +78,25 @@ public class PlaylistEntity {
 			.onNewButtonClick(() -> ViewStack.current().push(new PlaylistView()));
 	}
 
-	public static TableInspector<TrackEntity> getTracksTableInspector(@NotNull PlaylistEntity playlist) {
-		var playlistId = playlist.getPlaylistId();
-
+	public TableInspector<TrackEntity> getTracksTableInspector() {
 		return new TableInspector<>(
 			(session, search) -> session.createQuery("select t from PlaylistTrackEntity pt join TrackEntity t on pt.trackId = t.trackId where pt.playlistId = :listId and t.name like :search", TrackEntity.class)
-				.setParameter("listId", playlistId)
+				.setParameter("listId", this.playlistId)
 				.setParameter("search", defaultSearch(search)),
 
 			(session, search) -> session.createQuery("select count(*) from PlaylistTrackEntity pt join TrackEntity t on pt.trackId = t.trackId where pt.playlistId = :listId and t.name like :search", Long.class)
-				.setParameter("listId", playlistId)
+				.setParameter("listId", this.playlistId)
 				.setParameter("search", defaultSearch(search)),
 
 			new ListTableModel<>(List.of("Nombre", "Duración"), (item, column) -> column == 1 ? Utils.formatMillis(item.getMilliseconds()) : item.toString())
 		);
 	}
 
-	public static void addTrack(@NotNull PlaylistEntity playlist, @NotNull TrackEntity track) {
+	public void addTrack(@NotNull TrackEntity track) {
 		HibernateUtil.withSession(s -> {
 			// first check if the track is already in the playlist
 			s.createQuery("from PlaylistTrackEntity where playlistId = :playlistId and trackId = :trackId", PlaylistTrackEntity.class)
-				.setParameter("playlistId", playlist.getPlaylistId())
+				.setParameter("playlistId", this.getPlaylistId())
 				.setParameter("trackId", track.getTrackId())
 				.uniqueResultOptional()
 				.ifPresentOrElse(t -> {
@@ -107,7 +105,7 @@ public class PlaylistEntity {
 					);
 				}, () -> {
 					var playlistTrack = new PlaylistTrackEntity();
-					playlistTrack.setPlaylistId(playlist.getPlaylistId());
+					playlistTrack.setPlaylistId(this.getPlaylistId());
 					playlistTrack.setTrackId(track.getTrackId());
 
 					s.persist(playlistTrack);
@@ -116,10 +114,10 @@ public class PlaylistEntity {
 		});
 	}
 
-	public static void removeTrack(@NotNull PlaylistEntity playlist, @NotNull TrackEntity track) {
+	public void removeTrack(@NotNull TrackEntity track) {
 		HibernateUtil.withSession(s -> {
 			s.createMutationQuery("delete from PlaylistTrackEntity where playlistId = :playlistId and trackId = :trackId")
-				.setParameter("playlistId", playlist.getPlaylistId())
+				.setParameter("playlistId", this.getPlaylistId())
 				.setParameter("trackId", track.getTrackId())
 				.executeUpdate();
 
@@ -127,13 +125,13 @@ public class PlaylistEntity {
 		});
 	}
 
-	public static void remove(@NotNull PlaylistEntity playlist) {
+	public void remove() {
 		HibernateUtil.withSession(s -> {
 			s.createMutationQuery("delete from PlaylistTrackEntity where playlistId = :playlistId")
-				.setParameter("playlistId", playlist.getPlaylistId())
+				.setParameter("playlistId", this.getPlaylistId())
 				.executeUpdate();
 
-			s.remove(playlist);
+			s.remove(this);
 		});
 	}
 }
