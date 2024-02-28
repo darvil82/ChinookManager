@@ -131,7 +131,7 @@ public class AlbumView extends ToolView implements Saveable {
 
 	@Override
 	public void delete() {
-		AlbumEntity.remove(this.currentAlbum);
+		this.currentAlbum.remove();
 		ViewStack.current().pop();
 	}
 
