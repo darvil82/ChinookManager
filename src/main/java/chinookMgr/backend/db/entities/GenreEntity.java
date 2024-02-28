@@ -14,14 +14,12 @@ public class GenreEntity {
 	@jakarta.persistence.Column(name = "GenreId", nullable = false)
 	private int genreId;
 
-	public static GenreEntity getById(int id) {
-		return HibernateUtil.withSession(session -> {
-			return session.get(GenreEntity.class, id);
-		});
+	public static GenreEntity getById(Integer id) {
+		return EntityHelper.getById(GenreEntity.class, id);
 	}
 
 	public static TableInspector<GenreEntity> getTableInspector() {
-		return EntityHelper.getTableInspector(GenreEntity.class, "name").submitValueOnRowClick();
+		return EntityHelper.getTableInspector(GenreEntity.class, "name");
 	}
 
 	public static TableInspector<TrackEntity> getTracksTableInspector(GenreEntity genre) {

@@ -1,5 +1,7 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.db.entities.PlaylistEntity;
+import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
@@ -7,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.event.MouseEvent;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -34,5 +38,19 @@ public class GenericTableView<T> extends ToolView.Supplier<T> {
 	@Override
 	public @NotNull String getName() {
 		return this.name;
+	}
+
+
+	public static <T> BiConsumer<MouseEvent, T> handleSpecial(Consumer<T> onSpecialClick, Function<T, ToolView> view) {
+		return (e, track) -> {
+			// is the user holding the ctrl key?
+			if (e.isControlDown()) {
+				onSpecialClick.accept(track);
+				return;
+			}
+
+			// if not, then we just show the track details
+			ViewStack.current().push(view.apply(track));
+		};
 	}
 }

@@ -7,7 +7,10 @@ import org.jetbrains.annotations.NotNull;
 public abstract class EntityHelper {
 	private EntityHelper() {}
 
-	public static <T> T getById(Class<T> entityClass, int id) {
+	public static <T> T getById(Class<T> entityClass, Integer id) {
+		if (id == null)
+			return null;
+
 		return HibernateUtil.withSession(session -> {
 			return session.get(entityClass, id);
 		});

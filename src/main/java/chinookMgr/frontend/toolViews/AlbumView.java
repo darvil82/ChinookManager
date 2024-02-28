@@ -1,36 +1,44 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Saveable;
+import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.AlbumEntity;
 import chinookMgr.backend.db.entities.ArtistEntity;
+import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
+import chinookMgr.frontend.ViewStack;
+import chinookMgr.frontend.components.SaveOption;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class AlbumView extends ToolView {
+public class AlbumView extends ToolView implements Saveable {
 	private JTextField txtTitle;
 	private JButton btnArtist;
 	private JPanel tracksPanel;
 	private JPanel mainPanel;
+	private JPanel savePanel;
+	private JPanel infoPanel;
 
-	private AlbumEntity album;
+	private AlbumEntity currentAlbum;
 	private ArtistEntity artist;
 
 	public AlbumView() {
 		this.buildForNew();
 	}
 
-	public AlbumView(AlbumEntity album) {
-		this.album = album;
-		this.artist = ArtistEntity.getById(this.album.getArtistId());
+	public AlbumView(AlbumEntity currentAlbum) {
+		this.currentAlbum = currentAlbum;
+		this.artist = ArtistEntity.getById(this.currentAlbum.getArtistId());
 		this.buildForEntity();
 	}
 
 	@Override
 	protected void buildForEntity() {
 		super.buildForEntity();
-		this.txtTitle.setText(this.album.getTitle());
+		this.txtTitle.setText(this.currentAlbum.getTitle());
+		this.initTracksView();
 	}
 
 	@Override
@@ -43,16 +51,48 @@ public class AlbumView extends ToolView {
 			ArtistView::new
 		);
 
+		this.insertView(this.savePanel, new SaveOption<>(this, false));
+
+		this.getValidator().register(this.btnArtist, c -> this.artist != null, "Seleccione un artista");
+		this.getValidator().register(this.txtTitle, c -> !this.txtTitle.getText().isBlank(), "Ingrese un título");
+	}
+
+	private void initTracksView() {
+		this.tracksPanel.setVisible(true);
+		this.infoPanel.setBorder(BorderFactory.createTitledBorder("Información"));
 		this.insertView(
 			this.tracksPanel,
-			new GenericTableView<>("Canciones", AlbumEntity.getTracksTableInspector(this.album)
-				.openViewOnRowClick(TrackView::new))
-		);
+			new GenericTableView<>("Canciones", AlbumEntity.getTracksTableInspector(this.currentAlbum)
+				.openViewOnRowClick(TrackView::new)
+				.onRowClick(GenericTableView.handleSpecial(this::removeSong, TrackView::new))
+				.onNewButtonClick(() -> ViewStack.current().pushAwait(
+					new GenericTableView<>("Canciones", TrackEntity.getTableInspector().submitValueOnRowClick()),
+					this::addSong
+				))
+			));
+	}
+
+	private void removeSong(TrackEntity track) {
+		track.setAlbumId(null);
+
+		HibernateUtil.withSession(s -> {
+			s.merge(track);
+		});
+
+		this.onReMount();
+	}
+
+	private void addSong(TrackEntity track) {
+		track.setAlbumId(this.currentAlbum.getAlbumId());
+		HibernateUtil.withSession(s -> {
+			s.merge(track);
+		});
+		this.onReMount();
 	}
 
 	@Override
 	public @NotNull String getName() {
-		if (this.album == null)
+		if (this.currentAlbum == null)
 			return "Nuevo álbum";
 		else
 			return "Álbum (" + this.txtTitle.getText() + ")";
@@ -61,5 +101,45 @@ public class AlbumView extends ToolView {
 	@Override
 	public @NotNull JPanel getPanel() {
 		return this.mainPanel;
+	}
+
+	@Override
+	public void save() {
+		boolean isNew = this.currentAlbum == null;
+
+		if (isNew) {
+			this.currentAlbum = new AlbumEntity();
+		}
+
+		this.currentAlbum.setTitle(this.txtTitle.getText());
+		this.currentAlbum.setArtistId(this.artist.getArtistId());
+
+		HibernateUtil.withSession(s -> {
+			s.merge(this.currentAlbum);
+		});
+
+		if (!isNew) {
+			ViewStack.current().pop();
+			return;
+		}
+
+		this.initTracksView();
+		this.onReMount(); // to update the title
+	}
+
+	@Override
+	public boolean isDeletable() {
+		return this.currentAlbum != null;
+	}
+
+	@Override
+	public void delete() {
+		AlbumEntity.remove(this.currentAlbum);
+		ViewStack.current().pop();
+	}
+
+	@Override
+	public void cancel() {
+		ViewStack.current().pop();
 	}
 }

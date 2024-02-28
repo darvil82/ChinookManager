@@ -20,7 +20,7 @@ public abstract class UserToolbars {
 		e -> ViewStack.current().replace(new GenericTableView<>("Canciones", TrackEntity.getTableInspector().openViewOnRowClick(TrackView::new)))
 	);
 
-	public static final Consumer<Toolbar> LISTS = t -> t.addOption(
+	public static final Consumer<Toolbar> PLAYLISTS = t -> t.addOption(
 		"Listas",
 		e -> ViewStack.current().replace(new GenericTableView<>("Listas", PlaylistEntity.getTableInspector().openViewOnRowClick(PlaylistView::new)))
 	);
@@ -45,45 +45,44 @@ public abstract class UserToolbars {
 		e -> ViewStack.current().replace(new GenericTableView<>("Álbumes", AlbumEntity.getTableInspector().openViewOnRowClick(AlbumView::new)))
 	);
 
+	public static final Consumer<Toolbar> ARTISTS = t -> t.addOption(
+		"Artistas",
+		e -> ViewStack.current().replace(new GenericTableView<>("Artistas", ArtistEntity.getTableInspector().openViewOnRowClick(ArtistView::new)))
+	);
+
+
 	public static final Consumer<Toolbar> REPORTS = t -> t.addOption(
 		"Reportes",
 		e -> ViewStack.current().replace(new ReportsView())
 	);
 
 	public static final Consumer<Toolbar> DEBUG = t -> {
-		WELCOME.accept(t);
-		TRACKS.accept(t);
-		LISTS.accept(t);
-		ALBUMS.accept(t);
-		CUSTOMERS.accept(t);
-		EMPLOYEES.accept(t);
-		INVOICES.accept(t);
-		REPORTS.accept(t);
+		addTools(t, WELCOME, TRACKS, PLAYLISTS, ALBUMS, ARTISTS, CUSTOMERS, EMPLOYEES, INVOICES, REPORTS);
 		t.addOption("Debug", e -> ViewStack.current().replace(new TestView()));
 	};
 
 
 	public static void initializeToolbarForUser(@NotNull User user, @NotNull Toolbar toolbar) {
 		toolbar.removeAll();
-		setTools(toolbar, WELCOME, TRACKS, LISTS, ALBUMS);
+		addTools(toolbar, WELCOME, TRACKS, PLAYLISTS, ALBUMS);
 
 		if (user.hasPermission(Role.MANAGE_CUSTOMERS))
-			setTools(toolbar, CUSTOMERS);
+			addTools(toolbar, CUSTOMERS);
 
 		if (user.hasPermission(Role.MANAGE_EMPLOYEES))
-			setTools(toolbar, EMPLOYEES);
+			addTools(toolbar, EMPLOYEES);
 
 		if (user.hasPermission(Role.MANAGE_INVENTORY))
-			setTools(toolbar, INVOICES);
+			addTools(toolbar, INVOICES);
 
 		if (user.hasPermission(Role.SEE_REPORTS))
-			setTools(toolbar, REPORTS);
+			addTools(toolbar, REPORTS);
 
 		toolbar.toggleOption("Inicio", true);
 	}
 
 	@SafeVarargs
-	private static void setTools(@NotNull Toolbar toolbar, @NotNull Consumer<Toolbar>... tools) {
+	private static void addTools(@NotNull Toolbar toolbar, @NotNull Consumer<Toolbar>... tools) {
         for (Consumer<Toolbar> tool : tools) {
             tool.accept(toolbar);
         }

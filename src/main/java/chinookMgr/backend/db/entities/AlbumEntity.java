@@ -1,6 +1,9 @@
 package chinookMgr.backend.db.entities;
 
+import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.AlbumView;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,27 +17,7 @@ public class AlbumEntity {
 	@jakarta.persistence.Column(name = "AlbumId", nullable = false)
 	private int albumId;
 
-	public static AlbumEntity getById(int id) {
-		return EntityHelper.getById(AlbumEntity.class, id);
-	}
 
-	public static TableInspector<AlbumEntity> getTableInspector() {
-		return EntityHelper.getTableInspector(AlbumEntity.class, "title").submitValueOnRowClick();
-	}
-
-	public static TableInspector<TrackEntity> getTracksTableInspector(@NotNull AlbumEntity album) {
-		var albumId = album.getAlbumId();
-
-		return new TableInspector<>(
-			(session, search) -> session.createQuery("from TrackEntity where albumId = :albumId and name like :search and enabled = true", TrackEntity.class)
-				.setParameter("albumId", albumId)
-				.setParameter("search", defaultSearch(search)),
-
-			(session, search) -> session.createQuery("select count(*) from TrackEntity where albumId = :albumId and name like :search and enabled = true", Long.class)
-				.setParameter("albumId", albumId)
-				.setParameter("search", defaultSearch(search))
-		);
-	}
 
 	public int getAlbumId() {
 		return albumId;
@@ -93,5 +76,42 @@ public class AlbumEntity {
 	@Override
 	public String toString() {
 		return this.getTitle();
+	}
+
+
+
+	public static AlbumEntity getById(Integer id) {
+		return EntityHelper.getById(AlbumEntity.class, id);
+	}
+
+	public static TableInspector<AlbumEntity> getTableInspector() {
+		return EntityHelper.getTableInspector(AlbumEntity.class, "title")
+			.onNewButtonClick(() -> ViewStack.current().push(new AlbumView()));
+	}
+
+	public static TableInspector<TrackEntity> getTracksTableInspector(@NotNull AlbumEntity album) {
+		var albumId = album.getAlbumId();
+
+		return new TableInspector<>(
+			(session, search) -> session.createQuery("from TrackEntity where albumId = :albumId and name like :search and enabled = true", TrackEntity.class)
+				.setParameter("albumId", albumId)
+				.setParameter("search", defaultSearch(search)),
+
+			(session, search) -> session.createQuery("select count(*) from TrackEntity where albumId = :albumId and name like :search and enabled = true", Long.class)
+				.setParameter("albumId", albumId)
+				.setParameter("search", defaultSearch(search))
+		);
+	}
+
+	public static void remove(AlbumEntity album) {
+		// first we remove all the tracks
+		HibernateUtil.withSession(s -> {
+			s.createMutationQuery("update TrackEntity set albumId = null where albumId = :albumId")
+				.setParameter("albumId", album.getAlbumId())
+				.executeUpdate();
+
+			// then we remove the album
+			s.remove(album);
+		});
 	}
 }

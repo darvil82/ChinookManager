@@ -69,10 +69,6 @@ public class TrackView extends ToolView implements Saveable {
 	protected void build() {
 		SwingUtilities.invokeLater(() -> this.txtName.grabFocus());
 
-		this.getValidator().register(this.txtName, c -> !c.getText().isBlank(), "No se ha especificado un nombre");
-		this.getValidator().register(this.btnAlbum, c -> this.selectedAlbum != null, "No se ha seleccionado un album");
-		this.getValidator().register(this.btnGenre, c -> this.selectedGenre != null, "No se ha seleccionado un género");
-
 		this.mediaTypeContainer.add(this.comboMediaType = new TableComboBox<>(MediaTypeEntity.class, MediaTypeEntity::getName));
 		Utils.attachViewSelectorToButton(this.btnAlbum, () -> this.selectedAlbum, "album", AlbumEntity.getTableInspector(), a -> this.selectedAlbum = a, AlbumView::new);
 		Utils.attachViewSelectorToButton(this.btnGenre, () -> this.selectedGenre, "género", GenreEntity.getTableInspector(), g -> this.selectedGenre = g, GenreView::new);
@@ -86,6 +82,9 @@ public class TrackView extends ToolView implements Saveable {
 		this.numMinutes.setEditor(new JSpinner.NumberEditor(this.numMinutes, "0 min"));
 		this.numSeconds.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 		this.numSeconds.setEditor(new JSpinner.NumberEditor(this.numSeconds, "0 s"));
+
+
+		this.getValidator().register(this.txtName, c -> !c.getText().isBlank(), "No se ha especificado un nombre");
 	}
 
 	@Override
@@ -111,13 +110,13 @@ public class TrackView extends ToolView implements Saveable {
 		HibernateUtil.withSession(session -> {
 			this.track.setName(this.txtName.getText());
 			this.track.setComposer(this.txtComposer.getText());
-			this.track.setAlbumId(this.selectedAlbum.getAlbumId());
+			this.track.setAlbumId(this.selectedAlbum != null ? this.selectedAlbum.getAlbumId() : null);
 			this.track.setMilliseconds(
 				((int)this.numMinutes.getValue() * 60000) + ((int)this.numSeconds.getValue() * 1000)
 			);
 			this.track.setUnitPrice(BigDecimal.valueOf((double)this.numPrice.getValue()));
 			this.track.setMediaTypeId(this.comboMediaType.getSelectedEntity().getMediaTypeId());
-			this.track.setGenreId(this.selectedGenre.getGenreId());
+			this.track.setGenreId(this.selectedGenre != null ? this.selectedGenre.getGenreId() : null);
 
 			session.merge(this.track);
 		});

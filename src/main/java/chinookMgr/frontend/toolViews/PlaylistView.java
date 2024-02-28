@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
 
 public class PlaylistView extends ToolView implements Saveable {
 	private JTextField txtName;
@@ -19,7 +18,6 @@ public class PlaylistView extends ToolView implements Saveable {
 	private JPanel tracksPanel;
 	private JPanel mainPanel;
 	private JPanel savePanel;
-	private JPanel tracksPanelWrapper;
 	private JPanel infoPanel;
 
 	private PlaylistEntity currentPlaylist;
@@ -53,25 +51,18 @@ public class PlaylistView extends ToolView implements Saveable {
 	private void initPlaylistData() {
 		this.insertView(this.tracksPanel, new GenericTableView<>(
 				"Canciones", PlaylistEntity.getTracksTableInspector(this.currentPlaylist)
-				.onRowClick(this::onTrackClick)
+				.onRowClick(GenericTableView.handleSpecial(this::removeSong, TrackView::new))
 				.onNewButtonClick(this::addSong)
 			)
 		);
 		this.infoPanel.setBorder(BorderFactory.createTitledBorder("Detalles"));
-		this.tracksPanelWrapper.setVisible(true);
+		this.tracksPanel.setVisible(true);
 		this.recalculateDuration();
 	}
 
-	private void onTrackClick(MouseEvent e, TrackEntity track) {
-		// is the user holding the ctrl key?
-		if (e.isControlDown()) {
-			PlaylistEntity.removeTrack(this.currentPlaylist, track);
-			this.onReMount();
-			return;
-		}
-
-		// if not, then we just show the track details
-		ViewStack.current().push(new TrackView(track));
+	private void removeSong(TrackEntity track) {
+		PlaylistEntity.removeTrack(this.currentPlaylist, track);
+		this.onReMount();
 	}
 
 	private void addSong() {
