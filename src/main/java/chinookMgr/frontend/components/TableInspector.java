@@ -77,10 +77,12 @@ public class TableInspector<T> extends View {
 		this.btnBack.addActionListener(e -> this.setPage(this.currentPage - 1));
 		this.numPage.addChangeListener(e -> this.setPage((int)this.numPage.getValue() - 1));
 		this.numPage.setUI(new BasicSpinnerUI() {
+			@Override
 			protected Component createNextButton() {
 				return null;
 			}
 
+			@Override
 			protected Component createPreviousButton() {
 				return null;
 			}
@@ -90,10 +92,16 @@ public class TableInspector<T> extends View {
 		this.numPage.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(0, 0, 0, 0.4f)));
 
 		this.inputSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
 			public void keyReleased(java.awt.event.KeyEvent evt) {
 				TableInspector.this.updateData();
 			}
 		});
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		this.btnNew.setEnabled(enabled);
 	}
 
 

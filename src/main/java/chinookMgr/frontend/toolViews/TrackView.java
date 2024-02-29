@@ -1,5 +1,6 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Role;
 import chinookMgr.backend.db.entities.*;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
@@ -7,14 +8,10 @@ import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.components.SaveOption;
 import chinookMgr.frontend.components.TableComboBox;
-import chinookMgr.frontend.components.TableInspector;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.math.BigDecimal;
-import java.util.List;
-
-import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
 
 public class TrackView extends ToolView implements Saveable {
 	private JTextField txtName;
@@ -84,7 +81,7 @@ public class TrackView extends ToolView implements Saveable {
 		this.numSeconds.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 		this.numSeconds.setEditor(new JSpinner.NumberEditor(this.numSeconds, "0 s"));
 
-
+		this.getInputManager().register(Role.MANAGE_INVENTORY, this.txtName, this.txtComposer, this.numMinutes, this.numSeconds, this.numPrice, this.comboMediaType, this.btnAlbum, this.btnGenre);
 		this.getValidator().register(this.txtName, c -> !c.getText().isBlank(), "No se ha especificado un nombre");
 	}
 
@@ -131,10 +128,5 @@ public class TrackView extends ToolView implements Saveable {
 	@Override
 	public boolean isDeletable() {
 		return this.track != null;
-	}
-
-	@Override
-	public @NotNull List<Class<? extends ToolView>> getAffectedViews() {
-		return List.of(GenreView.class, AlbumView.class, PlaylistView.class);
 	}
 }

@@ -5,6 +5,7 @@ import chinookMgr.frontend.StatusManager;
 import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.GenericTableView;
 import chinookMgr.frontend.toolViews.PlaylistView;
 import chinookMgr.shared.ListTableModel;
 import jakarta.persistence.*;

@@ -2,11 +2,9 @@ package chinookMgr.frontend;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class ToolView extends View {
 	private final InputValidator validator = new InputValidator();
+	private final InputEnabler enabler = new InputEnabler();
 
 	protected void buildForNew() {
 		this.build();
@@ -25,15 +23,15 @@ public abstract class ToolView extends View {
 		return this.validator;
 	}
 
+	public InputEnabler getInputManager() {
+		return enabler;
+	}
+
 	@Override
 	public abstract @NotNull String getName();
 
 	public boolean enableBackButton() {
 		return true;
-	}
-
-	public @NotNull List<Class<? extends ToolView>> getAffectedViews() {
-		return List.of();
 	}
 
 	public static abstract class Supplier<T> extends ToolView { }

@@ -51,7 +51,16 @@ public class ViewStack {
 
 	public void notifyViewChange() {
 		if (onViewChange == null) return;
-		onViewChange.accept(views.isEmpty() ? null : getTop());
+
+		if (views.isEmpty()) {
+			onViewChange.accept(null);
+			return;
+		}
+
+		var top = getTop();
+
+		onViewChange.accept(top);
+		top.getInputManager().apply();
 	}
 
 	public void push(@NotNull ToolView view) {

@@ -17,17 +17,21 @@ import java.util.function.Function;
 public class GenericTableView<T> extends ToolView.Supplier<T> {
 	private final @NotNull JPanel mainPanel;
 	private final @NotNull String name;
+	private final @NotNull TableInspector<T> inspector;
 
 	public GenericTableView(@NotNull String name, @NotNull TableInspector<T> inspector) {
 		this.mainPanel = new JPanel();
 		this.name = name;
+		this.inspector = inspector;
 
-		this.insertView(
-			this.mainPanel,
-			inspector
-		);
+		this.insertView(this.mainPanel, inspector);
 
 		this.build();
+	}
+
+	@Override
+	public void setEnabled(boolean b) {
+		this.inspector.setEnabled(b);
 	}
 
 	@Override
@@ -49,7 +53,6 @@ public class GenericTableView<T> extends ToolView.Supplier<T> {
 				return;
 			}
 
-			// if not, then we just show the track details
 			ViewStack.current().push(view.apply(track));
 		};
 	}
