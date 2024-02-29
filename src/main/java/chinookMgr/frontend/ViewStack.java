@@ -90,28 +90,18 @@ public class ViewStack {
 		getTop().onReMount(prevTop);
 	}
 
-	public void popAffect() {
-		var prevTop = views.getLast();
-		pop();
-		checkForAffectedViews(prevTop);
-	}
-
 	@SuppressWarnings("unchecked")
 	public void popSubmit(@NotNull Object obj) {
-		var prevTop = views.removeLast();
-		prevTop.dispose();
+		var prevTop = views.getLast();
 
 		if (prevTop instanceof ToolView.Supplier<?> supplier) {
 			var callback = (Consumer<Object>)awaiters.get(supplier);
 			if (callback != null) {
 				callback.accept(obj);
-				awaiters.remove(supplier);
 			}
 		}
 
-		notifyViewChange();
-		if (views.isEmpty()) return;
-		getTop().onReMount(prevTop);
+		pop();
 	}
 
 	public @NotNull ToolView getTop() {
@@ -130,17 +120,5 @@ public class ViewStack {
 		views.forEach(ToolView::dispose);
 		views.clear();
 		notifyViewChange();
-	}
-
-	private void checkForAffectedViews(@NotNull ToolView prevTop) {
-		var viewInPlace = getTop();
-
-		for (var affectedView : viewInPlace.getAffectedViews()) {
-			if (affectedView.isInstance(prevTop)) {
-				StatusManager.showUpdate("Detectados posibles cambios irreversibles. Volviendo atrás.");
-				pop();
-				return;
-			}
-		}
 	}
 }

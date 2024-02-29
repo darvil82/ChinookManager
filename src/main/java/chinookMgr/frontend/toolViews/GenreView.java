@@ -82,7 +82,7 @@ public class GenreView extends ToolView implements Saveable {
 		});
 
 		if (!isNew) {
-			ViewStack.current().popAffect();
+			ViewStack.current().pop();
 			return;
 		}
 

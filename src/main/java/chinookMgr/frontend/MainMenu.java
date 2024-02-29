@@ -50,8 +50,10 @@ public class MainMenu extends JFrame {
 			this.toolbar.deactivateAll();
 			this.menuViewStack.replaceWithWelcome();
 		} else {
-			if (newView instanceof WelcomeView)
+			if (newView instanceof WelcomeView) {
+				this.toolbar.deactivateAll();
 				this.toolbar.toggleOption("Inicio", true);
+			}
 
 			this.txtCurrentViewName.setText(newView.getName());
 			this.viewContent.add(newView.getPanel());
