@@ -52,7 +52,6 @@ public class PlaylistView extends ToolView implements Saveable {
 		this.insertView(this.tracksPanel, new GenericTableView<>(
 				"Canciones", this.currentPlaylist.getTracksTableInspector()
 				.onRowClick(GenericTableView.handleSpecial(this::removeSong, TrackView::new))
-				.onNewButtonClick(this::addSong)
 			)
 		);
 		this.infoPanel.setBorder(BorderFactory.createTitledBorder("Detalles"));

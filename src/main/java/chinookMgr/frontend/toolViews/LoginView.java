@@ -38,7 +38,7 @@ public class LoginView extends ToolView {
 			if (!loginResult) {
 				JOptionPane.showMessageDialog(
 					this.mainPanel,
-					"El correo electrónico o la contraseña son incorrectos",
+					"El e-mail o la contraseña son incorrectos",
 					"Error",
 					JOptionPane.ERROR_MESSAGE
 				);

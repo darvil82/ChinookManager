@@ -1,6 +1,10 @@
 package chinookMgr.backend.db.entities;
 
+import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.ArtistView;
+import chinookMgr.frontend.toolViews.GenericTableView;
 import jakarta.persistence.*;
 
 import static chinookMgr.backend.db.entities.EntityHelper.defaultSearch;
@@ -66,7 +70,8 @@ public class ArtistEntity {
 	}
 
 	public static TableInspector<ArtistEntity> getTableInspector() {
-		return EntityHelper.getTableInspector(ArtistEntity.class, "name");
+		return EntityHelper.getTableInspector(ArtistEntity.class, "name")
+			.onNewButtonClick(() -> ViewStack.current().push(new ArtistView()));
 	}
 
 	public static TableInspector<AlbumEntity> getAlbumsTableInspector(ArtistEntity artist) {
@@ -80,6 +85,17 @@ public class ArtistEntity {
 				session.createQuery("select count(*) from AlbumEntity where artistId = :id and title like :input", Long.class)
 					.setParameter("id", artist.getArtistId())
 					.setParameter("input", defaultSearch(s))
-		);
+		).onNewButtonClick(() -> {
+			ViewStack.current().pushAwait(
+				new GenericTableView<>("Seleccionar álbum", AlbumEntity.getTableInspector().submitValueOnRowClick()),
+				album -> {
+					album.setArtistId(artist.getArtistId());
+
+					HibernateUtil.withSession(s -> {
+						s.merge(album);
+					});
+				}
+			);
+		});
 	}
 }

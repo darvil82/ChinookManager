@@ -20,6 +20,10 @@ public class InputValidator {
 
 	@SuppressWarnings("unchecked")
 	public <T extends JComponent> InputValidator register(T component, Predicate<T> predicate, String errorMessage) {
+		if (component != null && validators.stream().anyMatch(v -> v.component() == component)) {
+			throw new IllegalArgumentException("Component already registered");
+		}
+
 		validators.add((Validator<JComponent>) new Validator<>(component, predicate, errorMessage));
 		return this;
 	}

@@ -66,16 +66,25 @@ public class UserManager {
 		});
 	}
 
+	public static Boolean isEmailAvailable(@NotNull String email) {
+		return HibernateUtil.withSession(s -> {
+			long numEmployees = s.createQuery("select count(*) from EmployeeEntity where email = :email", Long.class)
+				.setParameter("email", email)
+				.getSingleResult();
+
+			long numCustomers = s.createQuery("select count(*) from CustomerEntity where email = :email", Long.class)
+				.setParameter("email", email)
+				.getSingleResult();
+
+			return numEmployees + numCustomers == 0;
+		});
+	}
+
 	public static Boolean registerCustomer(@NotNull String email, @NotNull String password, @NotNull String firstName, @NotNull String lastName, boolean loginOnSuccess) {
 		byte[] passwordHash = Utils.toMD5(password.getBytes());
 
 		return HibernateUtil.withSession(s -> {
-			boolean foundCustomer = !s.createQuery("from CustomerEntity where email = :email", CustomerEntity.class)
-				.setParameter("email", email)
-				.getResultList()
-				.isEmpty();
-
-			if (foundCustomer) return false;
+			if (!isEmailAvailable(email)) return false;
 
 			var customer = new CustomerEntity();
 			customer.setEmail(email);

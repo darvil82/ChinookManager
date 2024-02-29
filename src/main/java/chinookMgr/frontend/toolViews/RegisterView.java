@@ -31,7 +31,7 @@ public class RegisterView extends ToolView {
 
 		this.getValidator().register(this.inputFirstName, c -> !c.getText().isBlank(), "El nombre no puede estar vacío");
 		this.getValidator().register(this.inputLastName, c -> !c.getText().isBlank(), "El apellido no puede estar vacío");
-		this.getValidator().register(this.inputEmail, c -> c.getText().matches(".+@.+\\..+"), "El email no es válido");
+		this.getValidator().register(this.inputEmail, c -> c.getText().matches(".+@.+\\..+") && UserManager.isEmailAvailable(c.getText()), "El email no es válido");
 		this.getValidator().register(this.inputPassword, c -> c.getPassword().length > 7, "La contraseña debe tener al menos 8 caracteres");
 		this.getValidator().register(this.inputPassword2, c -> Arrays.equals(c.getPassword(), this.inputPassword.getPassword()), "Las contraseñas no coinciden");
 	}
@@ -50,7 +50,7 @@ public class RegisterView extends ToolView {
 			if (!result) {
 				JOptionPane.showMessageDialog(
 					this.mainPanel,
-					"El correo electrónico ya está en uso",
+					"Hubo un error al registrar el usuario.",
 					"Error",
 					JOptionPane.ERROR_MESSAGE
 				);

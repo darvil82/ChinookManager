@@ -3,6 +3,7 @@ package chinookMgr.backend.db.entities;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.GenericTableView;
 import chinookMgr.frontend.toolViews.GenreView;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
@@ -84,7 +85,18 @@ public class GenreEntity {
 			(session, search) -> session.createQuery("select count(*) from TrackEntity where genreId = :genreId and name like :search and enabled = true", Long.class)
 				.setParameter("genreId", genreId)
 				.setParameter("search", defaultSearch(search))
-		);
+		).onNewButtonClick(() -> {
+			ViewStack.current().pushAwait(
+				new GenericTableView<>("Seleccionar canción", TrackEntity.getTableInspector().submitValueOnRowClick()),
+				track -> {
+					track.setGenreId(genreId);
+
+					HibernateUtil.withSession(s -> {
+						s.merge(track);
+					});
+				}
+			);
+		});
 	}
 
 	public void remove() {
