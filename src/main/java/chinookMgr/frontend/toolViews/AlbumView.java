@@ -1,5 +1,6 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Role;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.AlbumEntity;
@@ -21,6 +22,7 @@ public class AlbumView extends ToolView implements Saveable {
 	private JPanel savePanel;
 	private JPanel infoPanel;
 
+	private GenericTableView<TrackEntity> tracksView;
 	private AlbumEntity currentAlbum;
 	private ArtistEntity artist;
 
@@ -55,6 +57,8 @@ public class AlbumView extends ToolView implements Saveable {
 
 		this.getValidator().register(this.btnArtist, c -> this.artist != null, "Seleccione un artista");
 		this.getValidator().register(this.txtTitle, c -> !this.txtTitle.getText().isBlank(), "Ingrese un título");
+
+		this.getInputManager().register(Role.MANAGE_INVENTORY, this.txtTitle, this.btnArtist);
 	}
 
 	private void initTracksView() {
@@ -62,7 +66,7 @@ public class AlbumView extends ToolView implements Saveable {
 		this.infoPanel.setBorder(BorderFactory.createTitledBorder("Información"));
 		this.insertView(
 			this.tracksPanel,
-			new GenericTableView<>("Canciones", AlbumEntity.getTracksTableInspector(this.currentAlbum)
+			this.tracksView = new GenericTableView<>("Canciones", AlbumEntity.getTracksTableInspector(this.currentAlbum)
 				.openViewOnRowClick(TrackView::new)
 				.onRowClick(GenericTableView.handleSpecial(this::removeSong, TrackView::new))
 				.onNewButtonClick(() -> ViewStack.current().pushAwait(
@@ -70,6 +74,8 @@ public class AlbumView extends ToolView implements Saveable {
 					this::addSong
 				))
 			));
+
+		this.getInputManager().register(Role.MANAGE_INVENTORY, this.tracksView);
 	}
 
 	private void removeSong(TrackEntity track) {
