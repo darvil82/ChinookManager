@@ -39,7 +39,9 @@ public class EmployeeEntity extends User {
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
+	@NotNull
+	@Override
+	public void setLastName(@NotNull String lastName) {
 		this.lastName = lastName;
 	}
 
@@ -52,7 +54,9 @@ public class EmployeeEntity extends User {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
+	@NotNull
+	@Override
+	public void setFirstName(@NotNull String firstName) {
 		this.firstName = firstName;
 	}
 
@@ -113,6 +117,7 @@ public class EmployeeEntity extends User {
 		return address;
 	}
 
+	@Override
 	public void setAddress(String address) {
 		this.address = address;
 	}
@@ -126,6 +131,7 @@ public class EmployeeEntity extends User {
 		return city;
 	}
 
+	@Override
 	public void setCity(String city) {
 		this.city = city;
 	}
@@ -139,6 +145,7 @@ public class EmployeeEntity extends User {
 		return state;
 	}
 
+	@Override
 	public void setState(String state) {
 		this.state = state;
 	}
@@ -152,6 +159,7 @@ public class EmployeeEntity extends User {
 		return country;
 	}
 
+	@Override
 	public void setCountry(String country) {
 		this.country = country;
 	}
@@ -165,6 +173,7 @@ public class EmployeeEntity extends User {
 		return postalCode;
 	}
 
+	@Override
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
@@ -178,6 +187,7 @@ public class EmployeeEntity extends User {
 		return phone;
 	}
 
+	@Override
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
@@ -191,6 +201,7 @@ public class EmployeeEntity extends User {
 		return fax;
 	}
 
+	@Override
 	public void setFax(String fax) {
 		this.fax = fax;
 	}
@@ -218,7 +229,9 @@ public class EmployeeEntity extends User {
 		});
 	}
 
-	public void setEmail(String email) {
+	@NotNull
+	@Override
+	public void setEmail(@NotNull String email) {
 		this.email = email;
 	}
 

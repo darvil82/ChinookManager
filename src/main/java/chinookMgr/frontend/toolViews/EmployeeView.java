@@ -1,24 +1,27 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.entities.EmployeeEntity;
 import chinookMgr.backend.db.entities.TitleEntity;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
+import chinookMgr.frontend.components.SaveOption;
 import chinookMgr.frontend.components.TableComboBox;
 import com.toedter.calendar.JDateChooser;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class EmployeeView extends ToolView {
+public class EmployeeView extends ToolView implements Saveable {
 	private JPanel mainPanel;
 	private JPanel userViewPanel;
 	private JPanel hireDatePanel;
 	private JButton btnBoss;
 	private JPanel titleContainer;
 	private JPanel birthDatePanel;
+	private JPanel savePanel;
 
-	private final EmployeeEntity currentEmployee;
+	private EmployeeEntity currentEmployee;
 	private final UserView userView;
 
 	private EmployeeEntity selectedBoss;
@@ -44,13 +47,15 @@ public class EmployeeView extends ToolView {
 	protected void build() {
 		super.build();
 
+		this.getValidator().register(this.userView.getValidator());
+		this.insertView(this.savePanel, new SaveOption<>(this));
 		this.insertView(this.userViewPanel, this.userView);
 		this.titleContainer.add(this.titleCombo = new TableComboBox<>(TitleEntity.class, TitleEntity::getName));
 		this.hireDatePanel.add(this.hireDateChooser = new JDateChooser());
 		this.birthDatePanel.add(this.birthDateChooser = new JDateChooser());
 		Utils.attachViewSelectorToButton(this.btnBoss, () -> this.selectedBoss, "superior", EmployeeEntity.getTableInspector(), e -> this.selectedBoss = e, EmployeeView::new);
 
-		this.getValidator().register(this.btnBoss, e -> this.selectedBoss.getEmployeeId() != this.currentEmployee.getEmployeeId(), "El empleado no puede ser su propio superior.");
+		this.getValidator().register(this.btnBoss, e -> this.selectedBoss.getEmployeeId() != this.currentEmployee.getEmployeeId(), "El empleado no puede ser su propio superior");
 	}
 
 	@Override
@@ -72,5 +77,10 @@ public class EmployeeView extends ToolView {
 	@Override
 	public @NotNull JPanel getPanel() {
 		return this.mainPanel;
+	}
+
+	@Override
+	public void save() {
+		this.userView.save();
 	}
 }

@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 public class InputValidator {
 	private final List<Validator<JComponent>> validators = new ArrayList<>();
 	private final Hashtable<JComponent, Color> failedComponents = new Hashtable<>();
+	private final List<InputValidator> subValidators = new ArrayList<>(0);
 
 
 	public record Validator<T extends JComponent>(T component, Predicate<T> predicate, String errorMessage) {}
@@ -32,8 +33,14 @@ public class InputValidator {
 		return this.register(null, c -> predicate.get(), errorMessage);
 	}
 
-	public boolean validate() {
-		var errors = new ArrayList<String>();
+	public void register(InputValidator validator) {
+		this.subValidators.add(validator);
+	}
+
+	protected void validate(List<String> errors) {
+		for (var subValidator : subValidators) {
+			subValidator.validate(errors);
+		}
 
 		for (var validator : validators) {
 			var component = validator.component();
@@ -52,11 +59,19 @@ public class InputValidator {
 				this.failedComponents.remove(component);
 			}
 		}
+	}
 
-		if (!errors.isEmpty()) {
+	public boolean validate() {
+		var errors = new ArrayList<String>();
+
+		this.validate(errors);
+
+		boolean hasErrors = !errors.isEmpty();
+
+		if (hasErrors) {
 			JOptionPane.showMessageDialog(ViewStack.currentPanel(), String.join(".\n", errors) + ".", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
-		return errors.isEmpty();
+		return !hasErrors;
 	}
 }

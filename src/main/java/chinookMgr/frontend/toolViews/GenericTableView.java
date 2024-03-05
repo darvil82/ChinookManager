@@ -1,12 +1,9 @@
 package chinookMgr.frontend.toolViews;
 
-import chinookMgr.backend.db.entities.PlaylistEntity;
-import chinookMgr.backend.db.entities.TrackEntity;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -14,7 +11,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class GenericTableView<T> extends ToolView.Supplier<T> {
+public class GenericTableView<T> extends ToolView.Submitter<T> {
 	private final @NotNull JPanel mainPanel;
 	private final @NotNull String name;
 	private final @NotNull TableInspector<T> inspector;

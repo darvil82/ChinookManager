@@ -11,15 +11,35 @@ import java.util.List;
 
 public abstract class User {
 	public abstract @NotNull String getFirstName();
+	public abstract void setFirstName(@NotNull String firstName);
+
 	public abstract @NotNull String getLastName();
+	public abstract void setLastName(@NotNull String lastName);
+
 	public abstract @Nullable String getAddress();
+	public abstract void setAddress(@Nullable String address);
+
 	public abstract @Nullable String getCity();
+	public abstract void setCity(@Nullable String city);
+
 	public abstract @Nullable String getState();
+	public abstract void setState(@Nullable String state);
+
 	public abstract @Nullable String getCountry();
+	public abstract void setCountry(@Nullable String country);
+
 	public abstract @Nullable String getPostalCode();
+	public abstract void setPostalCode(@Nullable String postalCode);
+
 	public abstract @Nullable String getPhone();
+	public abstract void setPhone(@Nullable String phone);
+
 	public abstract @Nullable String getFax();
+	public abstract void setFax(@Nullable String fax);
+
 	public abstract @NotNull String getEmail();
+	public abstract void setEmail(@NotNull String email);
+
 
 	public abstract @NotNull List<Role> getRoles();
 

@@ -34,5 +34,5 @@ public abstract class ToolView extends View {
 		return true;
 	}
 
-	public static abstract class Supplier<T> extends ToolView { }
+	public static abstract class Submitter<T> extends ToolView { }
 }

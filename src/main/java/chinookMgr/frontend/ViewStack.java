@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 public class ViewStack {
 	private final ArrayList<ToolView> views = new ArrayList<>();
-	private final HashMap<ToolView.Supplier<?>, Consumer<?>> awaiters = new HashMap<>();
+	private final HashMap<ToolView.Submitter<?>, Consumer<?>> awaiters = new HashMap<>();
 	public @Nullable Consumer<ToolView> onViewChange;
 	public @Nullable Runnable onStackPop;
 
@@ -68,7 +68,7 @@ public class ViewStack {
 		notifyViewChange();
 	}
 
-	public <T> void pushAwait(@NotNull ToolView.Supplier<T> view, @NotNull Consumer<T> onPop) {
+	public <T> void pushAwait(@NotNull ToolView.Submitter<T> view, @NotNull Consumer<T> onPop) {
 		views.add(view);
 		awaiters.put(view, onPop);
 		notifyViewChange();
@@ -90,7 +90,7 @@ public class ViewStack {
 		var prevTop = views.removeLast();
 		prevTop.dispose();
 
-		if (prevTop instanceof ToolView.Supplier<?> supplier) {
+		if (prevTop instanceof ToolView.Submitter<?> supplier) {
 			awaiters.remove(supplier);
 		}
 
@@ -103,7 +103,7 @@ public class ViewStack {
 	public void popSubmit(@NotNull Object obj) {
 		var prevTop = views.getLast();
 
-		if (prevTop instanceof ToolView.Supplier<?> supplier) {
+		if (prevTop instanceof ToolView.Submitter<?> supplier) {
 			var callback = (Consumer<Object>)awaiters.get(supplier);
 			if (callback != null) {
 				callback.accept(obj);

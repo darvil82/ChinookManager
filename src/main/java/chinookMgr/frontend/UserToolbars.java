@@ -78,7 +78,7 @@ public abstract class UserToolbars {
 		if (user.hasPermission(Role.MANAGE_EMPLOYEES))
 			addTools(toolbar, EMPLOYEES);
 
-		if (user.hasPermission(Role.MANAGE_INVENTORY))
+		if (user.hasPermission(Role.MANAGE_BILLING))
 			addTools(toolbar, INVOICES);
 
 		if (user.hasPermission(Role.SEE_REPORTS))

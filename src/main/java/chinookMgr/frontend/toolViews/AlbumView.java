@@ -66,7 +66,7 @@ public class AlbumView extends ToolView implements Saveable {
 				.openViewOnRowClick(TrackView::new)
 				.onRowClick(GenericTableView.handleSpecial(this::removeSong, TrackView::new))
 				.onNewButtonClick(() -> ViewStack.current().pushAwait(
-					new GenericTableView<>("Canciones", TrackEntity.getTableInspector().submitValueOnRowClick()),
+					new GenericTableView<>("Añadir canción al álbum", TrackEntity.getTableInspector().submitValueOnRowClick()),
 					this::addSong
 				))
 			));

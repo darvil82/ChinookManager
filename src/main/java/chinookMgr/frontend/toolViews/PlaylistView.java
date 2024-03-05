@@ -70,7 +70,7 @@ public class PlaylistView extends ToolView implements Saveable {
 
 	private void addSong() {
 		ViewStack.current().pushAwait(
-			new GenericTableView<>("Añadir Canción", TrackEntity.getTableInspector().submitValueOnRowClick()),
+			new GenericTableView<>("Añadir Canción a lista", TrackEntity.getTableInspector().submitValueOnRowClick()),
 			track -> {
 				this.currentPlaylist.addTrack(track);
 				this.recalculateDuration();

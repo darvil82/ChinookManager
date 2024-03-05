@@ -1,21 +1,25 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Saveable;
+import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.CustomerEntity;
 import chinookMgr.backend.db.entities.EmployeeEntity;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
+import chinookMgr.frontend.components.SaveOption;
 import com.toedter.calendar.JDateChooser;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class CustomerView extends ToolView {
+public class CustomerView extends ToolView implements Saveable {
 	private JPanel mainPanel;
 	private JPanel userViewPanel;
 	private JButton btnBoss;
 	private JTextField txtCompany;
+	private JPanel savePanel;
 
-	private final CustomerEntity currentCustomer;
+	private CustomerEntity currentCustomer;
 	private final UserView userView;
 
 	private EmployeeEntity supportEmployee;
@@ -39,25 +43,37 @@ public class CustomerView extends ToolView {
 		super.build();
 
 		this.insertView(this.userViewPanel, this.userView);
+		this.insertView(this.savePanel, new SaveOption<>(this));
 		Utils.attachViewSelectorToButton(this.btnBoss, () -> this.supportEmployee, "soporte", EmployeeEntity.getTableInspector(), e -> this.supportEmployee = e, EmployeeView::new);
-		this.txtCompany.setText(this.currentCustomer.getCompany());
 	}
 
 	@Override
 	protected void buildForEntity() {
 		super.buildForEntity();
+		this.txtCompany.setText(this.currentCustomer.getCompany());
 	}
 
 	@Override
 	public @NotNull String getName() {
 		if (this.currentCustomer == null)
-			return "Nuevo empleado";
+			return "Nuevo cliente";
 
-		return "Empleado (" + this.userView.getFullUsername() + ")";
+		return "Cliente (" + this.userView.getFullUsername() + ")";
 	}
 
 	@Override
 	public @NotNull JPanel getPanel() {
 		return this.mainPanel;
+	}
+
+	@Override
+	public void save() {
+		this.userView.save();
+		this.currentCustomer.setCompany(this.txtCompany.getText());
+		this.currentCustomer.setSupportRepId(this.supportEmployee.getEmployeeId());
+
+		HibernateUtil.withSession(s -> {
+			s.merge(this.currentCustomer);
+		});
 	}
 }

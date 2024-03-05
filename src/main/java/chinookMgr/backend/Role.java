@@ -11,7 +11,8 @@ public enum Role {
 	MANAGE_CUSTOMERS("Gestionar clientes"),
 	MANAGE_ROLES("Gestionar roles"),
 	MANAGE_INVENTORY("Gestionar inventario"),
-	SEE_REPORTS("Ver reportes");
+	SEE_REPORTS("Ver reportes"),
+	MANAGE_BILLING("Gestionar facturación");
 
 	public final byte flag_value;
 	public final @NotNull String name;
