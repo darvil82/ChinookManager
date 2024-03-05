@@ -6,12 +6,12 @@ import chinookMgr.frontend.ViewStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class WelcomeView extends ToolView {
 	private JPanel mainPanel;
 	private JButton btnLogin;
 	private JLabel txtWelcome;
-	private JButton btnDebugLogin;
 	private JButton btnRegister;
 
 	public WelcomeView() {
@@ -23,10 +23,6 @@ public class WelcomeView extends ToolView {
 	protected void build() {
 		this.btnLogin.addActionListener(e -> ViewStack.current().push(new LoginView()));
 		this.btnRegister.addActionListener(e -> ViewStack.current().push(new RegisterView()));
-		this.btnDebugLogin.addActionListener(e -> {
-			UserManager.login("david@gmail.com", "bartolo");
-			this.onReMount();
-		});
 	}
 
 	@Override
@@ -50,7 +46,6 @@ public class WelcomeView extends ToolView {
 
 		this.btnLogin.setVisible(false);
 		this.btnRegister.setVisible(false);
-		this.btnDebugLogin.setVisible(false);
 		this.txtWelcome.setText("¡Bienvenido, " + UserManager.getCurrentUser().getFullName() + "!");
 	}
 }

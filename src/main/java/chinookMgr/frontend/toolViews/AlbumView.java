@@ -23,7 +23,7 @@ public class AlbumView extends ToolView implements Saveable {
 	private JPanel infoPanel;
 
 	private AlbumEntity currentAlbum;
-	private ArtistEntity artist;
+	private ArtistEntity currentArtist;
 
 	public AlbumView() {
 		this.buildForNew();
@@ -31,7 +31,7 @@ public class AlbumView extends ToolView implements Saveable {
 
 	public AlbumView(AlbumEntity currentAlbum) {
 		this.currentAlbum = currentAlbum;
-		this.artist = ArtistEntity.getById(this.currentAlbum.getArtistId());
+		this.currentArtist = ArtistEntity.getById(this.currentAlbum.getArtistId());
 		this.buildForEntity();
 	}
 
@@ -46,15 +46,15 @@ public class AlbumView extends ToolView implements Saveable {
 	protected void build() {
 		Utils.attachViewSelectorToButton(
 			this.btnArtist,
-			() -> this.artist, "Artista",
+			() -> this.currentArtist, "Artista",
 			ArtistEntity.getTableInspector(),
-			e -> this.artist = e,
+			e -> this.currentArtist = e,
 			ArtistView::new
 		);
 
 		this.insertView(this.savePanel, new SaveOption<>(this, Role.MANAGE_INVENTORY, false));
 
-		this.getValidator().register(this.btnArtist, c -> this.artist != null, "Seleccione un artista");
+		this.getValidator().register(this.btnArtist, c -> this.currentArtist != null, "Seleccione un artista");
 		this.getValidator().register(this.txtTitle, c -> !this.txtTitle.getText().isBlank(), "Ingrese un título");
 
 		this.getInputManager().register(Role.MANAGE_INVENTORY, this.txtTitle, this.btnArtist);
@@ -110,7 +110,7 @@ public class AlbumView extends ToolView implements Saveable {
 		}
 
 		this.currentAlbum.setTitle(this.txtTitle.getText());
-		this.currentAlbum.setArtistId(this.artist.getArtistId());
+		this.currentAlbum.setArtistId(this.currentArtist.getArtistId());
 
 		HibernateUtil.withSession(s -> {
 			s.merge(this.currentAlbum);

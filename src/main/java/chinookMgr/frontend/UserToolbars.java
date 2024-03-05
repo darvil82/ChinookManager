@@ -55,12 +55,12 @@ public abstract class UserToolbars {
 		e -> ViewStack.current().replace(new GenericTableView<>("Géneros", GenreEntity.getTableInspector().openViewOnRowClick(GenreView::new)))
 	);
 
-
-
 	public static final Consumer<Toolbar> REPORTS = t -> t.addOption(
 		"Reportes",
 		e -> ViewStack.current().replace(new ReportsView())
 	);
+
+
 
 	public static final Consumer<Toolbar> DEBUG = t -> {
 		addTools(t, WELCOME, TRACKS, PLAYLISTS, ALBUMS, ARTISTS, GENRES, CUSTOMERS, EMPLOYEES, INVOICES, REPORTS);

@@ -1,6 +1,8 @@
 package chinookMgr.backend.db.entities;
 
+import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.InvoiceView;
 import chinookMgr.frontend.toolViews.TrackView;
 import chinookMgr.shared.ListTableModel;
 import jakarta.persistence.*;
