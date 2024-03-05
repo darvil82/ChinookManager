@@ -26,12 +26,19 @@ public class LoginView extends ToolView {
 		this.inputEmail.addActionListener(e -> this.login());
 		this.inputPassword.addActionListener(e -> this.login());
 		this.btnLogin.addActionListener(e -> this.login());
+
+		this.getValidator().register(this.inputEmail, e -> !e.getText().isBlank(), "El e-mail no puede estar vacío");
+		this.getValidator().register(this.inputPassword, e -> e.getPassword().length > 0, "La contraseña no puede estar vacía");
 	}
 
 	private void login() {
+		if (!this.getValidator().validate())
+			return;
+
 		StatusManager.disableBackButton();
 
 		LoadingManager.pushPop("Iniciando sesión...", () -> {
+
 			boolean loginResult = UserManager.login(this.inputEmail.getText().trim(), new String(this.inputPassword.getPassword()));
 			StatusManager.enableBackButton();
 

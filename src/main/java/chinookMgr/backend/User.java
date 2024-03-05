@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class User {
+	public abstract @NotNull Integer getId();
+
 	public abstract @NotNull String getFirstName();
 	public abstract void setFirstName(@NotNull String firstName);
 
@@ -64,7 +66,8 @@ public abstract class User {
 	}
 
 	public boolean hasPermission(@NotNull Role role) {
-		return this.getRoles().contains(role) || this.getRoles().contains(Role.ADMIN);
+		var roles = this.getRoles();
+		return roles.contains(role) || roles.contains(Role.ADMIN); // Admins have all permissions
 	}
 
 	@Override

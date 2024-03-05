@@ -4,6 +4,7 @@ package chinookMgr.frontend;
 import chinookMgr.backend.User;
 import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.components.Toolbar;
+import chinookMgr.frontend.toolViews.AppUserView;
 import chinookMgr.frontend.toolViews.UserView;
 import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.Nullable;
@@ -99,12 +100,12 @@ public class MainMenu extends JFrame {
 
 	public void build() {
 		this.toolbar = new Toolbar();
-		UserToolbars.DEBUG.accept(this.toolbar);
+//		UserToolbars.DEBUG.accept(this.toolbar);
 
-//		this.toolbar.setVisible(false);
+		this.toolbar.setVisible(false);
 		this.toolbarContainer.add(this.toolbar);
 		this.btnPrev.addActionListener(e -> ViewStack.current().pop());
-		this.btnAccount.addActionListener(e -> ViewStack.current().replace(new UserView(UserManager.getCurrentUser())));
+		this.btnAccount.addActionListener(e -> ViewStack.current().replace(new AppUserView(UserManager.getCurrentUser())));
 
 		Utils.addViewStackHotkeys(this, this.btnPrev);
 

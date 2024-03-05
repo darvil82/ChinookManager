@@ -6,7 +6,6 @@ import chinookMgr.frontend.components.TableInspector;
 import chinookMgr.frontend.toolViews.PlaylistView;
 import chinookMgr.frontend.toolViews.TrackView;
 import jakarta.persistence.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 

@@ -23,8 +23,11 @@ public class LoadingManager {
 		pushIntermediate(status);
 
 		new Thread(() -> {
-			runnable.run();
-			pop();
+			try {
+				runnable.run();
+			} finally {
+				pop();
+			}
 		}).start();
 	}
 

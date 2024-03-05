@@ -26,6 +26,13 @@ public class UserManager {
 			UserManager.onUserChange.accept(user);
 	}
 
+	public static boolean isCurrentUser(@NotNull User user) {
+		if (UserManager.currentUser == null) return false;
+		if (!user.getClass().isInstance(UserManager.currentUser)) return false;
+
+		return user.getId().equals(UserManager.currentUser.getId());
+	}
+
 	public static Boolean login(@NotNull String email, @NotNull String password) {
 		byte[] passwordHash = Utils.toMD5(password.getBytes());
 
@@ -101,5 +108,13 @@ public class UserManager {
 
 	public static void logout() {
 		setCurrentUser(null);
+	}
+
+	public static void fireUserEntityUpdate() {
+		HibernateUtil.withSession(s -> {
+			currentUser = s.get(currentUser.getClass(), currentUser.getId());
+		});
+
+		onUserChange.accept(currentUser);
 	}
 }

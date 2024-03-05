@@ -28,6 +28,11 @@ public class CustomerEntity extends User {
 		this.customerId = customerId;
 	}
 
+	@Override
+	public @NotNull Integer getId() {
+		return customerId;
+	}
+
 	@Basic
 	@Column(name = "FirstName", nullable = false, length = 40)
 	private String firstName;

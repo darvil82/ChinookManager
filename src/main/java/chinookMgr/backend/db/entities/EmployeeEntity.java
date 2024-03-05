@@ -30,6 +30,11 @@ public class EmployeeEntity extends User {
 		this.employeeId = employeeId;
 	}
 
+	@Override
+	public @NotNull Integer getId() {
+		return employeeId;
+	}
+
 	@Basic
 	@Column(name = "LastName", nullable = false, length = 20)
 	private String lastName;

@@ -1,6 +1,8 @@
 package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.Saveable;
+import chinookMgr.backend.UserManager;
+import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.EmployeeEntity;
 import chinookMgr.backend.db.entities.TitleEntity;
 import chinookMgr.frontend.ToolView;
@@ -11,6 +13,7 @@ import com.toedter.calendar.JDateChooser;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.sql.Timestamp;
 
 public class EmployeeView extends ToolView implements Saveable {
 	private JPanel mainPanel;
@@ -48,6 +51,7 @@ public class EmployeeView extends ToolView implements Saveable {
 		super.build();
 
 		this.getValidator().register(this.userView.getValidator());
+		this.getInputManager().register(this.userView.getInputManager());
 		this.insertView(this.savePanel, new SaveOption<>(this));
 		this.insertView(this.userViewPanel, this.userView);
 		this.titleContainer.add(this.titleCombo = new TableComboBox<>(TitleEntity.class, TitleEntity::getName));
@@ -82,5 +86,17 @@ public class EmployeeView extends ToolView implements Saveable {
 	@Override
 	public void save() {
 		this.userView.save();
+
+		this.currentEmployee.setTitle(this.titleCombo.getSelectedEntity().getId());
+		this.currentEmployee.setHireDate(new Timestamp(this.hireDateChooser.getDate().getTime()));
+		this.currentEmployee.setBirthDate(new Timestamp(this.birthDateChooser.getDate().getTime()));
+		this.currentEmployee.setReportsTo(this.selectedBoss == null ? null : this.selectedBoss.getEmployeeId());
+
+		HibernateUtil.withSession(s -> {
+			s.merge(this.currentEmployee);
+		});
+
+		if (UserManager.isCurrentUser(this.currentEmployee))
+			UserManager.fireUserEntityUpdate();
 	}
 }

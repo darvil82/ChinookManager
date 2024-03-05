@@ -3,6 +3,7 @@ package chinookMgr.frontend.toolViews;
 import chinookMgr.backend.Role;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.User;
+import chinookMgr.backend.UserManager;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.ToolView;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +45,8 @@ public class UserView extends ToolView implements Saveable {
 		this.getValidator().register(this.txtName, e -> !e.getText().isBlank(), "El nombre no puede estar vacío");
 		this.getValidator().register(this.txtSurname, e -> !e.getText().isBlank(), "El apellido no puede estar vacío");
 		this.getValidator().register(this.txtEmail, e -> e.getText().matches(".+@.+\\..+"), "El email no es válido");
+
+		this.getInputManager().register(Role.MANAGE_ROLES, this.listRoles);
 	}
 
 	@Override

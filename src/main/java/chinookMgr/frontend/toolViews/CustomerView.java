@@ -1,13 +1,13 @@
 package chinookMgr.frontend.toolViews;
 
 import chinookMgr.backend.Saveable;
+import chinookMgr.backend.UserManager;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.CustomerEntity;
 import chinookMgr.backend.db.entities.EmployeeEntity;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.components.SaveOption;
-import com.toedter.calendar.JDateChooser;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -42,6 +42,8 @@ public class CustomerView extends ToolView implements Saveable {
 	protected void build() {
 		super.build();
 
+		this.getValidator().register(this.userView.getValidator());
+		this.getInputManager().register(this.userView.getInputManager());
 		this.insertView(this.userViewPanel, this.userView);
 		this.insertView(this.savePanel, new SaveOption<>(this));
 		Utils.attachViewSelectorToButton(this.btnBoss, () -> this.supportEmployee, "soporte", EmployeeEntity.getTableInspector(), e -> this.supportEmployee = e, EmployeeView::new);
@@ -75,5 +77,8 @@ public class CustomerView extends ToolView implements Saveable {
 		HibernateUtil.withSession(s -> {
 			s.merge(this.currentCustomer);
 		});
+
+		if (UserManager.isCurrentUser(this.currentCustomer))
+			UserManager.fireUserEntityUpdate();
 	}
 }

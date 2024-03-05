@@ -1,5 +1,6 @@
 package chinookMgr.frontend.components;
 
+import chinookMgr.backend.Configuration;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.shared.ListTableModel;
 import chinookMgr.frontend.ToolView;
@@ -28,7 +29,7 @@ public class TableInspector<T> extends View {
 	private JPanel mainPanel;
 	private JLabel txtResultCount;
 	private JScrollPane tableScrollPane;
-	public static final int PAGE_SIZE = 100;
+	public final int PAGE_SIZE = Configuration.current().rowsPerPage;
 
 	private final Querier<T> querier;
 	private final Querier<Long> counter;

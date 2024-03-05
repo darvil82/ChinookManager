@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class ToolView extends View {
 	private final InputValidator validator = new InputValidator();
-	private final InputEnabler enabler = new InputEnabler();
+	private final InputManager enabler = new InputManager();
 
 	protected void buildForNew() {
 		this.build();
@@ -23,7 +23,7 @@ public abstract class ToolView extends View {
 		return this.validator;
 	}
 
-	public InputEnabler getInputManager() {
+	public InputManager getInputManager() {
 		return enabler;
 	}
 

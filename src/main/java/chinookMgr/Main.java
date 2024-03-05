@@ -1,5 +1,6 @@
 package chinookMgr;
 
+import chinookMgr.backend.Configuration;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.ConnectionAwaiter;
 import chinookMgr.frontend.ErrorDialog;
@@ -11,6 +12,7 @@ import javax.swing.*;
 
 public class Main {
 	public static void main(String[] args) {
+		Configuration.loadFromFile();
 		FlatOneDarkIJTheme.setup();
 
 		var app = MainMenu.INSTANCE;
