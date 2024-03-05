@@ -1,5 +1,6 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Role;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.UserManager;
 import chinookMgr.backend.db.HibernateUtil;
@@ -45,7 +46,7 @@ public class CustomerView extends ToolView implements Saveable {
 		this.getValidator().register(this.userView.getValidator());
 		this.getInputManager().register(this.userView.getInputManager());
 		this.insertView(this.userViewPanel, this.userView);
-		this.insertView(this.savePanel, new SaveOption<>(this));
+		this.insertView(this.savePanel, new SaveOption<>(this, Role.MANAGE_CUSTOMERS));
 		Utils.attachViewSelectorToButton(this.btnBoss, () -> this.supportEmployee, "soporte", EmployeeEntity.getTableInspector(), e -> this.supportEmployee = e, EmployeeView::new);
 	}
 

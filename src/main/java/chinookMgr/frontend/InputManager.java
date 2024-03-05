@@ -2,6 +2,7 @@ package chinookMgr.frontend;
 
 import chinookMgr.backend.Role;
 import chinookMgr.backend.UserManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -21,8 +22,13 @@ public class InputManager {
 		this.componentTable.put(predicate, List.of(components));
 	}
 
-	public void register(Role requiredRole, Component... components) {
+	public void register(@NotNull Role requiredRole, Component... components) {
 		this.register(() -> UserManager.getCurrentUser().hasPermission(requiredRole), components);
+	}
+
+	public <T extends Component> T register(@NotNull Role requiredRole, T component) {
+		this.register(requiredRole, new Component[]{component});
+		return component;
 	}
 
 	public void register(InputManager manager) {

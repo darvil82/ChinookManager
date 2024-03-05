@@ -41,7 +41,7 @@ public class AppUserView extends ToolView implements Saveable {
 
 		this.getInputManager().register(this.userView.getInputManager());
 		this.getValidator().register(this.userView.getValidator());
-		this.insertView(this.savePanel, new SaveOption<>(this));
+		this.insertView(this.savePanel, new SaveOption<>(this, null));
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Role;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.GenreEntity;
@@ -31,7 +32,7 @@ public class GenreView extends ToolView implements Saveable {
 
 	@Override
 	protected void build() {
-		this.insertView(this.savePanel, new SaveOption<>(this, false));
+		this.insertView(this.savePanel, new SaveOption<>(this, Role.MANAGE_INVENTORY, false));
 
 		this.getValidator().register(this.txtName, c -> !c.getText().isBlank(), "El nombre no puede estar vacío");
 	}

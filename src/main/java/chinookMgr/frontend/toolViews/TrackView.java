@@ -71,7 +71,7 @@ public class TrackView extends ToolView implements Saveable {
 		Utils.attachViewSelectorToButton(this.btnAlbum, () -> this.selectedAlbum, "album", AlbumEntity.getTableInspector(), a -> this.selectedAlbum = a, AlbumView::new);
 		Utils.attachViewSelectorToButton(this.btnGenre, () -> this.selectedGenre, "género", GenreEntity.getTableInspector(), g -> this.selectedGenre = g, GenreView::new);
 
-		this.insertView(this.savePanel, new SaveOption<>(this));
+		this.insertView(this.savePanel, new SaveOption<>(this, Role.MANAGE_INVENTORY));
 
 		this.numPrice.setModel(new SpinnerNumberModel(0, 0., 1000., 0.01));
 		this.numPrice.setEditor(new JSpinner.NumberEditor(this.numPrice, "0.00 €"));

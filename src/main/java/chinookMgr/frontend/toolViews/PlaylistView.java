@@ -17,7 +17,6 @@ public class PlaylistView extends ToolView implements Saveable {
 	private JTextField txtName;
 	private JTextField txtTotalDuration;
 	private JPanel tracksPanel;
-	private GenericTableView<TrackEntity> tracksTable;
 	private JPanel mainPanel;
 	private JPanel savePanel;
 	private JPanel infoPanel;
@@ -38,7 +37,7 @@ public class PlaylistView extends ToolView implements Saveable {
 	protected void build() {
 		super.build();
 
-		this.insertView(this.savePanel, new SaveOption<>(this, false));
+		this.insertView(this.savePanel, new SaveOption<>(this, Role.MANAGE_INVENTORY, false));
 		this.getValidator().register(this.txtName, c -> !c.getText().isBlank(), "El nombre no puede estar vacío");
 		this.getInputManager().register(Role.MANAGE_INVENTORY, this.txtName);
 	}
@@ -52,12 +51,11 @@ public class PlaylistView extends ToolView implements Saveable {
 	}
 
 	private void initPlaylistData() {
-		this.insertView(this.tracksPanel, this.tracksTable = new GenericTableView<>(
+		this.insertView(this.tracksPanel, this.getInputManager().register(Role.MANAGE_INVENTORY, new GenericTableView<>(
 			"Canciones", this.currentPlaylist.getTracksTableInspector()
 				.onRowClick(GenericTableView.handleSpecial(this::removeSong, TrackView::new))
 				.onNewButtonClick(this::addSong)
-		));
-		this.getInputManager().register(Role.MANAGE_INVENTORY, this.tracksTable);
+		)));
 		this.infoPanel.setBorder(BorderFactory.createTitledBorder("Detalles"));
 		this.tracksPanel.setVisible(true);
 		this.recalculateDuration();

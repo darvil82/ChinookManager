@@ -1,5 +1,6 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Role;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.backend.db.entities.ArtistEntity;
@@ -48,7 +49,7 @@ public class ArtistView extends ToolView implements Saveable {
 	@Override
 	protected void build() {
 		super.build();
-		this.insertView(this.savePanel, new SaveOption<>(this, false));
+		this.insertView(this.savePanel, new SaveOption<>(this, Role.MANAGE_INVENTORY, false));
 	}
 
 	@Override

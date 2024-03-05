@@ -29,7 +29,7 @@ public class InputValidator {
 		return this;
 	}
 
-	public <T extends JComponent> InputValidator register(Supplier<Boolean> predicate, String errorMessage) {
+	public InputValidator register(Supplier<Boolean> predicate, String errorMessage) {
 		return this.register(null, c -> predicate.get(), errorMessage);
 	}
 

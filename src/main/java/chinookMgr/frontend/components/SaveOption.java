@@ -1,8 +1,10 @@
 package chinookMgr.frontend.components;
 
+import chinookMgr.backend.Role;
 import chinookMgr.backend.Saveable;
 import chinookMgr.frontend.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -15,15 +17,17 @@ public class SaveOption<T extends ToolView & Saveable> extends View {
 	private final @NotNull T parent;
 	private final boolean autoPop;
 
-	public SaveOption(@NotNull T parent, boolean autoPop) {
+	public SaveOption(@NotNull T parent, @Nullable Role requiredRole, boolean autoPop) {
 		this.parent = parent;
 		this.autoPop = autoPop;
+		if (requiredRole != null)
+			parent.getInputManager().register(requiredRole, this);
 
 		this.build();
 	}
 
-	public SaveOption(@NotNull T parent) {
-		this(parent, true);
+	public SaveOption(@NotNull T parent, @Nullable Role requiredRole) {
+		this(parent, requiredRole, true);
 	}
 
 	private void whenRemounted(View view) {
@@ -59,6 +63,12 @@ public class SaveOption<T extends ToolView & Saveable> extends View {
 			this.whenDone();
 			StatusManager.showUpdate("Elemento guardado");
 		});
+	}
+
+	@Override
+	public void setEnabled(boolean b) {
+		this.btnSave.setEnabled(b);
+		this.btnDelete.setEnabled(b);
 	}
 
 	private void onCancel() {

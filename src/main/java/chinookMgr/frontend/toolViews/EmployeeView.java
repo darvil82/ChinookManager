@@ -1,5 +1,6 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Role;
 import chinookMgr.backend.Saveable;
 import chinookMgr.backend.UserManager;
 import chinookMgr.backend.db.HibernateUtil;
@@ -52,7 +53,7 @@ public class EmployeeView extends ToolView implements Saveable {
 
 		this.getValidator().register(this.userView.getValidator());
 		this.getInputManager().register(this.userView.getInputManager());
-		this.insertView(this.savePanel, new SaveOption<>(this));
+		this.insertView(this.savePanel, new SaveOption<>(this, Role.MANAGE_EMPLOYEES));
 		this.insertView(this.userViewPanel, this.userView);
 		this.titleContainer.add(this.titleCombo = new TableComboBox<>(TitleEntity.class, TitleEntity::getName));
 		this.hireDatePanel.add(this.hireDateChooser = new JDateChooser());
