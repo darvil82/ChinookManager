@@ -74,7 +74,7 @@ public class AppUserView extends ToolView implements Saveable {
 
 	private void previewTheme() {
 		Theme theme = (Theme)this.comboTheme.getSelectedItem();
-		if (theme == null || theme == this.OLD_THEME || this.previewedTheme) return;
+		if (theme == null || theme == this.OLD_THEME) return;
 
 		theme.apply();
 		StatusManager.showUpdate("Previsualizando tema '" + theme.name + "'...");
