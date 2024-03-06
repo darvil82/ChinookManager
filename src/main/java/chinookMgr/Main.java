@@ -26,7 +26,7 @@ public class Main {
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
-			UserManager.login("david@gmail.com", "test");
+			UserManager.login("david@gmail.com", "bartolomeo");
 		}).start();
 
 		try {

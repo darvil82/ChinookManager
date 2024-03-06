@@ -1,5 +1,6 @@
 package chinookMgr.frontend.toolViews;
 
+import chinookMgr.backend.Role;
 import chinookMgr.backend.db.entities.CustomerEntity;
 import chinookMgr.backend.db.entities.InvoiceEntity;
 import chinookMgr.frontend.ToolView;
@@ -37,6 +38,8 @@ public class InvoiceView extends ToolView {
 
 		Utils.attachViewSelectorToButton(this.btnCustomer, () -> this.currentCustomer, "cliente", CustomerEntity.getTableInspector(), c -> this.currentCustomer = c, CustomerView::new);
 		this.datePanel.add(this.dateChooser = new JDateChooser());
+
+		this.getInputManager().register(Role.MANAGE_BILLING, this.txtCountry, this.txtState, this.txtCity, this.txtPostal, this.txtAddress, this.btnCustomer, this.dateChooser);
 	}
 
 	@Override

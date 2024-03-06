@@ -3,6 +3,7 @@ package chinookMgr.backend.db.entities;
 import chinookMgr.backend.db.HibernateUtil;
 import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.GenericTableView;
 import chinookMgr.frontend.toolViews.PlaylistView;
 import chinookMgr.frontend.toolViews.TrackView;
 import jakarta.persistence.*;
@@ -210,6 +211,12 @@ public class TrackEntity {
 			)
 				.setParameter("trackId", this.trackId)
 				.setParameter("search", defaultSearch(search))
-		).openViewOnRowClick(PlaylistView::new);
+		)
+			.openViewOnRowClick(PlaylistView::new)
+			.onNewButtonClick(() -> {
+				ViewStack.current().pushAwait(new GenericTableView<>("Añadir a lista de reproducción", PlaylistEntity.getTableInspector().submitValueOnRowClick()), p -> {
+					p.addTrack(this);
+				});
+			});
 	}
 }

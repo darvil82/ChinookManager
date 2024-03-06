@@ -81,6 +81,9 @@ public abstract class UserToolbars {
 		if (user.hasPermission(Role.MANAGE_BILLING))
 			addTools(toolbar, INVOICES);
 
+		if (user.hasPermission(Role.MANAGE_INVENTORY))
+			addTools(toolbar, ARTISTS, GENRES);
+
 		if (user.hasPermission(Role.SEE_REPORTS))
 			addTools(toolbar, REPORTS);
 
