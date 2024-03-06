@@ -53,7 +53,9 @@ public class TrackView extends ToolView implements Saveable {
 		this.numPrice.setValue(this.track.getUnitPrice().doubleValue());
 		this.comboMediaType.setSelectedItem(MediaTypeEntity.getById(this.track.getMediaTypeId()));
 		this.playlistsPanel.setVisible(true);
-		this.insertView(this.playlistsPanel, new GenericTableView<>("Listas", this.track.getPlaylistsTableInspector()));
+		this.insertView(this.playlistsPanel, this.getInputManager().register(Role.MANAGE_INVENTORY,
+			new GenericTableView<>("Listas", this.track.getPlaylistsTableInspector())
+		));
 
 		int millis = track.getMilliseconds();
 		int minutes = millis / 60000;
