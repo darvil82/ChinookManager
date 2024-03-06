@@ -1,5 +1,6 @@
 package chinookMgr.frontend;
 
+import chinookMgr.backend.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -8,7 +9,6 @@ import java.util.function.Consumer;
 public abstract class StatusManager {
 	public static JLabel statusLabel;
 	private static HideThread hideThread;
-	public static int waitTime = 3000;
 	public static Consumer<Boolean> onBackButtonChange;
 
 	public static void showUpdate(@NotNull String status) {
@@ -44,7 +44,7 @@ public abstract class StatusManager {
 		@Override
 		public void run() {
 			try {
-				Thread.sleep(waitTime);
+				Thread.sleep(Configuration.current().statusMessageDelay);
 			} catch (InterruptedException e) {
 				StatusManager.hideThread = null;
 				return;

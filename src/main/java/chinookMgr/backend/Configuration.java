@@ -1,12 +1,17 @@
 package chinookMgr.backend;
 
+import chinookMgr.frontend.Theme;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 
 public final class Configuration implements Serializable {
 	public int rowsPerPage = 100;
+	public @NotNull Theme theme = Theme.ONE_DARK;
+	public volatile int statusMessageDelay = 3000;
 
+
+	private Configuration() {}
 	private static Configuration instance;
 	public static File CONFIG_FILE = new File("config.dat");
 
@@ -28,7 +33,7 @@ public final class Configuration implements Serializable {
 			return (Configuration)new ObjectInputStream(new FileInputStream(file)).readObject();
 		} catch (Exception e) {
 			System.out.println("Error reading configuration file. Using default configuration.");
-			return new Configuration();
+			return getDefault();
 		}
 	}
 
@@ -39,5 +44,9 @@ public final class Configuration implements Serializable {
 
 	public static void setConfig(@NotNull Configuration config) {
 		instance = config;
+	}
+
+	public static @NotNull Configuration getDefault() {
+		return new Configuration();
 	}
 }

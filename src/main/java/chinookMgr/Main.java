@@ -15,7 +15,7 @@ import javax.swing.*;
 public class Main {
 	public static void main(String[] args) {
 		Configuration.loadFromFile();
-		FlatOneDarkIJTheme.setup();
+		Configuration.current().theme.apply();
 
 		var app = MainMenu.INSTANCE;
 		var connectionLostDialog = new ConnectionAwaiter(app);
