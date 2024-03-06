@@ -27,10 +27,10 @@ public class MainMenu extends JFrame {
 	private final ViewStack menuViewStack;
 
 	public static final MainMenu INSTANCE = new MainMenu();
+	public static final String TITLE = "Chinook Manager";
 
 
 	private MainMenu() {
-		super("Chinook Manager");
 		this.menuViewStack = ViewStack.pushViewStack();
 		this.setContentPane(this.mainPanel);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,7 +40,7 @@ public class MainMenu extends JFrame {
 		this.build();
 	}
 
-	private void onViewStackChange(@Nullable ToolView newView) {
+	private void onViewChange(@Nullable ToolView newView) {
 		this.viewContent.removeAll();
 
 		if (newView == null) {
@@ -59,6 +59,7 @@ public class MainMenu extends JFrame {
 			this.txtAbsViewPath.setText(this.menuViewStack.getAbsPath());
 			this.txtAbsViewPath.setVisible(true);
 			this.btnPrev.setEnabled(newView.enableBackButton());
+			this.setTitle(TITLE + " - " + newView.getName());
 		}
 
 		SwingUtilities.invokeLater(() -> {
@@ -108,11 +109,11 @@ public class MainMenu extends JFrame {
 
 		Utils.addViewStackHotkeys(this, this.btnPrev);
 
-		this.menuViewStack.onViewChange = this::onViewStackChange;
+		this.menuViewStack.onViewChange = this::onViewChange;
 		LoadingManager.onTaskChange = this::onLoadingTaskChange;
 		UserManager.onUserChange = this::onUserChange;
 		StatusManager.statusLabel = this.txtStatus;
 		StatusManager.onBackButtonChange = this::onBackButtonChange;
-		this.onViewStackChange(null);
+		this.onViewChange(null);
 	}
 }
