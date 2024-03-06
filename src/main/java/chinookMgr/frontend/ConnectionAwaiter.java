@@ -19,4 +19,12 @@ public class ConnectionAwaiter extends JDialog {
 		this.setLocationRelativeTo(parent);
 		this.btnExit.addActionListener(e -> System.exit(0));
 	}
+
+	@Override
+	public void setVisible(boolean b) {
+		if (b)
+			this.setLocationRelativeTo(this.getParent());
+
+		super.setVisible(b);
+	}
 }
