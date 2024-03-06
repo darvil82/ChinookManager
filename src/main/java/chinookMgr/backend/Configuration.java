@@ -10,7 +10,7 @@ public final class Configuration implements Serializable {
 	private static Configuration instance;
 	public static File CONFIG_FILE = new File("config.dat");
 
-	public static Configuration current() {
+	public static @NotNull Configuration current() {
 		return instance;
 	}
 
@@ -23,7 +23,7 @@ public final class Configuration implements Serializable {
 		}
 	}
 
-	public static Configuration getFromFile(@NotNull File file) {
+	public static @NotNull Configuration getFromFile(@NotNull File file) {
 		try {
 			return (Configuration)new ObjectInputStream(new FileInputStream(file)).readObject();
 		} catch (Exception e) {
