@@ -34,6 +34,7 @@ public class GenreView extends ToolView implements Saveable {
 	protected void build() {
 		this.insertView(this.savePanel, new SaveOption<>(this, Role.MANAGE_INVENTORY, false));
 
+		this.getInputManager().register(Role.MANAGE_INVENTORY, this.txtName);
 		this.getValidator().register(this.txtName, c -> !c.getText().isBlank(), "El nombre no puede estar vacío");
 	}
 
@@ -50,8 +51,8 @@ public class GenreView extends ToolView implements Saveable {
 		this.infoPanel.setBorder(BorderFactory.createTitledBorder("Información"));
 		this.insertView(
 			this.tracksPanel,
-			new GenericTableView<>("Canciones", GenreEntity.getTracksTableInspector(this.currentGenre)
-				.openViewOnRowClick(TrackView::new))
+			this.getInputManager().register(Role.MANAGE_INVENTORY, new GenericTableView<>("Canciones", GenreEntity.getTracksTableInspector(this.currentGenre)
+				.openViewOnRowClick(TrackView::new)))
 		);
 	}
 

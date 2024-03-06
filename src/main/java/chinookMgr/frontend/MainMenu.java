@@ -101,9 +101,7 @@ public class MainMenu extends JFrame {
 
 	public void build() {
 		this.toolbar = new Toolbar();
-//		UserToolbars.DEBUG.accept(this.toolbar);
 
-		this.toolbar.setVisible(false);
 		this.toolbarContainer.add(this.toolbar);
 		this.btnPrev.addActionListener(e -> ViewStack.current().pop());
 		this.btnAccount.addActionListener(e -> ViewStack.current().replace(new AppUserView(UserManager.getCurrentUser())));

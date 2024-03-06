@@ -41,14 +41,15 @@ public class ArtistView extends ToolView implements Saveable {
 		this.infoPanel.setBorder(BorderFactory.createTitledBorder("Información"));
 		this.insertView(
 			this.albumsPanel,
-			new GenericTableView<>("álbunes", ArtistEntity.getAlbumsTableInspector(this.currentArtist)
-				.openViewOnRowClick(AlbumView::new))
+			this.getInputManager().register(Role.MANAGE_INVENTORY, new GenericTableView<>("álbunes", ArtistEntity.getAlbumsTableInspector(this.currentArtist)
+				.openViewOnRowClick(AlbumView::new)))
 		);
 	}
 
 	@Override
 	protected void build() {
 		super.build();
+		this.getInputManager().register(Role.MANAGE_INVENTORY, this.txtName);
 		this.insertView(this.savePanel, new SaveOption<>(this, Role.MANAGE_INVENTORY, false));
 	}
 

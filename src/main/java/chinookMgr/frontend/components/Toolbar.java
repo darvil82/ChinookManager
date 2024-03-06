@@ -11,6 +11,7 @@ public class Toolbar extends JComponent {
 	public Toolbar() {
 		var layout = new GridLayout(0, 1);
 		this.setLayout(layout);
+		this.setVisible(false);
 		this.setMinimumSize(new Dimension(100, 0));
 	}
 
