@@ -6,7 +6,9 @@ import chinookMgr.backend.db.entities.EmployeeEntity;
 import chinookMgr.shared.Utils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class UserManager {
 	private static User currentUser;
@@ -22,6 +24,7 @@ public class UserManager {
 
 	private static void setCurrentUser(User user) {
 		UserManager.currentUser = user;
+
 		if (UserManager.onUserChange != null)
 			UserManager.onUserChange.accept(user);
 	}
@@ -34,7 +37,7 @@ public class UserManager {
 	}
 
 	public static Boolean login(@NotNull String email, @NotNull String password) {
-		byte[] passwordHash = Utils.toMD5(password.getBytes());
+		var passwordHash = Utils.toMD5(password.getBytes());
 
 		return HibernateUtil.withSession(session -> {
 			{
@@ -88,7 +91,7 @@ public class UserManager {
 	}
 
 	public static Boolean registerCustomer(@NotNull String email, @NotNull String password, @NotNull String firstName, @NotNull String lastName, boolean loginOnSuccess) {
-		byte[] passwordHash = Utils.toMD5(password.getBytes());
+		var passwordHash = Utils.toMD5(password.getBytes());
 
 		return HibernateUtil.withSession(s -> {
 			if (!isEmailAvailable(email)) return false;

@@ -5,7 +5,9 @@ import chinookMgr.backend.Saveable;
 import chinookMgr.backend.User;
 import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.ToolView;
+import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.SaveOption;
+import chinookMgr.frontend.toolViews.user.UserView;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -15,14 +17,12 @@ public class AppUserView extends ToolView implements Saveable {
 	private JPanel savePanel;
 	private JPanel mainPanel;
 	private JSpinner numRowsPerPage;
+	private JButton btnLogout;
 
-	private final UserView userView;
-
-	private final User user;
+	private final UserView<User> userView;
 
 	public AppUserView(@NotNull User user) {
-		this.user = user;
-		this.userView = new UserView(user);
+		this.userView = new UserView<>(user);
 		this.buildForEntity();
 	}
 
@@ -37,6 +37,10 @@ public class AppUserView extends ToolView implements Saveable {
 	protected void build() {
 		super.build();
 
+		this.btnLogout.addActionListener(e -> {
+			UserManager.logout();
+			ViewStack.current().replaceWithWelcome();
+		});
 		this.numRowsPerPage.setModel(new SpinnerNumberModel(Configuration.current().rowsPerPage, 15, 1000, 15));
 
 		this.getInputManager().register(this.userView.getInputManager());
@@ -46,7 +50,7 @@ public class AppUserView extends ToolView implements Saveable {
 
 	@Override
 	public void save() {
-		this.userView.save();
+		this.userView.saveCurrent();
 		Configuration.current().rowsPerPage = (int)this.numRowsPerPage.getValue();
 		Configuration.current().save();
 		UserManager.fireUserEntityUpdate();

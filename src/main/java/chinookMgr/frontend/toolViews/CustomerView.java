@@ -9,6 +9,7 @@ import chinookMgr.backend.db.entities.EmployeeEntity;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.components.SaveOption;
+import chinookMgr.frontend.toolViews.user.UserView;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -21,22 +22,21 @@ public class CustomerView extends ToolView implements Saveable {
 	private JPanel savePanel;
 
 	private CustomerEntity currentCustomer;
-	private final UserView userView;
+	private final UserView<CustomerEntity> userView;
 
 	private EmployeeEntity supportEmployee;
 
 
 	public CustomerView(CustomerEntity customer) {
 		this.currentCustomer = customer;
-		this.userView = new UserView(customer);
+		this.userView = new UserView<>(customer);
 		this.supportEmployee = this.currentCustomer.getSupportRepId() == null ? null : EmployeeEntity.getById(this.currentCustomer.getSupportRepId());
 		this.buildForEntity();
 	}
 
 	public CustomerView() {
-		this.currentCustomer = new CustomerEntity();
-		this.userView = new UserView();
-		this.buildForEntity();
+		this.userView = new UserView<>();
+		this.buildForNew();
 	}
 
 	@Override
@@ -71,9 +71,15 @@ public class CustomerView extends ToolView implements Saveable {
 
 	@Override
 	public void save() {
-		this.userView.save();
+		boolean isNew = this.currentCustomer == null;
+
+		if (isNew)
+			this.currentCustomer = new CustomerEntity();
+
+		this.userView.save(this.currentCustomer);
+
 		this.currentCustomer.setCompany(this.txtCompany.getText());
-		this.currentCustomer.setSupportRepId(this.supportEmployee.getEmployeeId());
+		this.currentCustomer.setSupportRepId(this.supportEmployee == null ? null : this.supportEmployee.getEmployeeId());
 
 		HibernateUtil.withSession(s -> {
 			s.merge(this.currentCustomer);
@@ -81,5 +87,17 @@ public class CustomerView extends ToolView implements Saveable {
 
 		if (UserManager.isCurrentUser(this.currentCustomer))
 			UserManager.fireUserEntityUpdate();
+	}
+
+	@Override
+	public void delete() {
+		HibernateUtil.withSession(s -> {
+			s.remove(this.currentCustomer);
+		});
+	}
+
+	@Override
+	public boolean isDeletable() {
+		return this.currentCustomer != null;
 	}
 }

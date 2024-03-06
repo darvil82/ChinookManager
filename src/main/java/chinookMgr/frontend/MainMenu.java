@@ -5,13 +5,11 @@ import chinookMgr.backend.User;
 import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.components.Toolbar;
 import chinookMgr.frontend.toolViews.AppUserView;
-import chinookMgr.frontend.toolViews.UserView;
 import chinookMgr.frontend.toolViews.WelcomeView;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class MainMenu extends JFrame {
 	private JPanel mainPanel;
@@ -87,8 +85,11 @@ public class MainMenu extends JFrame {
 
 	private void onUserChange(@Nullable User newUser) {
 		this.btnAccount.setVisible(newUser != null);
+		this.toolbar.setVisible(newUser != null);
 
-		if (newUser == null) return;
+		if (newUser == null) {
+			return;
+		}
 
 		UserToolbars.initializeToolbarForUser(newUser, this.toolbar);
 		this.toolbar.setVisible(true);

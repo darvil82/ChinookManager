@@ -10,11 +10,13 @@ import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.Utils;
 import chinookMgr.frontend.components.SaveOption;
 import chinookMgr.frontend.components.TableComboBox;
+import chinookMgr.frontend.toolViews.user.UserView;
 import com.toedter.calendar.JDateChooser;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class EmployeeView extends ToolView implements Saveable {
 	private JPanel mainPanel;
@@ -26,7 +28,7 @@ public class EmployeeView extends ToolView implements Saveable {
 	private JPanel savePanel;
 
 	private EmployeeEntity currentEmployee;
-	private final UserView userView;
+	private final UserView<EmployeeEntity> userView;
 
 	private EmployeeEntity selectedBoss;
 	private JDateChooser hireDateChooser;
@@ -36,31 +38,32 @@ public class EmployeeView extends ToolView implements Saveable {
 
 	public EmployeeView(EmployeeEntity employee) {
 		this.currentEmployee = employee;
-		this.userView = new UserView(employee);
+		this.userView = new UserView<>(employee);
 		this.selectedBoss = this.currentEmployee.getReportsTo() == null ? null : EmployeeEntity.getById(this.currentEmployee.getReportsTo());
 		this.buildForEntity();
 	}
 
 	public EmployeeView() {
-		this.currentEmployee = new EmployeeEntity();
-		this.userView = new UserView();
-		this.buildForEntity();
+		this.userView = new UserView<>();
+		this.buildForNew();
 	}
 
 	@Override
 	protected void build() {
 		super.build();
 
+		this.userView.setRolesEditable(false);
 		this.getValidator().register(this.userView.getValidator());
 		this.getInputManager().register(this.userView.getInputManager());
 		this.insertView(this.savePanel, new SaveOption<>(this, Role.MANAGE_EMPLOYEES));
 		this.insertView(this.userViewPanel, this.userView);
-		this.titleContainer.add(this.titleCombo = new TableComboBox<>(TitleEntity.class, TitleEntity::getName));
+		this.titleContainer.add(this.titleCombo = new TableComboBox<>(TitleEntity.class, TitleEntity::getName).onSelect(this::onSelectTitle));
 		this.hireDatePanel.add(this.hireDateChooser = new JDateChooser());
 		this.birthDatePanel.add(this.birthDateChooser = new JDateChooser());
 		Utils.attachViewSelectorToButton(this.btnBoss, () -> this.selectedBoss, "superior", EmployeeEntity.getTableInspector(), e -> this.selectedBoss = e, EmployeeView::new);
+		this.hireDateChooser.setEnabled(false);
 
-		this.getValidator().register(this.btnBoss, e -> this.selectedBoss.getEmployeeId() != this.currentEmployee.getEmployeeId(), "El empleado no puede ser su propio superior");
+		this.getValidator().register(this.btnBoss, e -> this.selectedBoss == null || (this.selectedBoss.getEmployeeId() != this.currentEmployee.getEmployeeId()), "El empleado no puede ser su propio superior");
 	}
 
 	@Override
@@ -69,6 +72,16 @@ public class EmployeeView extends ToolView implements Saveable {
 		this.titleCombo.setSelectedEntity(TitleEntity.getById(this.currentEmployee.getTitle()));
 		this.hireDateChooser.setDate(this.currentEmployee.getHireDate());
 		this.birthDateChooser.setDate(this.currentEmployee.getBirthDate());
+	}
+
+	@Override
+	protected void buildForNew() {
+		super.buildForNew();
+		this.hireDateChooser.setDate(new Date());
+	}
+
+	private void onSelectTitle(@NotNull TitleEntity title) {
+		this.userView.setRoles(Role.getRolesFromFlags(title.getRoles()));
 	}
 
 	@Override
@@ -86,11 +99,17 @@ public class EmployeeView extends ToolView implements Saveable {
 
 	@Override
 	public void save() {
-		this.userView.save();
+		boolean isNew = this.currentEmployee == null;
+
+		if (isNew) {
+			this.currentEmployee = new EmployeeEntity();
+		}
+
+		this.userView.save(this.currentEmployee);
 
 		this.currentEmployee.setTitle(this.titleCombo.getSelectedEntity().getId());
 		this.currentEmployee.setHireDate(new Timestamp(this.hireDateChooser.getDate().getTime()));
-		this.currentEmployee.setBirthDate(new Timestamp(this.birthDateChooser.getDate().getTime()));
+		this.currentEmployee.setBirthDate(this.birthDateChooser.getDate() == null ? null : new Timestamp(this.birthDateChooser.getDate().getTime()));
 		this.currentEmployee.setReportsTo(this.selectedBoss == null ? null : this.selectedBoss.getEmployeeId());
 
 		HibernateUtil.withSession(s -> {

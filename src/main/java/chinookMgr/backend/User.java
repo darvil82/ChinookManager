@@ -42,6 +42,8 @@ public abstract class User {
 	public abstract @NotNull String getEmail();
 	public abstract void setEmail(@NotNull String email);
 
+	public abstract byte[] getPassword();
+	public abstract void setPassword(byte[] password);
 
 	public abstract @NotNull List<Role> getRoles();
 

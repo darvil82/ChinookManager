@@ -1,4 +1,4 @@
-package chinookMgr.frontend.toolViews;
+package chinookMgr.frontend.toolViews.user;
 
 import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.LoadingManager;

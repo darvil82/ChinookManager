@@ -2,7 +2,9 @@ package chinookMgr.backend.db.entities;
 
 import chinookMgr.backend.Role;
 import chinookMgr.backend.User;
+import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.CustomerView;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -204,10 +206,12 @@ public class CustomerEntity extends User {
 	@Column(name = "Password", nullable = true)
 	private byte[] password;
 
+	@Override
 	public byte[] getPassword() {
 		return password;
 	}
 
+	@Override
 	public void setPassword(byte[] password) {
 		this.password = password;
 	}
@@ -290,6 +294,6 @@ public class CustomerEntity extends User {
 				.setParameter("search", defaultSearch(search)),
 
 			User.getTableModel()
-		);
+		).onNewButtonClick(() -> ViewStack.current().push(new CustomerView()));
 	}
 }

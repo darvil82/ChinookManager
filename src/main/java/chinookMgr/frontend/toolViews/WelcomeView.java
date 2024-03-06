@@ -3,10 +3,11 @@ package chinookMgr.frontend.toolViews;
 import chinookMgr.backend.UserManager;
 import chinookMgr.frontend.ToolView;
 import chinookMgr.frontend.ViewStack;
+import chinookMgr.frontend.toolViews.user.LoginView;
+import chinookMgr.frontend.toolViews.user.RegisterView;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class WelcomeView extends ToolView {
 	private JPanel mainPanel;

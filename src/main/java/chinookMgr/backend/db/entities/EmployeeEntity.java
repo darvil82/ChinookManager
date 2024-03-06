@@ -3,7 +3,9 @@ package chinookMgr.backend.db.entities;
 import chinookMgr.backend.Role;
 import chinookMgr.backend.User;
 import chinookMgr.backend.db.HibernateUtil;
+import chinookMgr.frontend.ViewStack;
 import chinookMgr.frontend.components.TableInspector;
+import chinookMgr.frontend.toolViews.EmployeeView;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -222,16 +224,15 @@ public class EmployeeEntity extends User {
 
 	@Override
 	public @NotNull List<Role> getRoles() {
+		var title = TitleEntity.getById(this.title);
+		if (title == null)
+			return List.of();
 		return Role.getRolesFromFlags(TitleEntity.getById(this.title).getRoles());
 	}
 
 	@Override
 	public void setRoles(@NotNull List<Role> roles) {
-		var title = TitleEntity.getById(this.title);
-		title.setRoles(Role.getFlagsFromRoles(roles));
-		HibernateUtil.withSession(s -> {
-			s.merge(title);
-		});
+		throw new UnsupportedOperationException("Employee roles are determined by their title");
 	}
 
 	@NotNull
@@ -244,10 +245,12 @@ public class EmployeeEntity extends User {
 	@Column(name = "Password", nullable = true)
 	private byte[] password;
 
+	@Override
 	public byte[] getPassword() {
 		return password;
 	}
 
+	@Override
 	public void setPassword(byte[] password) {
 		this.password = password;
 	}
@@ -313,6 +316,6 @@ public class EmployeeEntity extends User {
 				.setParameter("search", defaultSearch(search)),
 
 			User.getTableModel()
-		);
+		).onNewButtonClick(() -> ViewStack.current().push(new EmployeeView()));
 	}
 }
